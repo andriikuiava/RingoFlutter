@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'Registration.dart';
+import 'package:ringoflutter/Classes/LoginCredentialsClass.dart';
+import 'package:ringoflutter/Classes/TokensClass.dart';
+import 'package:ringoflutter/Security/Functions/LoginFunc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
+import 'package:ringoflutter/Security/checkIsLoggedIn.dart';
+import 'package:ringoflutter/Security/Functions/LogOutFunc.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -23,6 +30,9 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final currentTheme = Theme.of(context);
+    final storage = FlutterSecureStorage();
+    checkIsLoggedIn(context);
+    // logOut();
 
     return CupertinoPageScaffold(
       backgroundColor: currentTheme.scaffoldBackgroundColor,
@@ -35,9 +45,9 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: 30.0),
               Container(
                 height: 145,
-                child: Image.asset( currentTheme.brightness == Brightness.light ?
-                    'assets/images/Ringo-Black.png'
-                :    'assets/images/Ringo-White.png'),
+                child: Image.asset(currentTheme.brightness == Brightness.light
+                    ? 'assets/images/Ringo-Black.png'
+                    : 'assets/images/Ringo-White.png'),
               ),
               const SizedBox(height: 12.0),
               DefaultTextStyle(
@@ -132,7 +142,29 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           child: CupertinoButton(
                             color: currentTheme.backgroundColor,
-                            onPressed: () {},
+                            onPressed: () async {
+                              LoginCredentials credentials = LoginCredentials(
+                                email: _emailController.text,
+                                password: _passwordController.text,
+                              );
+                              Tokens receivedTokens =
+                              await loginFunc(context, credentials);
+                              if (receivedTokens.accessToken != null) {
+                                storage.write(
+                                    key: "access_token",
+                                    value: receivedTokens.accessToken);
+                                storage.write(
+                                    key: "refresh_token",
+                                    value: receivedTokens.refreshToken);
+
+                                DateTime currentTime = DateTime.now();
+                                DateTime futureTime =
+                                currentTime.add(Duration(minutes: 5));
+                                storage.write(
+                                    key: "timestamp",
+                                    value: futureTime.toString());
+                              }
+                            },
                             child: FittedBox(
                               fit: BoxFit.scaleDown,
                               child: Text(
@@ -166,7 +198,10 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           child: CupertinoButton(
                             color: currentTheme.backgroundColor,
-                            onPressed: () {},
+                            onPressed: () async {
+                              bool isTimestampValid = await checkTimestamp();
+                              print(isTimestampValid);
+                            },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -266,7 +301,9 @@ class _LoginPageState extends State<LoginPage> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => RegistrationPage()),
+                              MaterialPageRoute(
+                                builder: (context) => RegistrationPage(),
+                              ),
                             );
                           },
                           child: Text(

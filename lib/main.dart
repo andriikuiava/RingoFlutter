@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'UI/Themes.dart';
 import 'Security/LoginPage.dart';
 
-
 void main() {
   runApp(
     MaterialApp(
@@ -13,7 +12,7 @@ void main() {
         textDirection: TextDirection.ltr,
         child: LoginPage(),
       ),
-      debugShowCheckedModeBanner: false
+      debugShowCheckedModeBanner: false,
     ),
   );
 }
