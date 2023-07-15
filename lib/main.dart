@@ -6,6 +6,7 @@ import 'Security/LoginPage.dart';
 void main() {
   runApp(
     MaterialApp(
+      navigatorKey: App.materialKey,
       theme: lightTheme,
       darkTheme: darkTheme,
       home: Directionality(
@@ -15,4 +16,8 @@ void main() {
       debugShowCheckedModeBanner: false,
     ),
   );
+}
+
+class App {
+  static final GlobalKey<NavigatorState> materialKey = GlobalKey<NavigatorState>();
 }

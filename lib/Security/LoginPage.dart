@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final currentTheme = Theme.of(context);
     final storage = FlutterSecureStorage();
-    checkIsLoggedIn(context);
+    checkIsLoggedIn();
     // logOut();
 
     return CupertinoPageScaffold(

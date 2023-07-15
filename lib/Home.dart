@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ringoflutter/Security/Functions/LogOutFunc.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -12,9 +13,14 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
 
-    return const CupertinoPageScaffold(
+    return CupertinoPageScaffold(
       child: Center(
-        child: Text('Home'),
+        child: TextButton(
+            onPressed: () {
+              logOut();
+            },
+            child: Text("data"),
+        ),
       ),
     );
   }

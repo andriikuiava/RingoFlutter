@@ -4,8 +4,11 @@ import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:ringoflutter/Security/Functions/RefreshTokenFunc.dart';
 import 'package:ringoflutter/Security/Functions/LogOutFunc.dart';
 import 'package:ringoflutter/Home.dart';
+import 'package:ringoflutter/main.dart';
 
-void checkIsLoggedIn(BuildContext context) async {
+final GlobalKey<NavigatorState> navigatorKey = App.materialKey;
+
+void checkIsLoggedIn() async {
   final storage = FlutterSecureStorage();
   String currentTime = DateTime.now().toString();
   String? storedTime = await storage.read(key: 'timestamp');
@@ -17,16 +20,13 @@ void checkIsLoggedIn(BuildContext context) async {
     if (current.compareTo(stored) > 0) {
       var token = await storage.read(key: 'refresh_token');
       refreshTokens(token!);
-      print("object");
     } else {
       print(stored);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => Home()),
+      navigatorKey.currentState?.pushReplacement(
+        MaterialPageRoute(builder: (_) => Home()),
       );
     }
   } else {
-    logOut();
     throw Exception('No timestamp found');
   }
 }
