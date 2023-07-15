@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:ringoflutter/Security/Functions/RegisterFunc.dart';
 import 'package:intl/intl.dart';
 import 'package:ringoflutter/Classes/RegistrationCredentialsClass.dart';
+import 'dart:io';
+import 'package:ringoflutter/AppTabBar/Profile/Functions/SendPhoto.dart';
+
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({Key? key});
@@ -18,6 +21,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
   late TextEditingController _passwordController;
   late DateTime dateController;
   int selectedGender = 2;
+  File? image;
+
 
   @override
   void initState() {
@@ -61,11 +66,21 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 children: [
                   Row(
                     children: [
-                      Icon(
-                        CupertinoIcons.person_circle,
-                        color: currentTheme.primaryColor,
-                        size: 120,
-                      ),
+                      (image == null)
+                          ? Icon(
+                              CupertinoIcons.person_circle,
+                              color: currentTheme.primaryColor,
+                              size: 120,
+                            )
+                          : CircleAvatar(
+                              radius: 60,
+                              backgroundImage: FileImage(image!),
+                            ),
+                      // Icon(
+                      //   CupertinoIcons.person_circle,
+                      //   color: currentTheme.primaryColor,
+                      //   size: 120,
+                      // )
                       const SizedBox(width: 20),
                       Expanded(
                         child: Column(
@@ -90,7 +105,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                   ),
                                 ],
                               ),
-                              onPressed: () {},
+                              onPressed: () async {
+                                final pickedImage = await pickImage();
+                                if (pickedImage != null) {
+                                  setState(() {
+                                    image = File(pickedImage.path);
+                                  });
+                                }
+                              },
                             ),
                             const SizedBox(height: 10),
                             CupertinoButton(
@@ -113,7 +135,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                   ),
                                 ],
                               ),
-                              onPressed: () {},
+                              onPressed: () async {
+                                final pickedImage = await takeImage();
+                                if (pickedImage != null) {
+                                  setState(() {
+                                    image = File(pickedImage.path);
+                                  });
+                                }
+                              },
                             ),
                           ],
                         ),
@@ -330,9 +359,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             style: TextStyle(
                               color: currentTheme.primaryColor,
                               fontSize: 16,
-                              fontWeight: FontWeight.bold,
                               decoration: TextDecoration.none,
-
                             ),
                           ),
                           1: Text(
@@ -340,7 +367,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             style: TextStyle(
                               color: currentTheme.primaryColor,
                               fontSize: 16,
-                              fontWeight: FontWeight.bold,
                               decoration: TextDecoration.none,
 
                             ),
@@ -350,7 +376,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             style: TextStyle(
                               color: currentTheme.primaryColor,
                               fontSize: 16,
-                              fontWeight: FontWeight.bold,
                                 decoration: TextDecoration.none,
                             ),
                           ),
@@ -422,6 +447,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                 ],
               ),
+            ),
+            SliverToBoxAdapter(
+              child: const SizedBox(height: 32),
             ),
           ],
         ),

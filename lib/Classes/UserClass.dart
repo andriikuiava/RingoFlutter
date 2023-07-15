@@ -1,21 +1,36 @@
+import 'dart:convert';
+
 class User {
   int id;
-  String email;
+  String? email;
   String name;
   String username;
-  int profilePicture;
+  int? profilePictureId;
   bool isActive;
-  String dateOfBirth;
-  String gender;
+  String? dateOfBirth;
+  String? gender;
 
   User({
     required this.id,
-    required this.email,
+    this.email,
     required this.name,
     required this.username,
-    required this.profilePicture,
+    this.profilePictureId,
     required this.isActive,
-    required this.dateOfBirth,
-    required this.gender,
+    this.dateOfBirth,
+    this.gender,
   });
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      id: json['id'],
+      email: json['email'],
+      name: json['name'],
+      username: json['username'],
+      profilePictureId: json['profilePictureId'],
+      isActive: json['isActive'],
+      dateOfBirth: json['dateOfBirth'],
+      gender: json['gender'],
+    );
+  }
 }

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+var defaultWidgetCornerRadius = BorderRadius.circular(12);
+var defaultWidgetPadding = EdgeInsets.all(12);
+
 final lightTheme = ThemeData(
   brightness: Brightness.light,
   primaryColor: Colors.black,
