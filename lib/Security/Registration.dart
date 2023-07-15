@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ringoflutter/Security/Functions/RegisterFunc.dart';
+import 'package:intl/intl.dart';
+import 'package:ringoflutter/Classes/RegistrationCredentialsClass.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({Key? key});
@@ -380,8 +383,29 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       child: CupertinoButton(
                         color: currentTheme.backgroundColor,
                         onPressed: () {
-                          print(dateController);
-                          print(selectedGender);
+                          String genderText = '';
+                          if (selectedGender == 0) {
+                            genderText = "MALE";
+                          }
+                          if (selectedGender == 1) {
+                            genderText = "FEMALE";
+                          }
+                          if (selectedGender == 2) {
+                            genderText = "OTHER";
+                          }
+
+                          DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+                          String formattedTimestamp = dateFormat.format(dateController!);
+                          registerUser(
+                            RegistrationCredentials(
+                                name: _fullNameController.text,
+                                username: _usernameController.text,
+                                email: _emailController.text,
+                                password: _passwordController.text,
+                                dateOfBirth: formattedTimestamp,
+                                gender: genderText,
+                              )
+                          );
                         },
                         child: FittedBox(
                           fit: BoxFit.scaleDown,

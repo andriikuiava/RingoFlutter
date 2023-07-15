@@ -6,8 +6,8 @@ import 'package:ringoflutter/Classes/TokensClass.dart';
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:ringoflutter/Security/Functions/LoginFunc.dart';
 import 'package:ringoflutter/Security/checkIsLoggedIn.dart';
-
 import 'Registration.dart';
+import 'package:ringoflutter/Security/Functions/LogOutFunc.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -148,7 +148,7 @@ class _LoginPageState extends State<LoginPage> {
                                 password: _passwordController.text,
                               );
                               Tokens receivedTokens =
-                              await loginFunc(context, credentials);
+                              await loginFunc(credentials);
                               if (receivedTokens.accessToken != null) {
                                 storage.write(
                                     key: "access_token",
@@ -156,13 +156,6 @@ class _LoginPageState extends State<LoginPage> {
                                 storage.write(
                                     key: "refresh_token",
                                     value: receivedTokens.refreshToken);
-
-                                DateTime currentTime = DateTime.now();
-                                DateTime futureTime =
-                                currentTime.add(Duration(minutes: 5));
-                                storage.write(
-                                    key: "timestamp",
-                                    value: futureTime.toString());
                               }
                             },
                             child: FittedBox(
