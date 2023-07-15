@@ -1,7 +1,7 @@
-import 'package:ringoflutter/Classes/TokensClass.dart';
+import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:ringoflutter/Classes/TokensClass.dart';
 import 'package:ringoflutter/Security/Functions/LogOutFunc.dart';
 
 Future<Tokens> refreshTokens(String refreshToken) async {

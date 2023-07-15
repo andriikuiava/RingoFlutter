@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
-import 'package:ringoflutter/Security/Functions/RefreshTokenFunc.dart';
-import 'package:ringoflutter/Security/Functions/LogOutFunc.dart';
 import 'package:ringoflutter/Home.dart';
+import 'package:ringoflutter/Security/Functions/RefreshTokenFunc.dart';
 import 'package:ringoflutter/main.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = App.materialKey;

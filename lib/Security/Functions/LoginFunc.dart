@@ -1,8 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:ringoflutter/Classes/LoginCredentialsClass.dart';
 import 'package:ringoflutter/Classes/TokensClass.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:ringoflutter/Home.dart';
 
 Future<Tokens> loginFunc(BuildContext context, LoginCredentials loginCredentials) async {

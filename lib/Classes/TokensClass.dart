@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class Tokens {
   String accessToken;
   String refreshToken;

@@ -1,13 +1,13 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'Registration.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ringoflutter/Classes/LoginCredentialsClass.dart';
 import 'package:ringoflutter/Classes/TokensClass.dart';
-import 'package:ringoflutter/Security/Functions/LoginFunc.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
+import 'package:ringoflutter/Security/Functions/LoginFunc.dart';
 import 'package:ringoflutter/Security/checkIsLoggedIn.dart';
-import 'package:ringoflutter/Security/Functions/LogOutFunc.dart';
+
+import 'Registration.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);

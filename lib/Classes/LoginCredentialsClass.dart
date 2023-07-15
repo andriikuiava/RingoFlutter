@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class LoginCredentials {
   String email;
   String password;
