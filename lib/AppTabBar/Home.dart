@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'Profile/Profile.dart';
+import 'Tickets/Tickets.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -77,7 +78,7 @@ class _HomeState extends State<Home> {
             tab = TalkScreen();
             break;
           case 3:
-            tab = SearchScreen();
+            tab = TicketsScreen();
             break;
           case 4:
             tab = ProfileScreen();
@@ -112,15 +113,6 @@ class TalkScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Text('Talk Screen'),
-    );
-  }
-}
-
-class SearchScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('Search Screen'),
     );
   }
 }

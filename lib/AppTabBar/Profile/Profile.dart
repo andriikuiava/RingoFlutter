@@ -7,6 +7,8 @@ import 'package:ringoflutter/Security/Functions/LogOutFunc.dart';
 import 'package:ringoflutter/AppTabBar/Profile/EditProfileView.dart';
 import 'package:ringoflutter/UI/Functions/Formats.dart';
 import 'package:ringoflutter/AppTabBar/Profile/ChangePassword.dart';
+import 'package:ringoflutter/AppTabBar/Profile/SavedEvents.dart';
+import 'package:ringoflutter/AppTabBar/Profile/Functions/GetEventsFunc.dart';
 
 class ProfileScreen extends StatelessWidget {
   @override
@@ -235,7 +237,7 @@ class ProfileScreen extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(height: 9,),
+                                  const SizedBox(height: 10,),
                                 ],
                               );
                             }
@@ -248,6 +250,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+                SavedEventsScreen(),
               ],
             ),
           ),
