@@ -18,4 +18,9 @@ class Currency {
       symbol: json['symbol'],
     );
   }
+
+  @override
+  String toString() {
+    return 'Currency{id: $id, name: $name, symbol: $symbol}';
+  }
 }

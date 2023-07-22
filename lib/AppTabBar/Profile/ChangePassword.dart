@@ -6,6 +6,7 @@ import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:ringoflutter/Classes/TokensClass.dart';
+import 'package:ringoflutter/Security/Functions/LogOutFunc.dart';
 
 class ChangePasswordView extends StatefulWidget {
   const ChangePasswordView({super.key});
@@ -40,7 +41,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
             color: currentTheme.primaryColor,
           ),
         ),
-        middle: Text('Change Password',
+        middle: Text('Settings',
         style: TextStyle(
           color: currentTheme.primaryColor,
         ),),
@@ -157,16 +158,34 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                     widthFactor: 0.9,
                     child: CupertinoButton(
                       child: Text('Change password',
-                      style: TextStyle(
-                        color: currentTheme.primaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),),
+                        style: TextStyle(
+                          color: currentTheme.primaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),),
                       color: currentTheme.backgroundColor,
                       onPressed: () {
                         checkTimestamp();
                         changePassword(_oldPasswordController.text,
                             _newPasswordController.text
                         );
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20.0),
+                Container(
+                  height: 50,
+                  child: FractionallySizedBox(
+                    widthFactor: 0.9,
+                    child: CupertinoButton(
+                      child: Text('Log out',
+                        style: TextStyle(
+                          color: currentTheme.primaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),),
+                      color: currentTheme.backgroundColor,
+                      onPressed: () {
+                        logOut();
                       },
                     ),
                   ),

@@ -15,7 +15,9 @@ class RegistrationForm {
     return RegistrationForm(
       title: json['title'],
       description: json['description'],
-      questions: json['questions'],
+      questions: List<Question>.from(
+        json['questions'].map((question) => Question.fromJson(question)),
+      ),
     );
   }
 }
