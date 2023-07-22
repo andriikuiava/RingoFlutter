@@ -7,6 +7,7 @@ import 'package:ringoflutter/Security/Functions/LogOutFunc.dart';
 import 'package:ringoflutter/AppTabBar/Profile/EditProfileView.dart';
 import 'package:ringoflutter/UI/Functions/Formats.dart';
 import 'package:ringoflutter/AppTabBar/Profile/ChangePassword.dart';
+import 'package:ringoflutter/AppTabBar/Profile/SavedEvents.dart';
 
 class ProfileScreen extends StatelessWidget {
   @override
@@ -88,43 +89,49 @@ class ProfileScreen extends StatelessWidget {
                                             ),
                                           ),
                                         ),
-                                      const SizedBox(width: 8),
-                                      Column(
+                                      Row(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          const SizedBox(height: 8,),
-                                          Text(
-                                            data.name,
-                                            style: TextStyle(
-                                              decoration: TextDecoration.none,
-                                              color: currentTheme.primaryColor,
-                                              fontSize: 32,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                          const SizedBox(width: 10,),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              const SizedBox(height: 8,),
+                                              Text(
+                                                data.name,
+                                                style: TextStyle(
+                                                  decoration: TextDecoration.none,
+                                                  color: currentTheme.primaryColor,
+                                                  fontSize: 32,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Text(
+                                                '@${data.username}',
+                                                style: TextStyle(
+                                                  decoration: TextDecoration.none,
+                                                  color: Colors.grey,
+                                                  fontWeight: FontWeight.normal,
+                                                  fontSize: 20,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 10,),
+                                            ],
                                           ),
-                                          Text(
-                                            '@${data.username}',
-                                            style: TextStyle(
-                                              decoration: TextDecoration.none,
-                                              color: Colors.grey,
-                                              fontWeight: FontWeight.normal,
-                                              fontSize: 20,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 10,),
                                         ],
-                                      ),
+                                      )
                                     ],
                                   ),
                                   Row(
                                     children: [
                                       const SizedBox(width: 12,),
                                       Icon(
-                                          CupertinoIcons.calendar,
+                                        CupertinoIcons.calendar,
                                         size: 22,
                                       ),
                                       const SizedBox(width: 8,),
-                                      Text((data.dateOfBirth == null) ? 'No date of birth provided' : convertTimestampToBigDate(data.dateOfBirth!),
+                                      Text(
+                                        (data.dateOfBirth == null) ? 'No date of birth provided' : convertTimestampToBigDate(data.dateOfBirth!),
                                         style: TextStyle(
                                           decoration: TextDecoration.none,
                                           color: currentTheme.primaryColor,
@@ -139,11 +146,12 @@ class ProfileScreen extends StatelessWidget {
                                     children: [
                                       const SizedBox(width: 12,),
                                       Icon(
-                                          CupertinoIcons.person,
+                                        CupertinoIcons.person,
                                         size: 22,
                                       ),
                                       const SizedBox(width: 8,),
-                                      Text((data.gender == null) ? 'No gender provided' : capitalizeFirstLetter(data.gender!),
+                                      Text(
+                                        (data.gender == null) ? 'No gender provided' : capitalizeFirstLetter(data.gender!),
                                         style: TextStyle(
                                           decoration: TextDecoration.none,
                                           color: currentTheme.primaryColor,
@@ -153,89 +161,38 @@ class ProfileScreen extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 9,),
-                                  Center(
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          width: MediaQuery.of(context).size.width * 0.4, // Set width to 40% of screen width
-                                          child: TextButton(
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                CupertinoPageRoute(
-                                                  builder: (context) => EditProfile(beforeEdit: data),
-                                                ),
-                                              );
-                                            },
-                                            style: ButtonStyle(
-                                              backgroundColor: MaterialStateProperty.all<Color>(currentTheme.scaffoldBackgroundColor),
-                                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(12),
-                                                ),
-                                              ),
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                Icon(
-                                                  CupertinoIcons.pencil,
-                                                  color: currentTheme.primaryColor,
-                                                ),
-                                                const SizedBox(width: 8,),
-                                                Text(
-                                                  'Edit Profile',
-                                                  style: TextStyle(
-                                                    decoration: TextDecoration.none,
-                                                    color: currentTheme.primaryColor,
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.normal,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
+                                  const SizedBox(height: 10,),
+                                  Row(
+                                    children: [
+                                      const SizedBox(width: 12,),
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          primary: currentTheme.primaryColor,
+                                          onPrimary: currentTheme.backgroundColor,
                                         ),
-                                        const SizedBox(width: 12),
-                                        Container(
-                                          width: MediaQuery.of(context).size.width * 0.4,
-                                          child: TextButton(
-                                            onPressed: () {
-                                              logOut();
-                                            },
-                                            style: ButtonStyle(
-                                              backgroundColor: MaterialStateProperty.all<Color>(currentTheme.scaffoldBackgroundColor),
-                                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(12),
-                                                ),
-                                              ),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                              builder: (context) => EditProfile(beforeEdit: data),
                                             ),
-                                            child: Row(
-                                              children: [
-                                                Icon(
-                                                  CupertinoIcons.person_crop_circle_badge_minus,
-                                                  color: currentTheme.primaryColor,
-                                                ),
-                                                const SizedBox(width: 8,),
-                                                Text(
-                                                  'Log Out',
-                                                  style: TextStyle(
-                                                    decoration: TextDecoration.none,
-                                                    color: currentTheme.primaryColor,
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.normal,
-                                                  ),
-                                                ),
-                                              ],
+                                          );
+                                        },
+                                        child: Row(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              CupertinoIcons.pencil,
+                                              size: 22,
                                             ),
-                                          ),
+                                            const SizedBox(width: 5,),
+                                            Text('Edit Profile')
+                                          ],
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(height: 9,),
+                                  const SizedBox(height: 10,),
                                 ],
                               );
                             }
@@ -247,6 +204,10 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                   ),
+                ),
+                FractionallySizedBox(
+                  widthFactor: 0.95,
+                  child: SavedEventsScreen(),
                 ),
               ],
             ),

@@ -10,8 +10,8 @@ class Organisation {
   String description;
   double? rating;
   String contacts;
-  int pastEventsCount;
-  int upcomingEventsCount;
+  int? pastEventsCount;
+  int? upcomingEventsCount;
 
   Organisation({
     required this.id,
@@ -23,11 +23,11 @@ class Organisation {
     required this.description,
     this.rating,
     required this.contacts,
-    required this.pastEventsCount,
-    required this.upcomingEventsCount,
+    this.pastEventsCount,
+    this.upcomingEventsCount,
   });
 
-  factory Organisation.fromJson(Map<String, dynamic> json) {
+  static Organisation fromJson(Map<String, dynamic> json) {
     return Organisation(
       id: json['id'],
       email: json['email'],

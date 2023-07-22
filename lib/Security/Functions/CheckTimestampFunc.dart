@@ -16,7 +16,7 @@ Future<bool> checkTimestamp() async {
       await refreshTokens(token!);
       return false;
     } else {
-      print(stored);
+      // print(stored);
       return true;
     }
   } else {
