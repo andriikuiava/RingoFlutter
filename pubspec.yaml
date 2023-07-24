@@ -21,6 +21,10 @@ dependencies:
   carousel_slider: ^4.2.1
   fluttertoast: ^8.2.2
   qr_flutter: ^4.1.0
+  geolocator: ^9.0.2
+  cached_network_image: ^3.2.3
+  flutter_image_compress: ^2.0.4
+  flutter_widget_to_image: ^0.0.1
 
 dev_dependencies:
   flutter_test:
