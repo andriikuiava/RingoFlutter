@@ -15,9 +15,4 @@ class Coordinates {
       longitude: json['longitude'],
     );
   }
-
-  @override
-  String toString() {
-    return 'Coordinates{latitude: $latitude, longitude: $longitude}';
-  }
 }

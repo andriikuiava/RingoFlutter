@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ringoflutter/AppTabBar/Map/GetLocation.dart';
 import 'Profile/Profile.dart';
 import 'Tickets/Tickets.dart';
+import 'Map/MapPage.dart';
+
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -11,7 +14,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int _selectedIndex = 3;
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +72,7 @@ class _HomeState extends State<Home> {
         Widget? tab;
         switch (index) {
           case 0:
-            tab = HomeScreen();
+            tab = MapPage();
             break;
           case 1:
             tab = TimelineScreen();
@@ -86,15 +89,6 @@ class _HomeState extends State<Home> {
         }
         return CupertinoTabView(builder: (context) => tab!);
       },
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('Home Screen'),
     );
   }
 }

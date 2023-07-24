@@ -15,6 +15,7 @@ import 'package:ringoflutter/Host/HostPage.dart';
 import 'package:ringoflutter/Security/Functions/LogOutFunc.dart';
 import 'package:ringoflutter/AppTabBar/Tickets/OneTicketPage.dart';
 import 'package:ringoflutter/Classes/TicketClass.dart';
+import 'package:flutter/services.dart';
 
 class EventPage extends StatefulWidget {
   final int eventId;
