@@ -66,22 +66,29 @@ class _TicketsScreenState extends State<TicketsScreen> {
               shrinkWrap: true,
               itemCount: myTickets.length,
               itemBuilder: (context, int index) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MyTicketPage(
-                          ticket: myTickets[index],
-                        ),
+                return Column(
+                  children: [
+                    const SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MyTicketPage(
+                                ticket: myTickets[index],
+                              ),
+                            ),
+                          );
+                        },
+                        child: buildTicket(myTickets[index]),
                       ),
-                    );
-                  },
-                  child: buildTicket(myTickets[index]),
+                    ),
+                  ]
                 );
               },
-              separatorBuilder: (BuildContext context, int index) =>
-                  SizedBox(height: 10),
+              separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 0),
             );
           }
         },
@@ -110,6 +117,9 @@ class _TicketsScreenState extends State<TicketsScreen> {
                 fit: BoxFit.cover,
               ),
             ),
+          ),
+          const SizedBox(
+            width: 10,
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
