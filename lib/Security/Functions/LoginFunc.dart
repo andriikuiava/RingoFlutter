@@ -29,6 +29,12 @@ Future<Tokens> loginFunc(LoginCredentials loginCredentials) async {
     storage.write(
         key: "timestamp",
         value: futureTime.toString());
+    storage.write(
+        key: "access_token",
+        value: jsonResponse['accessToken']);
+    storage.write(
+        key: "refresh_token",
+        value: jsonResponse['refreshToken']);
 
     return Tokens(
       accessToken: jsonResponse['accessToken'],

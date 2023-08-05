@@ -7,14 +7,14 @@ import 'package:ringoflutter/Classes/RegistrationFormClass.dart';
 import 'package:ringoflutter/Classes/OrganisationClass.dart';
 
 class EventInFeed {
-  int? id; // Make it nullable
+  int? id;
   String name;
   String? description;
   bool isActive;
   String? address;
   Coordinates? coordinates;
-  int? mainPhotoId; // Make it nullable
-  double? distance;
+  int? mainPhotoId;
+  int? distance;
   bool isTicketNeeded;
   double? price;
   Currency? currency;

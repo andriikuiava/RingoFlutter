@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'Security/LoginPage.dart';
 import 'UI/Themes.dart';
-// import 'package:ringoflutter/AppTabBar/Feed/test.dart';
+import 'package:ringoflutter/AppTabBar/Feed/EventsNearYou.dart';
+import 'package:ringoflutter/AppTabBar/Feed/Builder.dart';
 
 void main() {
   runApp(
@@ -12,7 +13,7 @@ void main() {
       home: Directionality(
         textDirection: TextDirection.ltr,
         child: LoginPage(),
-        // child: HomeScreen(),
+        // child: FeedBuilder(key: UniqueKey(), request: "123"),
       ),
       debugShowCheckedModeBanner: false,
     ),

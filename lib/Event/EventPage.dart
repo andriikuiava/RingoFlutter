@@ -16,6 +16,7 @@ import 'package:ringoflutter/Security/Functions/LogOutFunc.dart';
 import 'package:ringoflutter/AppTabBar/Tickets/OneTicketPage.dart';
 import 'package:ringoflutter/Classes/TicketClass.dart';
 import 'package:flutter/services.dart';
+import 'package:ringoflutter/Event/FormCompletion.dart';
 
 class EventPage extends StatefulWidget {
   final int eventId;
@@ -303,9 +304,20 @@ class _EventPageState extends State<EventPage>
                                         ),
                                       ),
                                     ),
-                                    onPressed: () async {
+                                    onPressed: () {
                                       if (!event.isRegistered) {
-                                        getTicketNoForm();
+                                        if (event.registrationForm == null) {
+                                          getTicketNoForm();
+                                        } else {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => FormCompletion(
+                                                form: event.registrationForm!,
+                                              ),
+                                            ),
+                                          );
+                                        }
                                       } else {
                                         getBoughtTicket();
                                       }
@@ -413,7 +425,6 @@ class _EventPageState extends State<EventPage>
                           borderRadius: defaultWidgetCornerRadius,
                           child: GoogleMap(
                             buildingsEnabled: true,
-                            myLocationButtonEnabled: false,
                             mapType: MapType.normal,
                             initialCameraPosition: CameraPosition(
                               target: LatLng(event.coordinates!.latitude, event.coordinates!.longitude),

@@ -4,6 +4,8 @@ import 'package:ringoflutter/AppTabBar/Map/GetLocation.dart';
 import 'Profile/Profile.dart';
 import 'Tickets/Tickets.dart';
 import 'Map/MapPage.dart';
+import 'Feed/FeedPage.dart';
+import 'Search/SearchPage.dart';
 
 
 class Home extends StatefulWidget {
@@ -14,7 +16,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -75,10 +77,10 @@ class _HomeState extends State<Home> {
             tab = MapPage();
             break;
           case 1:
-            tab = TimelineScreen();
+            tab = SearchPage();
             break;
           case 2:
-            tab = TalkScreen();
+            tab = FeedPage();
             break;
           case 3:
             tab = TicketsScreen();
@@ -89,24 +91,6 @@ class _HomeState extends State<Home> {
         }
         return CupertinoTabView(builder: (context) => tab!);
       },
-    );
-  }
-}
-
-class TimelineScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('Timeline Screen'),
-    );
-  }
-}
-
-class TalkScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('Talk Screen'),
     );
   }
 }

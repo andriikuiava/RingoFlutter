@@ -26,13 +26,17 @@ class Question {
   int id;
   String content;
   bool required;
-  bool multipleOptionsAllowed;
+  bool? multipleOptionsAllowed;
+  String type;
+  int? maxCharacters;
 
   Question({
     required this.id,
     required this.content,
     required this.required,
     required this.multipleOptionsAllowed,
+    required this.type,
+    required this.maxCharacters,
   });
 
   factory Question.fromJson(Map<String, dynamic> json) {
@@ -41,6 +45,8 @@ class Question {
       content: json['content'],
       required: json['required'],
       multipleOptionsAllowed: json['multipleOptionsAllowed'],
+      type: json['type'],
+      maxCharacters: json['maxCharacters'],
     );
   }
 }

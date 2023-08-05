@@ -25,6 +25,9 @@ dependencies:
   cached_network_image: ^3.2.3
   flutter_image_compress: ^2.0.4
   flutter_widget_to_image: ^0.0.1
+  syncfusion_flutter_sliders: ^22.2.5
+  pull_down_button: ^0.9.3
+  omni_datetime_picker: ^1.0.7
 
 dev_dependencies:
   flutter_test:
