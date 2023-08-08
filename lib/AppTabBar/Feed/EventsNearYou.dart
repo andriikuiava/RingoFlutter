@@ -6,20 +6,20 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'dart:async';
 import 'package:ringoflutter/AppTabBar/Map/GetLocation.dart';
-import 'package:ringoflutter/Classes/CoordinatesClass.dart';
 import 'package:ringoflutter/Classes/EventClass.dart';
-import 'package:ringoflutter/UI/Themes.dart';
 import 'package:ringoflutter/UI/Functions/Formats.dart';
 import 'package:ringoflutter/Event/EventPage.dart';
 
 class TabBarForFeed extends StatefulWidget {
+  const TabBarForFeed({super.key});
+
   @override
   _TabBarForFeedState createState() => _TabBarForFeedState();
 }
 
 class _TabBarForFeedState extends State<TabBarForFeed>
     with TickerProviderStateMixin {
-  List<EventInFeed> _data = [];
+  final List<EventInFeed> _data = [];
   int _currentPage = 0;
   late TabController _tabController;
   int _currentTabIndex = 0;
@@ -35,7 +35,7 @@ class _TabBarForFeedState extends State<TabBarForFeed>
       vsync: this,
     );
 
-    Timer.periodic(Duration(seconds: 1), (timer) {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_currentTabIndex == nextRequest) {
         _fetchData(page: _currentPage + 1);
         nextRequest += 10;
@@ -58,7 +58,7 @@ class _TabBarForFeedState extends State<TabBarForFeed>
   Future<void> _fetchData({int page = 0}) async {
     var userCoordinates = await getUserLocation();
     checkTimestamp();
-    final storage = FlutterSecureStorage();
+    const storage = FlutterSecureStorage();
     String? token = await storage.read(key: 'access_token');
 
     final url = Uri.parse(
@@ -88,7 +88,7 @@ class _TabBarForFeedState extends State<TabBarForFeed>
         heightFactor: 0.9,
         child: Column(
           children: [
-            Container(
+            SizedBox(
               height: 0,
               child: TabBar(
                 controller: _tabController,
@@ -105,7 +105,7 @@ class _TabBarForFeedState extends State<TabBarForFeed>
                 children: List.generate(
                   _data.length,
                       (index) => Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -132,13 +132,13 @@ class _TabBarForFeedState extends State<TabBarForFeed>
                               borderRadius: BorderRadius.circular(10.0),
                               child: Container(
                                 width: double.infinity,
-                                padding: EdgeInsets.all(5),
-                                color: currentTheme.backgroundColor,
+                                padding: const EdgeInsets.all(5),
+                                color: currentTheme.colorScheme.background,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "${_data[index].name}",
+                                      _data[index].name,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 26,
@@ -148,7 +148,7 @@ class _TabBarForFeedState extends State<TabBarForFeed>
                                     if (_data[index].distance != null)
                                       Row(
                                         children: [
-                                          Icon(
+                                          const Icon(
                                             CupertinoIcons.location,
                                             color: Colors.grey,
                                             size: 16,
@@ -156,7 +156,7 @@ class _TabBarForFeedState extends State<TabBarForFeed>
                                           const SizedBox(width: 4),
                                           Text(
                                             "${_data[index].distance!}m away",
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 16,
                                               color: Colors.grey,
@@ -172,7 +172,7 @@ class _TabBarForFeedState extends State<TabBarForFeed>
                                             children: [
                                               Row(
                                                 children: [
-                                                  Icon(
+                                                  const Icon(
                                                     CupertinoIcons.map_pin,
                                                     color: Colors.grey,
                                                     size: 16,
@@ -180,7 +180,7 @@ class _TabBarForFeedState extends State<TabBarForFeed>
                                                   const SizedBox(width: 4),
                                                   Text(
                                                     "${_data[index].address}",
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                       fontWeight: FontWeight.bold,
                                                       fontSize: 16,
                                                       color: Colors.grey,
@@ -190,7 +190,7 @@ class _TabBarForFeedState extends State<TabBarForFeed>
                                               ),
                                               Text(
                                                 "${_data[index].currency!.symbol} ${_data[index].price}",
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 16,
                                                   color: Colors.grey,
@@ -209,15 +209,15 @@ class _TabBarForFeedState extends State<TabBarForFeed>
                                             children: [
                                               Row(
                                                 children: [
-                                                  Icon(
+                                                  const Icon(
                                                     CupertinoIcons.calendar_today,
                                                     color: Colors.grey,
                                                     size: 16,
                                                   ),
                                                   const SizedBox(width: 4),
                                                   Text(
-                                                    "${convertHourTimestamp(_data[index].startTime!)}",
-                                                    style: TextStyle(
+                                                    convertHourTimestamp(_data[index].startTime!),
+                                                    style: const TextStyle(
                                                       fontWeight: FontWeight.bold,
                                                       fontSize: 16,
                                                       color: Colors.grey,
@@ -227,7 +227,7 @@ class _TabBarForFeedState extends State<TabBarForFeed>
                                               ),
                                               Row(
                                                 children: [
-                                                  Icon(
+                                                  const Icon(
                                                     CupertinoIcons.person_2_fill,
                                                     color: Colors.grey,
                                                     size: 16,
@@ -235,7 +235,7 @@ class _TabBarForFeedState extends State<TabBarForFeed>
                                                   const SizedBox(width: 4),
                                                   Text(
                                                     "${_data[index].peopleCount}/${_data[index].capacity}",
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                       fontWeight: FontWeight.bold,
                                                       fontSize: 16,
                                                       color: Colors.grey,

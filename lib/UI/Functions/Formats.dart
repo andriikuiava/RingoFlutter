@@ -14,7 +14,7 @@ String convertTimestampToBigDate(String timestamp) {
 }
 
 String capitalizeFirstLetter(String input) {
-  if (input == null || input.isEmpty) {
+  if (input.isEmpty) {
     return input;
   }
 
@@ -28,9 +28,7 @@ String capitalizeFirstLetter(String input) {
 String convertHourTimestamp(String timestamp) {
   DateTime parsedDateTime = DateTime.parse(timestamp);
   String formattedDate = parsedDateTime.day.toString();
-  String formattedTime = parsedDateTime.hour.toString().padLeft(2, '0') +
-      ':' +
-      parsedDateTime.minute.toString().padLeft(2, '0');
+  String formattedTime = '${parsedDateTime.hour.toString().padLeft(2, '0')}:${parsedDateTime.minute.toString().padLeft(2, '0')}';
   String formattedMonth;
 
   switch (parsedDateTime.month) {

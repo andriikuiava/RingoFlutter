@@ -28,6 +28,7 @@ dependencies:
   syncfusion_flutter_sliders: ^22.2.5
   pull_down_button: ^0.9.3
   omni_datetime_picker: ^1.0.7
+  google_sign_in: ^6.1.4
 
 dev_dependencies:
   flutter_test:

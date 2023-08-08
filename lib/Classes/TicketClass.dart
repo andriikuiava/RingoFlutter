@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:ringoflutter/Classes/UserClass.dart';
 import 'package:ringoflutter/Classes/EventClass.dart';
 

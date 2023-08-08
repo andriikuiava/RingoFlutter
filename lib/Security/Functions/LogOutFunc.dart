@@ -6,11 +6,11 @@ import 'package:ringoflutter/Security/checkIsLoggedIn.dart';
 
 
 void logOut() {
-  final storage = new FlutterSecureStorage();
+  const storage = FlutterSecureStorage();
 
   storage.deleteAll();
 
   navigatorKey.currentState?.pushReplacement(
-    MaterialPageRoute(builder: (_) => LoginPage()),
+    MaterialPageRoute(builder: (_) => const LoginPage()),
   );
 }

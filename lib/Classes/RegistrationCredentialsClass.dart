@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 class RegistrationCredentials {
   String name;

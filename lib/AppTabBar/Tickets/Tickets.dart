@@ -11,6 +11,8 @@ import 'package:ringoflutter/AppTabBar/Tickets/OneTicketPage.dart';
 
 
 class TicketsScreen extends StatefulWidget {
+  const TicketsScreen({super.key});
+
   @override
   _TicketsScreenState createState() => _TicketsScreenState();
 }
@@ -20,7 +22,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
 
   Future<List<Ticket>> getMyTickets() async {
     checkTimestamp();
-    var storage = new FlutterSecureStorage();
+    var storage = const FlutterSecureStorage();
     var token = await storage.read(key: "access_token");
     Uri url = Uri.parse('http://localhost:8080/api/tickets');
     var headers = {'Authorization': 'Bearer $token'};
@@ -55,13 +57,13 @@ class _TicketsScreenState extends State<TicketsScreen> {
         future: getMyTickets(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Text('Failed to load events');
+            return const Text('Failed to load events');
           } else {
             List<Ticket> myTickets = snapshot.data ?? [];
             return ListView.separated(
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
               itemCount: myTickets.length,
@@ -100,10 +102,10 @@ class _TicketsScreenState extends State<TicketsScreen> {
     final currentTheme = Theme.of(context);
     return Container(
       decoration: BoxDecoration(
-        color: currentTheme.backgroundColor,
+        color: currentTheme.colorScheme.background,
         borderRadius: defaultWidgetCornerRadius,
       ),
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

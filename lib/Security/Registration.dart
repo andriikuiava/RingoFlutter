@@ -8,7 +8,7 @@ import 'package:ringoflutter/AppTabBar/Profile/Functions/SendPhoto.dart';
 
 
 class RegistrationPage extends StatefulWidget {
-  const RegistrationPage({Key? key});
+  const RegistrationPage({Key? key}) : super(key: key);
 
   @override
   State<RegistrationPage> createState() => _RegistrationPageState();
@@ -86,7 +86,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         child: Column(
                           children: [
                             CupertinoButton(
-                              color: currentTheme.backgroundColor,
+                              color: currentTheme.colorScheme.background,
                               minSize: 40,
                               padding: EdgeInsets.zero,
                               child: Row(
@@ -116,7 +116,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             ),
                             const SizedBox(height: 10),
                             CupertinoButton(
-                              color: currentTheme.backgroundColor,
+                              color: currentTheme.colorScheme.background,
                               minSize: 40,
                               padding: EdgeInsets.zero,
                               child: Row(
@@ -152,23 +152,23 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ],
               ),
             ),
-            SliverToBoxAdapter(
-              child: const SizedBox(height: 20),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: 20),
             ),
             SliverToBoxAdapter(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   DefaultTextStyle(
-                    child: Text('Full name'),
                     style: TextStyle(
                       color: currentTheme.primaryColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
+                    child: const Text('Full name'),
                   ),
                   const SizedBox(height: 8.0),
-                  Container(
+                  SizedBox(
                     height: 50,
                     child: CupertinoTextField(
                       cursorColor: currentTheme.primaryColor,
@@ -180,7 +180,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         fontSize: 16,
                       ),
                       decoration: BoxDecoration(
-                        color: currentTheme.backgroundColor,
+                        color: currentTheme.colorScheme.background,
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
@@ -188,23 +188,23 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ],
               ),
             ),
-            SliverToBoxAdapter(
-              child: const SizedBox(height: 20),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: 20),
             ),
             SliverToBoxAdapter(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   DefaultTextStyle(
-                    child: Text('Username'),
                     style: TextStyle(
                       color: currentTheme.primaryColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
+                    child: const Text('Username'),
                   ),
                   const SizedBox(height: 8.0),
-                  Container(
+                  SizedBox(
                     height: 50,
                     child: CupertinoTextField(
                       cursorColor: currentTheme.primaryColor,
@@ -216,7 +216,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         fontSize: 16,
                       ),
                       decoration: BoxDecoration(
-                        color: currentTheme.backgroundColor,
+                        color: currentTheme.colorScheme.background,
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
@@ -224,23 +224,23 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ],
               ),
             ),
-            SliverToBoxAdapter(
-              child: const SizedBox(height: 20),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: 20),
             ),
             SliverToBoxAdapter(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   DefaultTextStyle(
-                    child: Text('Email'),
                     style: TextStyle(
                       color: currentTheme.primaryColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
+                    child: const Text('Email'),
                   ),
                   const SizedBox(height: 8.0),
-                  Container(
+                  SizedBox(
                     height: 50,
                     child: CupertinoTextField(
                       cursorColor: currentTheme.primaryColor,
@@ -252,7 +252,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         fontSize: 16,
                       ),
                       decoration: BoxDecoration(
-                        color: currentTheme.backgroundColor,
+                        color: currentTheme.colorScheme.background,
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
@@ -260,23 +260,23 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ],
               ),
             ),
-            SliverToBoxAdapter(
-              child: const SizedBox(height: 20),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: 20),
             ),
             SliverToBoxAdapter(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   DefaultTextStyle(
-                    child: Text('Password'),
                     style: TextStyle(
                       color: currentTheme.primaryColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
+                    child: const Text('Password'),
                   ),
                   const SizedBox(height: 8.0),
-                  Container(
+                  SizedBox(
                     height: 50,
                     child: CupertinoTextField(
                       obscureText: true,
@@ -289,7 +289,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         fontSize: 16,
                       ),
                       decoration: BoxDecoration(
-                        color: currentTheme.backgroundColor,
+                        color: currentTheme.colorScheme.background,
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
@@ -297,23 +297,23 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ],
               ),
             ),
-            SliverToBoxAdapter(
-              child: const SizedBox(height: 20),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: 20),
             ),
             SliverToBoxAdapter(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   DefaultTextStyle(
-                    child: Text('Date of birth'),
                     style: TextStyle(
                       color: currentTheme.primaryColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
+                    child: const Text('Date of birth'),
                   ),
                   const SizedBox(height: 8.0),
-                  Container(
+                  SizedBox(
                     height: 180,
                     child: CupertinoDatePicker(
                       mode: CupertinoDatePickerMode.date,
@@ -326,25 +326,25 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ],
               ),
             ),
-            SliverToBoxAdapter(
-              child: const SizedBox(height: 20),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: 20),
             ),
             SliverToBoxAdapter(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   DefaultTextStyle(
-                    child: Text('Gender'),
                     style: TextStyle(
                       color: currentTheme.primaryColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
+                    child: const Text('Gender'),
                   ),
                   const SizedBox(height: 8.0),
-                  Container(
+                  SizedBox(
                     width: double.infinity, // Take up the full available width
-                    child: Container(
+                    child: SizedBox(
                       width: 320, // Set the desired width for the gender picker
                       child: CupertinoSlidingSegmentedControl<int>(
                         groupValue: selectedGender,
@@ -386,8 +386,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ],
               ),
             ),
-            SliverToBoxAdapter(
-              child: const SizedBox(height: 26),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: 26),
             ),
             SliverToBoxAdapter(
               child: Row(
@@ -401,12 +401,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             color: currentTheme.shadowColor,
                             spreadRadius: 2,
                             blurRadius: 5,
-                            offset: Offset(0, 3),
+                            offset: const Offset(0, 3),
                           ),
                         ],
                       ),
                       child: CupertinoButton(
-                        color: currentTheme.backgroundColor,
+                        color: currentTheme.colorScheme.background,
                         onPressed: () {
                           String genderText = '';
                           if (selectedGender == 0) {
@@ -420,7 +420,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           }
 
                           DateFormat dateFormat = DateFormat('yyyy-MM-dd');
-                          String formattedTimestamp = dateFormat.format(dateController!);
+                          String formattedTimestamp = dateFormat.format(dateController);
                           registerUser(
                             RegistrationCredentials(
                                 name: _fullNameController.text,
@@ -448,8 +448,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ],
               ),
             ),
-            SliverToBoxAdapter(
-              child: const SizedBox(height: 32),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: 32),
             ),
           ],
         ),

@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:ringoflutter/UI/Themes.dart';
-import 'package:ringoflutter/AppTabBar/Feed/EventsNearYou.dart';
 import 'package:ringoflutter/AppTabBar/Map/GetLocation.dart';
-import 'package:ringoflutter/Classes/CoordinatesClass.dart';
-import 'package:ringoflutter/AppTabBar/Feed/Popular.dart';
-import 'package:ringoflutter/AppTabBar/Feed/Builder.dart';
 
 
 class FeedPage extends StatelessWidget {
@@ -19,7 +14,7 @@ class FeedPage extends StatelessWidget {
       backgroundColor: currentTheme.scaffoldBackgroundColor,
       navigationBar: CupertinoNavigationBar(
         backgroundColor: currentTheme.scaffoldBackgroundColor,
-        middle: Text('Feed'),
+        middle: const Text('Feed'),
       ),
       child: SingleChildScrollView(
         child: Column(
@@ -27,7 +22,7 @@ class FeedPage extends StatelessWidget {
           children: [
             const SizedBox(height: 4),
             Container(
-              padding: EdgeInsets.only(left: 16, right: 16),
+              padding: const EdgeInsets.only(left: 16, right: 16),
               child: Align(
                 alignment: Alignment.topLeft,
                 child: Text(

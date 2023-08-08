@@ -3,13 +3,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:ringoflutter/UI/Themes.dart';
 import 'package:ringoflutter/AppTabBar/Profile/Functions/getUserInfo.dart';
 import 'package:ringoflutter/Classes/UserClass.dart';
-import 'package:ringoflutter/Security/Functions/LogOutFunc.dart';
 import 'package:ringoflutter/AppTabBar/Profile/EditProfileView.dart';
 import 'package:ringoflutter/UI/Functions/Formats.dart';
 import 'package:ringoflutter/AppTabBar/Profile/ChangePassword.dart';
 import 'package:ringoflutter/AppTabBar/Profile/SavedEvents.dart';
 
 class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final currentTheme = Theme.of(context);
@@ -22,7 +23,7 @@ class ProfileScreen extends StatelessWidget {
             Navigator.push(
               context,
               CupertinoPageRoute(
-                builder: (context) => ChangePasswordView(),
+                builder: (context) => const ChangePasswordView(),
               ),
             );
           },
@@ -51,12 +52,12 @@ class ProfileScreen extends StatelessWidget {
                     borderRadius: defaultWidgetCornerRadius,
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.95,
-                      color: currentTheme.backgroundColor,
+                      color: currentTheme.colorScheme.background,
                       child: FutureBuilder<User>(
                         future: getUserInfo(),
                         builder: (BuildContext context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) {
-                            return Center(
+                            return const Center(
                               child: CircularProgressIndicator(
                                 color: Colors.deepPurpleAccent,
                               ),
@@ -67,7 +68,7 @@ class ProfileScreen extends StatelessWidget {
                               return Center(
                                 child: Text(
                                   'An ${snapshot.error} occurred',
-                                  style: TextStyle(fontSize: 18, color: Colors.red),
+                                  style: const TextStyle(fontSize: 18, color: Colors.red),
                                 ),
                               );
                             } else if (snapshot.hasData) {
@@ -82,7 +83,7 @@ class ProfileScreen extends StatelessWidget {
                                           child: ClipRRect(
                                             borderRadius: BorderRadius.circular(8),
                                             child: Image.network(
-                                              'http://localhost:8080/api/photos/${data!.profilePictureId}',
+                                              'http://localhost:8080/api/photos/${data.profilePictureId}',
                                               width: 100,
                                               height: 100,
                                               fit: BoxFit.cover,
@@ -108,7 +109,7 @@ class ProfileScreen extends StatelessWidget {
                                               ),
                                               Text(
                                                 '@${data.username}',
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   decoration: TextDecoration.none,
                                                   color: Colors.grey,
                                                   fontWeight: FontWeight.normal,
@@ -125,7 +126,7 @@ class ProfileScreen extends StatelessWidget {
                                   Row(
                                     children: [
                                       const SizedBox(width: 12,),
-                                      Icon(
+                                      const Icon(
                                         CupertinoIcons.calendar,
                                         size: 22,
                                       ),
@@ -145,7 +146,7 @@ class ProfileScreen extends StatelessWidget {
                                   Row(
                                     children: [
                                       const SizedBox(width: 12,),
-                                      Icon(
+                                      const Icon(
                                         CupertinoIcons.person,
                                         size: 22,
                                       ),
@@ -167,8 +168,7 @@ class ProfileScreen extends StatelessWidget {
                                       const SizedBox(width: 12,),
                                       ElevatedButton(
                                         style: ElevatedButton.styleFrom(
-                                          primary: currentTheme.primaryColor,
-                                          onPrimary: currentTheme.backgroundColor,
+                                          foregroundColor: currentTheme.colorScheme.background, backgroundColor: currentTheme.primaryColor,
                                         ),
                                         onPressed: () {
                                           Navigator.push(
@@ -178,14 +178,14 @@ class ProfileScreen extends StatelessWidget {
                                             ),
                                           );
                                         },
-                                        child: Row(
+                                        child: const Row(
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             Icon(
                                               CupertinoIcons.pencil,
                                               size: 22,
                                             ),
-                                            const SizedBox(width: 5,),
+                                            SizedBox(width: 5,),
                                             Text('Edit Profile')
                                           ],
                                         ),
@@ -197,7 +197,7 @@ class ProfileScreen extends StatelessWidget {
                               );
                             }
                           }
-                          return Center(
+                          return const Center(
                             child: CircularProgressIndicator(),
                           );
                         },
@@ -205,7 +205,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                FractionallySizedBox(
+                const FractionallySizedBox(
                   widthFactor: 0.95,
                   child: SavedEventsScreen(),
                 ),

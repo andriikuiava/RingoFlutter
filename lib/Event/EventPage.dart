@@ -8,14 +8,11 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ringoflutter/UI/Functions/Formats.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'dart:ui';
 import 'package:ringoflutter/Host/HostPage.dart';
 import 'package:ringoflutter/Security/Functions/LogOutFunc.dart';
 import 'package:ringoflutter/AppTabBar/Tickets/OneTicketPage.dart';
 import 'package:ringoflutter/Classes/TicketClass.dart';
-import 'package:flutter/services.dart';
 import 'package:ringoflutter/Event/FormCompletion.dart';
 
 class EventPage extends StatefulWidget {
@@ -45,7 +42,7 @@ class _EventPageState extends State<EventPage>
 
   Future<EventFull> getEvent() async {
     checkTimestamp();
-    final storage = new FlutterSecureStorage();
+    const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     Uri url = Uri.parse('http://localhost:8080/api/events/${widget.eventId}');
     var headers = {'Authorization': 'Bearer $token'};
@@ -61,7 +58,7 @@ class _EventPageState extends State<EventPage>
 
   Future<EventFull> saveEvent(bool isSaved) async {
     checkTimestamp();
-    final storage = new FlutterSecureStorage();
+    const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     Uri url = (isSaved ? Uri.parse('http://localhost:8080/api/events/${widget.eventId}/unsave') : Uri.parse('http://localhost:8080/api/events/${widget.eventId}/save'));
     print(url);
@@ -79,7 +76,7 @@ class _EventPageState extends State<EventPage>
 
   Future<EventFull> getTicketNoForm() async {
     checkTimestamp();
-    final storage = new FlutterSecureStorage();
+    const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     Uri url = Uri.parse('http://localhost:8080/api/events/${widget.eventId}/join');
     var headers = {'Authorization': 'Bearer $token'};
@@ -97,7 +94,7 @@ class _EventPageState extends State<EventPage>
 
   void getBoughtTicket() async {
     checkTimestamp();
-    final storage = new FlutterSecureStorage();
+    const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     Uri url = Uri.parse('http://localhost:8080/api/events/${widget.eventId}/ticket');
     var headers = {'Authorization': 'Bearer $token'};
@@ -137,9 +134,9 @@ class _EventPageState extends State<EventPage>
         if (snapshot.hasData) {
           EventFull event = snapshot.data!;
           List<String> imgList = [];
-          imgList.add("http://localhost:8080/api/photos/${event.mainPhoto!.mediumQualityId}");
+          imgList.add("http://localhost:8080/api/photos/${event.mainPhoto.mediumQualityId}");
           for(var photoLoop in event.photos) {
-            imgList.add("http://localhost:8080/api/photos/${photoLoop.normalId!}");
+            imgList.add("http://localhost:8080/api/photos/${photoLoop.normalId}");
           }
 
           return Material(
@@ -162,6 +159,7 @@ class _EventPageState extends State<EventPage>
                   ),
                 ),
               ),
+              backgroundColor: currentTheme.scaffoldBackgroundColor,
               child: CustomScrollView(
                 slivers: [
                   SliverList(
@@ -171,12 +169,12 @@ class _EventPageState extends State<EventPage>
                         child: Container(
                           width: MediaQuery.of(context).size.width * 0.9,
                           decoration: BoxDecoration(
-                            color: currentTheme.backgroundColor,
+                            color: currentTheme.colorScheme.background,
                             borderRadius: defaultWidgetCornerRadius,
                           ),
-                          constraints: BoxConstraints(maxWidth: double.infinity),
+                          constraints: const BoxConstraints(maxWidth: double.infinity),
                           child: Padding(
-                            padding: EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(8.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -210,7 +208,7 @@ class _EventPageState extends State<EventPage>
                                       children: [
                                         if (event.host.profilePictureId != null)
                                           Container(
-                                            decoration: BoxDecoration(
+                                            decoration: const BoxDecoration(
                                               shape: BoxShape.circle,
                                             ),
                                             child: CircleAvatar(
@@ -239,7 +237,7 @@ class _EventPageState extends State<EventPage>
                                             ),
                                             Text(
                                               "@${event.host.username}",
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 color: Colors.grey,
                                                 decoration:
                                                 TextDecoration.none,
@@ -256,54 +254,9 @@ class _EventPageState extends State<EventPage>
                                 const SizedBox(
                                   height: 12,
                                 ),
-                                Container(
+                                SizedBox(
                                   width: MediaQuery.of(context).size.width * 0.9,
                                   child: ElevatedButton(
-                                    child: !event.isRegistered
-                                    ? Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          child: Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              (event.price == 0.0 ? "Get Ticket" : "Buy Ticket"),
-                                              style: TextStyle(
-                                                color: currentTheme.backgroundColor,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Text(
-                                              (event.price == 0.0 ? "Free" : "${event.currency!.symbol} ${event.price}"),
-                                              style: TextStyle(
-                                                color: currentTheme.backgroundColor,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                    : Expanded(
-                                      child: Align(
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          ("Open Ticket"),
-                                          style: TextStyle(
-                                            color: currentTheme.backgroundColor,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
                                     onPressed: () {
                                       if (!event.isRegistered) {
                                         if (event.registrationForm == null) {
@@ -325,14 +278,59 @@ class _EventPageState extends State<EventPage>
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: currentTheme.primaryColor,
                                     ),
+                                    child: !event.isRegistered
+                                    ? Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              (event.price == 0.0 ? "Get Ticket" : "Buy Ticket"),
+                                              style: TextStyle(
+                                                color: currentTheme.colorScheme.background,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Align(
+                                            alignment: Alignment.centerRight,
+                                            child: Text(
+                                              (event.price == 0.0 ? "Free" : "${event.currency!.symbol} ${event.price}"),
+                                              style: TextStyle(
+                                                color: currentTheme.colorScheme.background,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                    : Expanded(
+                                      child: Align(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          ("Open Ticket"),
+                                          style: TextStyle(
+                                            color: currentTheme.colorScheme.background,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                                Container(
+                                SizedBox(
                                   width: MediaQuery.of(context).size.width * 0.9,
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Container(
+                                      SizedBox(
                                         width: MediaQuery.of(context).size.width * 0.43,
                                         child: ElevatedButton(
                                           style: ElevatedButton.styleFrom(
@@ -352,11 +350,11 @@ class _EventPageState extends State<EventPage>
                                         ),
                                       ),
                                       const SizedBox(height: 6,),
-                                      Container(
+                                      SizedBox(
                                         width: MediaQuery.of(context).size.width * 0.43,
                                         child: OutlinedButton(
                                           style: OutlinedButton.styleFrom(
-                                            backgroundColor: currentTheme.backgroundColor,
+                                            backgroundColor: currentTheme.colorScheme.background,
                                           ),
                                           child: Align(
                                             alignment: Alignment.center,
@@ -385,7 +383,7 @@ class _EventPageState extends State<EventPage>
                                             Fluttertoast.showToast(
                                               msg: event.isSaved ? "Event was removed from saved" : "Event was added to saved",
                                               gravity: ToastGravity.CENTER,
-                                              backgroundColor: currentTheme.backgroundColor,
+                                              backgroundColor: currentTheme.colorScheme.background,
                                               textColor: currentTheme.primaryColor,
                                               fontSize: 24,
                                             );
@@ -400,7 +398,7 @@ class _EventPageState extends State<EventPage>
                           ),
                         ),
                       ),
-                      Container(
+                      SizedBox(
                         height: MediaQuery.of(context).size.width,
                         child: PageView.builder(
                           itemCount: imgList.length,
@@ -419,7 +417,7 @@ class _EventPageState extends State<EventPage>
                       const SizedBox(
                         height: 12,
                       ),
-                      Container(
+                      SizedBox(
                         height: 200,
                         child: ClipRRect(
                           borderRadius: defaultWidgetCornerRadius,
@@ -445,12 +443,12 @@ class _EventPageState extends State<EventPage>
                         child: Container(
                           width: MediaQuery.of(context).size.width * 0.9,
                           decoration: BoxDecoration(
-                            color: currentTheme.backgroundColor,
+                            color: currentTheme.colorScheme.background,
                             borderRadius: defaultWidgetCornerRadius,
                           ),
-                          constraints: BoxConstraints(maxWidth: double.infinity),
+                          constraints: const BoxConstraints(maxWidth: double.infinity),
                           child: Padding(
-                            padding: EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(8.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -523,15 +521,14 @@ class _EventPageState extends State<EventPage>
                   ),
                 ],
               ),
-              backgroundColor: currentTheme.scaffoldBackgroundColor,
             ),
           );
         } else if (snapshot.hasError) {
-          return Center(
+          return const Center(
             child: Text('Failed to load event'),
           );
         }
-        return Center(
+        return const Center(
           child: CircularProgressIndicator(),
         );
       },

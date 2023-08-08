@@ -6,20 +6,20 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'dart:async';
 import 'package:ringoflutter/AppTabBar/Map/GetLocation.dart';
-import 'package:ringoflutter/Classes/CoordinatesClass.dart';
 import 'package:ringoflutter/Classes/EventClass.dart';
-import 'package:ringoflutter/UI/Themes.dart';
 import 'package:ringoflutter/UI/Functions/Formats.dart';
 import 'package:ringoflutter/Event/EventPage.dart';
 
 class PopularForFeed extends StatefulWidget {
+  const PopularForFeed({super.key});
+
   @override
   _PopularForFeedState createState() => _PopularForFeedState();
 }
 
 class _PopularForFeedState extends State<PopularForFeed>
     with TickerProviderStateMixin {
-  List<EventInFeed> _data = [];
+  final List<EventInFeed> _data = [];
   int _currentPage = 0;
   int nextRequest = 6;
 
@@ -28,7 +28,7 @@ class _PopularForFeedState extends State<PopularForFeed>
     super.initState();
     _fetchData(page: _currentPage);
 
-    Timer.periodic(Duration(seconds: 1), (timer) {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_data.isNotEmpty && _data.length - 1 == nextRequest) {
         _fetchData(page: _currentPage + 1);
         nextRequest += 10;
@@ -39,7 +39,7 @@ class _PopularForFeedState extends State<PopularForFeed>
   Future<void> _fetchData({int page = 0}) async {
     var userCoordinates = await getUserLocation();
     checkTimestamp();
-    final storage = FlutterSecureStorage();
+    const storage = FlutterSecureStorage();
     String? token = await storage.read(key: 'access_token');
 
     final url = Uri.parse(
@@ -66,7 +66,7 @@ class _PopularForFeedState extends State<PopularForFeed>
   Widget build(BuildContext context) {
     final currentTheme = Theme.of(context);
     return ListView.builder(
-      physics: NeverScrollableScrollPhysics(), // Prevent scrolling for the view
+      physics: const NeverScrollableScrollPhysics(), // Prevent scrolling for the view
       itemCount: _data.length,
       itemBuilder: (context, index) {
         EventInFeed event = _data[index];
@@ -86,8 +86,8 @@ class _PopularForFeedState extends State<PopularForFeed>
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Container(
-                    color: currentTheme.backgroundColor,
-                    padding: EdgeInsets.all(8),
+                    color: currentTheme.colorScheme.background,
+                    padding: const EdgeInsets.all(8),
                     child: Row(
                       children: [
                         ClipRRect(
@@ -118,7 +118,7 @@ class _PopularForFeedState extends State<PopularForFeed>
                                 children: [
                                   Text(
                                     " ${event.currency!.symbol}",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.grey,
                                       decoration: TextDecoration.none,
                                       fontSize: 16,
@@ -129,7 +129,7 @@ class _PopularForFeedState extends State<PopularForFeed>
                                   const SizedBox(width: 8),
                                   Text(
                                     "${event.price}",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.grey,
                                       decoration: TextDecoration.none,
                                       fontSize: 16,
@@ -141,7 +141,7 @@ class _PopularForFeedState extends State<PopularForFeed>
                               ),
                               Row(
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     CupertinoIcons.calendar_today,
                                     color: Colors.grey,
                                     size: 16,
@@ -149,7 +149,7 @@ class _PopularForFeedState extends State<PopularForFeed>
                                   const SizedBox(width: 4),
                                   Text(
                                     convertHourTimestamp(event.startTime!),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.grey,
                                       decoration: TextDecoration.none,
                                       fontSize: 16,
@@ -161,7 +161,7 @@ class _PopularForFeedState extends State<PopularForFeed>
                               ),
                               Row(
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     CupertinoIcons.person_2_fill,
                                     color: Colors.grey,
                                     size: 16,
@@ -169,7 +169,7 @@ class _PopularForFeedState extends State<PopularForFeed>
                                   const SizedBox(width: 4),
                                   Text(
                                     "${event.peopleCount} / ${event.capacity}",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.grey,
                                       decoration: TextDecoration.none,
                                       fontSize: 16,
@@ -187,7 +187,7 @@ class _PopularForFeedState extends State<PopularForFeed>
                   ),
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
             ],
           ),
         );

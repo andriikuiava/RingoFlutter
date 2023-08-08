@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ringoflutter/AppTabBar/Map/GetLocation.dart';
 import 'Profile/Profile.dart';
 import 'Tickets/Tickets.dart';
 import 'Map/MapPage.dart';
@@ -16,7 +15,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int _selectedIndex = 1;
+  int _selectedIndex = 2;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +33,7 @@ class _HomeState extends State<Home> {
             ),
             label: 'Map',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.search),
             label: 'Search',
           ),
@@ -74,19 +73,19 @@ class _HomeState extends State<Home> {
         Widget? tab;
         switch (index) {
           case 0:
-            tab = MapPage();
+            tab = const MapPage();
             break;
           case 1:
-            tab = SearchPage();
+            tab = const SearchPage();
             break;
           case 2:
-            tab = FeedPage();
+            tab = const FeedPage();
             break;
           case 3:
-            tab = TicketsScreen();
+            tab = const TicketsScreen();
             break;
           case 4:
-            tab = ProfileScreen();
+            tab = const ProfileScreen();
             break;
         }
         return CupertinoTabView(builder: (context) => tab!);

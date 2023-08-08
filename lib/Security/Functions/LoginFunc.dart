@@ -14,18 +14,18 @@ Future<Tokens> loginFunc(LoginCredentials loginCredentials) async {
   final headers = {'Content-Type': 'application/json'};
 
   final response = await http.post(url, headers: headers, body: jsonBody);
-  final storage = new FlutterSecureStorage();
+  const storage = FlutterSecureStorage();
 
   if (response.statusCode == 200) {
     final jsonResponse = jsonDecode(response.body);
 
     navigatorKey.currentState?.pushReplacement(
-      MaterialPageRoute(builder: (_) => Home()),
+      MaterialPageRoute(builder: (_) => const Home()),
     );
 
     DateTime currentTime = DateTime.now();
     DateTime futureTime =
-    currentTime.add(Duration(minutes: 5));
+    currentTime.add(const Duration(minutes: 5));
     storage.write(
         key: "timestamp",
         value: futureTime.toString());
@@ -35,6 +35,21 @@ Future<Tokens> loginFunc(LoginCredentials loginCredentials) async {
     storage.write(
         key: "refresh_token",
         value: jsonResponse['refreshToken']);
+
+    Uri url = Uri.parse('http://localhost:8080/api/participants');
+    var responseId = await http.get(url, headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${jsonResponse['accessToken']}'
+    });
+    if (responseId.statusCode == 200) {
+      final jsonResponse = jsonDecode(responseId.body);
+      print(jsonResponse);
+      storage.write(
+          key: "id",
+          value: jsonResponse['id'].toString());
+    } else {
+      throw Exception('Failed to load participants');
+    }
 
     return Tokens(
       accessToken: jsonResponse['accessToken'],
