@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -31,7 +30,7 @@ void sendPhoto(File image) async {
   checkTimestamp();
 
   Uri url = Uri.parse('http://localhost:8080/api/participants/profile-picture');
-  final storage = new FlutterSecureStorage();
+  const storage = FlutterSecureStorage();
   var token = await storage.read(key: "access_token");
 
   var request = http.MultipartRequest("PUT", url);

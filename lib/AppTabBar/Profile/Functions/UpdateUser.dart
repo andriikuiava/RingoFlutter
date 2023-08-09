@@ -1,10 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:http/http.dart' as http;
-import 'package:http_parser/http_parser.dart';
 import 'dart:io';
 import 'package:ringoflutter/AppTabBar/Profile/Functions/SendPhoto.dart';
 
@@ -21,7 +18,7 @@ void updateUser(String name, String username, File? image, int genderId, String 
     selectedGender = "OTHER";
   }
   Uri url = Uri.parse('http://localhost:8080/api/participants');
-  var storage = new FlutterSecureStorage();
+  var storage = const FlutterSecureStorage();
   var token = await storage.read(key: "access_token");
   var headers = {
     'Authorization': "Bearer $token",

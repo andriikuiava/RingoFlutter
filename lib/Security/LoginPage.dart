@@ -3,11 +3,42 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ringoflutter/Classes/LoginCredentialsClass.dart';
 import 'package:ringoflutter/Classes/TokensClass.dart';
-import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:ringoflutter/Security/Functions/LoginFunc.dart';
 import 'package:ringoflutter/Security/checkIsLoggedIn.dart';
 import 'Registration.dart';
-import 'package:ringoflutter/Security/Functions/LogOutFunc.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+Future<void> signInWithGoogle() async {
+  try {
+    GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email'], clientId: "445780816677-on7ff5l41ig1ervle491sc7vuvg4n5ro.apps.googleusercontent.com");
+    GoogleSignInAccount? account = await googleSignIn.signIn();
+
+    if (account != null) {
+      GoogleSignInAuthentication authentication = await account.authentication;
+      String idToken = authentication.idToken ?? '';
+
+      var url = Uri.parse('http://localhost:8080/api/participants/sign-up/google');
+      var body = {'token': idToken};
+      var headers = {'Content-Type': 'application/json'};
+      debugPrint(idToken);
+      var encodedBody = jsonEncode(body);
+
+      var response = await http.post(url, body: encodedBody, headers: headers);
+      if (response.statusCode == 200) {
+        print('Google Sign-In success: $response');
+      } else {
+        print('Google Sign-In failed: ${response.statusCode}');
+      }
+    } else {
+      print('Google Sign-In cancelled.');
+    }
+  } catch (error) {
+    print('Error occurred during Google Sign-In: $error');
+  }
+}
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -30,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final currentTheme = Theme.of(context);
-    final storage = FlutterSecureStorage();
+    const storage = FlutterSecureStorage();
     checkIsLoggedIn();
     // logOut();
 
@@ -42,8 +73,8 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 30.0),
-              Container(
+              const SizedBox(height: 30.0),
+              SizedBox(
                 height: 145,
                 child: Image.asset(currentTheme.brightness == Brightness.light
                     ? 'assets/images/Ringo-Black.png'
@@ -51,27 +82,27 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 12.0),
               DefaultTextStyle(
-                child: Text("Login to Ringo"),
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: currentTheme.primaryColor,
                 ),
+                child: const Text("Login to Ringo"),
               ),
               const SizedBox(height: 20.0),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   DefaultTextStyle(
-                    child: Text('Email'),
                     style: TextStyle(
                       color: currentTheme.primaryColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
+                    child: const Text('Email'),
                   ),
                   const SizedBox(height: 8.0),
-                  Container(
+                  SizedBox(
                     height: 50,
                     child: CupertinoTextField(
                       cursorColor: currentTheme.primaryColor,
@@ -83,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
                         fontSize: 16,
                       ),
                       decoration: BoxDecoration(
-                        color: currentTheme.backgroundColor,
+                        color: currentTheme.colorScheme.background,
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
@@ -95,15 +126,15 @@ class _LoginPageState extends State<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   DefaultTextStyle(
-                    child: Text('Password'),
                     style: TextStyle(
                       color: currentTheme.primaryColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
+                    child: const Text('Password'),
                   ),
                   const SizedBox(height: 8.0),
-                  Container(
+                  SizedBox(
                     height: 50,
                     child: CupertinoTextField(
                       cursorColor: currentTheme.primaryColor,
@@ -115,7 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                         fontSize: 16,
                       ),
                       decoration: BoxDecoration(
-                        color: currentTheme.backgroundColor,
+                        color: currentTheme.colorScheme.background,
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
@@ -136,12 +167,12 @@ class _LoginPageState extends State<LoginPage> {
                                 color: currentTheme.shadowColor,
                                 spreadRadius: 2,
                                 blurRadius: 5,
-                                offset: Offset(0, 3),
+                                offset: const Offset(0, 3),
                               ),
                             ],
                           ),
                           child: CupertinoButton(
-                            color: currentTheme.backgroundColor,
+                            color: currentTheme.colorScheme.background,
                             onPressed: () async {
                               LoginCredentials credentials = LoginCredentials(
                                 email: _emailController.text,
@@ -149,15 +180,13 @@ class _LoginPageState extends State<LoginPage> {
                               );
                               Tokens receivedTokens =
                               await loginFunc(credentials);
-                              if (receivedTokens.accessToken != null) {
-                                storage.write(
-                                    key: "access_token",
-                                    value: receivedTokens.accessToken);
-                                storage.write(
-                                    key: "refresh_token",
-                                    value: receivedTokens.refreshToken);
-                              }
-                            },
+                              storage.write(
+                                  key: "access_token",
+                                  value: receivedTokens.accessToken);
+                              storage.write(
+                                  key: "refresh_token",
+                                  value: receivedTokens.refreshToken);
+                                                        },
                             child: FittedBox(
                               fit: BoxFit.scaleDown,
                               child: Text(
@@ -173,7 +202,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10.0), // Added space between the buttons
+                  const SizedBox(height: 10.0), // Added space between the buttons
                   Row(
                     children: [
                       Expanded(
@@ -185,15 +214,14 @@ class _LoginPageState extends State<LoginPage> {
                                 color: currentTheme.shadowColor,
                                 spreadRadius: 2,
                                 blurRadius: 5,
-                                offset: Offset(0, 3),
+                                offset: const Offset(0, 3),
                               ),
                             ],
                           ),
                           child: CupertinoButton(
-                            color: currentTheme.backgroundColor,
+                            color: currentTheme.colorScheme.background,
                             onPressed: () async {
-                              bool isTimestampValid = await checkTimestamp();
-                              print(isTimestampValid);
+                              signInWithGoogle();
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -203,7 +231,7 @@ class _LoginPageState extends State<LoginPage> {
                                   width: 24,
                                   height: 24,
                                 ),
-                                SizedBox(width: 8.0),
+                                const SizedBox(width: 8.0),
                                 Text(
                                   'Continue with Google',
                                   style: TextStyle(
@@ -218,7 +246,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10.0), // Added space between the buttons
+                  const SizedBox(height: 10.0), // Added space between the buttons
                   Row(
                     children: [
                       Expanded(
@@ -230,7 +258,7 @@ class _LoginPageState extends State<LoginPage> {
                                 color: currentTheme.shadowColor,
                                 spreadRadius: 2,
                                 blurRadius: 5,
-                                offset: Offset(0, 3),
+                                offset: const Offset(0, 3),
                               ),
                             ],
                           ),
@@ -242,7 +270,7 @@ class _LoginPageState extends State<LoginPage> {
                               child: Text(
                                 'Login',
                                 style: TextStyle(
-                                  color: currentTheme.backgroundColor,
+                                  color: currentTheme.colorScheme.background,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -252,12 +280,12 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 20.0), // Added space between the buttons
+                  const SizedBox(height: 20.0), // Added space between the buttons
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: TextButton(
                           style: TextButton.styleFrom(
                             padding: EdgeInsets.zero, // Remove padding around the text
@@ -283,10 +311,10 @@ class _LoginPageState extends State<LoginPage> {
                           color: currentTheme.primaryColor,
                           fontSize: 16,
                         ),
-                        child: Text("Don't have an account?"),
+                        child: const Text("Don't have an account?"),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: TextButton(
                           style: TextButton.styleFrom(
                             padding: EdgeInsets.zero, // Remove padding around the text
@@ -295,7 +323,7 @@ class _LoginPageState extends State<LoginPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => RegistrationPage(),
+                                builder: (context) => const RegistrationPage(),
                               ),
                             );
                           },

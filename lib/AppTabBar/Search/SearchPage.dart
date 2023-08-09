@@ -6,17 +6,13 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'dart:async';
 import 'package:ringoflutter/AppTabBar/Map/GetLocation.dart';
-import 'package:ringoflutter/Classes/CoordinatesClass.dart';
 import 'package:ringoflutter/Classes/EventClass.dart';
 import 'package:ringoflutter/UI/Themes.dart';
 import 'package:ringoflutter/UI/Functions/Formats.dart';
 import 'package:ringoflutter/Event/EventPage.dart';
-import 'package:flutter/animation.dart';
 import 'package:pull_down_button/pull_down_button.dart';
 import 'package:ringoflutter/Classes/CurrencyClass.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ringoflutter/Security/Functions/LogOutFunc.dart';
-import 'package:ringoflutter/Event/EventPage.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -26,7 +22,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  TextEditingController _SearchedString = TextEditingController();
+  final TextEditingController _SearchedString = TextEditingController();
 
   List<EventInFeed> events = [];
   int currentPage = 0;
@@ -46,8 +42,8 @@ class _SearchPageState extends State<SearchPage> {
   var sortBy = "price";
   var sortDirection = "ASC";
 
-  TextEditingController _TextFieldPriceTo = TextEditingController();
-  TextEditingController _TextFieldPriceFrom = TextEditingController();
+  final TextEditingController _TextFieldPriceTo = TextEditingController();
+  final TextEditingController _TextFieldPriceFrom = TextEditingController();
   var selectedCurrency = "USD";
   var selectedCurrencySymbol = "\$";
   var selectedCurrencyId = 0;
@@ -72,23 +68,23 @@ class _SearchPageState extends State<SearchPage> {
     var result = "";
 
     if (sortDirection == "ASC") {
-      result = result + "?sortDirection=ASC&";
+      result = "$result?sortDirection=ASC&";
     }
     else if (sortDirection == "DESC") {
-      result = result + "?sortDirection=DESC&";
+      result = "$result?sortDirection=DESC&";
     }
 
     if (sortBy == "distance") {
-      result = result + "&sort=distance&";
+      result = "$result&sort=distance&";
     }
     else if (sortBy == "price") {
-      result = result + "&sort=price&";
+      result = "$result&sort=price&";
     }
     else if (sortBy == "date") {
-      result = result + "&sort=startTime&";
+      result = "$result&sort=startTime&";
     }
     else if (sortBy == "popularity") {
-      result = result + "&sort=peopleCount&";
+      result = "$result&sort=peopleCount&";
     }
 
     //location
@@ -96,15 +92,18 @@ class _SearchPageState extends State<SearchPage> {
     //date
 
 
-    if (_SearchedString.text != null && _SearchedString.text != "")
-      result = result + "&searchString=${_SearchedString.text}&";
+    if (_SearchedString.text != "") {
+      result = "$result&searchString=${_SearchedString.text}&";
+    }
 
 
-    if (_TextFieldPriceFrom.text != null && _TextFieldPriceFrom.text != "")
-      result = result + "&priceMin=${_TextFieldPriceFrom.text}&currencyId=${selectedCurrencyId}&";
+    if (_TextFieldPriceFrom.text != "") {
+      result = "$result&priceMin=${_TextFieldPriceFrom.text}&currencyId=$selectedCurrencyId&";
+    }
 
-    if (_TextFieldPriceTo.text != null && _TextFieldPriceTo.text != "")
-      result = result + "&priceMax=${_TextFieldPriceTo.text}&currencyId=${selectedCurrencyId}&";
+    if (_TextFieldPriceTo.text != "") {
+      result = "$result&priceMax=${_TextFieldPriceTo.text}&currencyId=$selectedCurrencyId&";
+    }
 
     return result;
   }
@@ -112,7 +111,7 @@ class _SearchPageState extends State<SearchPage> {
   Future<void> fetchEvents() async {
     var userCoordinates = await getUserLocation();
     checkTimestamp();
-    final storage = FlutterSecureStorage();
+    const storage = FlutterSecureStorage();
     String? token = await storage.read(key: 'access_token');
     try {
       setState(() {
@@ -120,7 +119,7 @@ class _SearchPageState extends State<SearchPage> {
       });
       var getRequest = buildRequest();
       var url = Uri.parse(
-          'http://localhost:8080/api/events?page=$currentPage&limit=10&${getRequest}');
+          'http://localhost:8080/api/events?page=$currentPage&limit=10&$getRequest');
       print(url);
       var headers = {
         'Authorization': 'Bearer $token',
@@ -153,7 +152,7 @@ class _SearchPageState extends State<SearchPage> {
   List<Currency> listOfCurrencies = [];
   void getCurrencies() async {
     checkTimestamp();
-    final storage = FlutterSecureStorage();
+    const storage = FlutterSecureStorage();
     String? token = await storage.read(key: 'access_token');
     var url = Uri.parse('http://localhost:8080/api/currencies');
     var headers = {
@@ -195,7 +194,7 @@ class _SearchPageState extends State<SearchPage> {
         backgroundColor: currentTheme.scaffoldBackgroundColor,
         navigationBar: CupertinoNavigationBar(
           backgroundColor: currentTheme.scaffoldBackgroundColor,
-          middle: Text('Search'),
+          middle: const Text('Search'),
         ),
         child: Column(
           children: [
@@ -203,18 +202,18 @@ class _SearchPageState extends State<SearchPage> {
             Row(
               children: [
                 SizedBox(width: MediaQuery.of(context).size.width * 0.05),
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width * 0.65,
                   child: CupertinoTextField(
                     controller: _SearchedString,
                     placeholder: 'Search',
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: currentTheme.backgroundColor,
+                      color: currentTheme.colorScheme.background,
                       borderRadius: defaultWidgetCornerRadius,
                     ),
                     prefix: Padding(
-                      padding: EdgeInsets.only(left: 10),
+                      padding: const EdgeInsets.only(left: 10),
                       child: Icon(
                         CupertinoIcons.search,
                         color: currentTheme.primaryColor,
@@ -227,10 +226,10 @@ class _SearchPageState extends State<SearchPage> {
                 ClipRRect(
                   borderRadius: defaultWidgetCornerRadius,
                   child: Container(
-                    color: currentTheme.backgroundColor,
+                    color: currentTheme.colorScheme.background,
                     width: MediaQuery.of(context).size.width * 0.24,
                     child: CupertinoButton(
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       child: Text(
                         'Search',
                         style: TextStyle(
@@ -272,7 +271,7 @@ class _SearchPageState extends State<SearchPage> {
                             : sortBy == "popularity"
                                 ? CupertinoIcons.person_2_fill
                             : CupertinoIcons.sort_down,
-                            color: currentTheme.backgroundColor,
+                            color: currentTheme.colorScheme.background,
                           ),
                         ),
                         title: sortDirection == "ASC"
@@ -294,7 +293,7 @@ class _SearchPageState extends State<SearchPage> {
                                 : sortBy == "popularity"
                                 ? "Least popular"
                                 : "Sort by",
-                        subtitle: 'Sorted by ${sortBy}',
+                        subtitle: 'Sorted by $sortBy',
                       ),
                       PullDownMenuActionsRow.small(
                         items: [
@@ -379,8 +378,8 @@ class _SearchPageState extends State<SearchPage> {
                       borderRadius: BorderRadius.circular(12),
                       child: CupertinoButton(
                         onPressed: showMenu,
-                        color: currentTheme.backgroundColor,
-                        padding: EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                        color: currentTheme.colorScheme.background,
+                        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                         child: Row(
                           children: [
                             Icon(
@@ -390,7 +389,7 @@ class _SearchPageState extends State<SearchPage> {
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              'Sorted by ${sortBy}',
+                              'Sorted by $sortBy',
                               style: TextStyle(
                                 color: currentTheme.primaryColor,
                                 decoration: TextDecoration.none,
@@ -415,8 +414,8 @@ class _SearchPageState extends State<SearchPage> {
                             _isDateEndButtonTapped = false;
                           });
                         },
-                        color: currentTheme.backgroundColor,
-                        padding: EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                        color: currentTheme.colorScheme.background,
+                        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                         child: Row(
                           children: [
                             Icon(
@@ -450,8 +449,8 @@ class _SearchPageState extends State<SearchPage> {
                             _isDateEndButtonTapped = false;
                           });
                         },
-                        color: currentTheme.backgroundColor,
-                        padding: EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                        color: currentTheme.colorScheme.background,
+                        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                         child: Row(
                           children: [
                             Icon(
@@ -486,8 +485,8 @@ class _SearchPageState extends State<SearchPage> {
                           });
                         },
 
-                        color: currentTheme.backgroundColor,
-                        padding: EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                        color: currentTheme.colorScheme.background,
+                        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                         child: Row(
                           children: [
                             Icon(
@@ -522,8 +521,8 @@ class _SearchPageState extends State<SearchPage> {
                           });
                         },
 
-                        color: currentTheme.backgroundColor,
-                        padding: EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                        color: currentTheme.colorScheme.background,
+                        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                         child: Row(
                           children: [
                             Icon(
@@ -562,7 +561,7 @@ class _SearchPageState extends State<SearchPage> {
                     Container(
                       width: MediaQuery.of(context).size.width * 0.20,
                       height: 70,
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
                         child: CupertinoTextField(
@@ -576,7 +575,7 @@ class _SearchPageState extends State<SearchPage> {
                     Container(
                       width: MediaQuery.of(context).size.width * 0.20,
                       height: 70,
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
                         child: CupertinoTextField(
@@ -609,12 +608,12 @@ class _SearchPageState extends State<SearchPage> {
                           width: MediaQuery.of(context).size.width * 0.20,
                           height: 50,
                           decoration: BoxDecoration(
-                            color: currentTheme.backgroundColor,
+                            color: currentTheme.colorScheme.background,
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Center(
                             child: Text(
-                              '${selectedCurrencySymbol} ${selectedCurrency}',
+                              '$selectedCurrencySymbol $selectedCurrency',
                               style: TextStyle(fontSize: 16, color: currentTheme.primaryColor),
                             ),
                           ),
@@ -634,7 +633,7 @@ class _SearchPageState extends State<SearchPage> {
                         width: MediaQuery.of(context).size.width * 0.20,
                         height: 50,
                         decoration: BoxDecoration(
-                          color: currentTheme.backgroundColor,
+                          color: currentTheme.colorScheme.background,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Center(
@@ -649,21 +648,21 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               ],
             )
-                : SizedBox(),
+                : const SizedBox(),
             _isLocationPickerTapped
                 ? Column(
               children: [
                 const SizedBox(height: 10),
                 ClipRRect(
                   borderRadius: defaultWidgetCornerRadius,
-                  child: Container(
+                  child: SizedBox(
                     height: MediaQuery.of(context).size.width * 0.93,
                     width: MediaQuery.of(context).size.width * 0.93,
                     child: GoogleMap(
                       onMapCreated: (controller) {
                         _mapController = controller;
                       },
-                      initialCameraPosition: CameraPosition(
+                      initialCameraPosition: const CameraPosition(
                         target: LatLng(59.47644736286131, 24.781226109442517),
                         zoom: 10,
                       ),
@@ -674,7 +673,7 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width * 0.93,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -684,7 +683,7 @@ class _SearchPageState extends State<SearchPage> {
                           _mapTopLeft = null;
                           _mapBottomRight = null;
                         },
-                        color: currentTheme.backgroundColor,
+                        color: currentTheme.colorScheme.background,
                         child: Text(
                           'Cancel',
                           style: TextStyle(fontSize: 16, color: currentTheme.primaryColor),
@@ -701,7 +700,7 @@ class _SearchPageState extends State<SearchPage> {
                           _mapTopLeft = LatLng(visibleRegion.northeast.latitude, visibleRegion.southwest.longitude);
                           _mapBottomRight = LatLng(visibleRegion.southwest.latitude, visibleRegion.northeast.longitude);
                         },
-                        color: currentTheme.backgroundColor,
+                        color: currentTheme.colorScheme.background,
                         child: Text(
                           'Apply',
                           style: TextStyle(fontSize: 16, color: currentTheme.primaryColor),
@@ -713,11 +712,11 @@ class _SearchPageState extends State<SearchPage> {
                 const SizedBox(height: 10),
                 ],
                 )
-            : SizedBox(),
+            : const SizedBox(),
             _isDateStartButtonTapped
               ? Column(
                 children: [
-                  Container(
+                  SizedBox(
                     height: MediaQuery.of(context).size.width * 0.93,
                     child: CupertinoDatePicker(
                       mode: CupertinoDatePickerMode.dateAndTime,
@@ -729,7 +728,7 @@ class _SearchPageState extends State<SearchPage> {
                       },
                     ),
                   ),
-                  Container(
+                  SizedBox(
                     width: MediaQuery.of(context).size.width * 0.93,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween, // Aligns buttons to the left and right
@@ -741,7 +740,7 @@ class _SearchPageState extends State<SearchPage> {
                               _isDateStartButtonTapped = false;
                             });
                           },
-                          color: currentTheme.backgroundColor,
+                          color: currentTheme.colorScheme.background,
                           child: Text(
                             'Reset',
                             style: TextStyle(fontSize: 16, color: currentTheme.primaryColor),
@@ -753,7 +752,7 @@ class _SearchPageState extends State<SearchPage> {
                               _isDateStartButtonTapped = false;
                             });
                           },
-                          color: currentTheme.backgroundColor,
+                          color: currentTheme.colorScheme.background,
                           child: Text(
                             'Apply',
                             style: TextStyle(fontSize: 16, color: currentTheme.primaryColor),
@@ -765,13 +764,13 @@ class _SearchPageState extends State<SearchPage> {
                   const SizedBox(height: 10),
                 ],
               )
-            : SizedBox(),
+            : const SizedBox(),
             _isDateEndButtonTapped
-              ? Container(
+              ? SizedBox(
                 width: MediaQuery.of(context).size.width * 0.93,
                 child: Column(
                   children: [
-                    Container(
+                    SizedBox(
                       height: MediaQuery.of(context).size.width * 0.93,
                       child: CupertinoDatePicker(
                         mode: CupertinoDatePickerMode.dateAndTime,
@@ -783,7 +782,7 @@ class _SearchPageState extends State<SearchPage> {
                         },
                       ),
                     ),
-                    Container(
+                    SizedBox(
                       width: MediaQuery.of(context).size.width * 0.93,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween, // Aligns buttons to the left and right
@@ -795,7 +794,7 @@ class _SearchPageState extends State<SearchPage> {
                                 _isDateEndButtonTapped = false;
                               });
                             },
-                            color: currentTheme.backgroundColor,
+                            color: currentTheme.colorScheme.background,
                             child: Text(
                               'Reset',
                               style: TextStyle(fontSize: 16, color: currentTheme.primaryColor),
@@ -807,7 +806,7 @@ class _SearchPageState extends State<SearchPage> {
                                 _isDateEndButtonTapped = false;
                               });
                             },
-                            color: currentTheme.backgroundColor,
+                            color: currentTheme.colorScheme.background,
                             child: Text(
                               'Apply',
                               style: TextStyle(fontSize: 16, color: currentTheme.primaryColor),
@@ -820,7 +819,7 @@ class _SearchPageState extends State<SearchPage> {
                   ],
                 ),
             )
-            : SizedBox(),
+            : const SizedBox(),
             Expanded(
               child: NotificationListener<ScrollNotification>(
                 onNotification: _onNotification,
@@ -828,7 +827,7 @@ class _SearchPageState extends State<SearchPage> {
                   itemCount: events.length + 1,
                   itemBuilder: (context, index) {
                     if (index == 0) {
-                      return SizedBox();
+                      return const SizedBox();
                     } else if (index <= events.length) {
                       final event = events[index - 1];
                       return GestureDetector(
@@ -844,10 +843,10 @@ class _SearchPageState extends State<SearchPage> {
                           children: [
                             ClipRRect(
                               borderRadius: defaultWidgetCornerRadius,
-                              child: Container(
+                              child: SizedBox(
+                                height: MediaQuery.of(context).size.width * 0.93,
                                 child: Image.network(
                                     "http://localhost:8080/api/photos/${event.mainPhotoId}"),
-                                height: MediaQuery.of(context).size.width * 0.93,
                               ),
                             ),
                             const SizedBox(height: 5),
@@ -855,13 +854,13 @@ class _SearchPageState extends State<SearchPage> {
                               borderRadius: defaultWidgetCornerRadius,
                               child: Container(
                                 width: MediaQuery.of(context).size.width * 0.93,
-                                color: currentTheme.backgroundColor,
-                                padding: EdgeInsets.all(8),
+                                color: currentTheme.colorScheme.background,
+                                padding: const EdgeInsets.all(8),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "${event.name}",
+                                      event.name,
                                       style: TextStyle(
                                         color: currentTheme.primaryColor,
                                         decoration: TextDecoration.none,
@@ -871,15 +870,15 @@ class _SearchPageState extends State<SearchPage> {
                                     ),
                                     Row(
                                       children: [
-                                        Icon(
+                                        const Icon(
                                           CupertinoIcons.map_pin,
                                           color: Colors.grey,
                                           size: 18,
                                         ),
                                         const SizedBox(width: 4),
                                         Text(
-                                          "${event.address!}",
-                                          style: TextStyle(
+                                          event.address!,
+                                          style: const TextStyle(
                                             color: Colors.grey,
                                             decoration: TextDecoration.none,
                                             fontSize: 18,
@@ -893,15 +892,15 @@ class _SearchPageState extends State<SearchPage> {
                                       children: [
                                         Row(
                                           children: [
-                                            Icon(
+                                            const Icon(
                                               CupertinoIcons.calendar_today,
                                               color: Colors.grey,
                                               size: 18,
                                             ),
                                             const SizedBox(width: 4),
                                             Text(
-                                              "${convertHourTimestamp(event.startTime!)}",
-                                              style: TextStyle(
+                                              convertHourTimestamp(event.startTime!),
+                                              style: const TextStyle(
                                                 color: Colors.grey,
                                                 decoration: TextDecoration.none,
                                                 fontSize: 18,
@@ -912,7 +911,7 @@ class _SearchPageState extends State<SearchPage> {
                                         ),
                                         Text(
                                           "${event.currency!.symbol} ${event.price}",
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             color: Colors.grey,
                                             decoration: TextDecoration.none,
                                             fontSize: 18,
@@ -927,7 +926,7 @@ class _SearchPageState extends State<SearchPage> {
                                         children: [
                                           Row(
                                             children: [
-                                              Icon(
+                                              const Icon(
                                                 CupertinoIcons.location_fill,
                                                 color: Colors.grey,
                                                 size: 18,
@@ -935,7 +934,7 @@ class _SearchPageState extends State<SearchPage> {
                                               const SizedBox(width: 4),
                                               Text(
                                                 "${event.distance!}",
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   color: Colors.grey,
                                                   decoration: TextDecoration.none,
                                                   fontSize: 18,
@@ -946,7 +945,7 @@ class _SearchPageState extends State<SearchPage> {
                                           ),
                                           Row(
                                             children: [
-                                              Icon(
+                                              const Icon(
                                                 CupertinoIcons.person_2_fill,
                                                 color: Colors.grey,
                                                 size: 18,
@@ -954,7 +953,7 @@ class _SearchPageState extends State<SearchPage> {
                                               const SizedBox(width: 4),
                                               Text(
                                                 "${event.peopleCount} / ${event.capacity}",
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   color: Colors.grey,
                                                   decoration: TextDecoration.none,
                                                   fontSize: 18,
@@ -968,7 +967,7 @@ class _SearchPageState extends State<SearchPage> {
                                     if (event.distance == null)
                                       Row(
                                         children: [
-                                          Icon(
+                                          const Icon(
                                             CupertinoIcons.person_2_fill,
                                             color: Colors.grey,
                                             size: 18,
@@ -976,7 +975,7 @@ class _SearchPageState extends State<SearchPage> {
                                           const SizedBox(width: 4),
                                           Text(
                                             "${event.peopleCount} / ${event.capacity}",
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               color: Colors.grey,
                                               decoration: TextDecoration.none,
                                               fontSize: 18,
@@ -994,9 +993,9 @@ class _SearchPageState extends State<SearchPage> {
                         ),
                       );
                     } else if (isLoading) {
-                      return Center(child: CircularProgressIndicator());
+                      return const Center(child: CircularProgressIndicator());
                     } else {
-                      return SizedBox();
+                      return const SizedBox();
                     }
                   },
                 ),

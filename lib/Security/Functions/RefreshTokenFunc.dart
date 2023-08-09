@@ -5,7 +5,7 @@ import 'package:ringoflutter/Classes/TokensClass.dart';
 import 'package:ringoflutter/Security/Functions/LogOutFunc.dart';
 
 Future<Tokens> refreshTokens(String refreshToken) async {
-  final storage = new FlutterSecureStorage();
+  const storage = FlutterSecureStorage();
   var url = Uri.parse('http://localhost:8080/api/auth/refresh-token');
   var headers = {
     'Authorization': 'Bearer $refreshToken',
@@ -21,7 +21,7 @@ Future<Tokens> refreshTokens(String refreshToken) async {
         await storage.write(key: "refresh_token", value: jsonResponse['refreshToken']);
 
         DateTime currentTime = DateTime.now();
-        DateTime futureTime = currentTime.add(Duration(minutes: 5));
+        DateTime futureTime = currentTime.add(const Duration(minutes: 5));
         storage.write(key: "timestamp", value: futureTime.toString());
 
         return Tokens(

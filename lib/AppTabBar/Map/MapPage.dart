@@ -5,10 +5,7 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:ringoflutter/Classes/CoordinatesClass.dart';
-import 'dart:typed_data';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:ui' as ui;
-import 'package:ringoflutter/UI/Themes.dart';
 import 'package:ringoflutter/Event/EventPage.dart';
 
 
@@ -22,7 +19,7 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   Coordinates? userLocation;
   GoogleMapController? _mapController;
-  List<Marker> _markers = [];
+  final List<Marker> _markers = [];
 
   @override
   void initState() {
@@ -49,7 +46,7 @@ class _MapPageState extends State<MapPage> {
 
   Future<List<MapObject>> _fetchDataFromServer() async {
     await checkTimestamp();
-    final storage = new FlutterSecureStorage();
+    const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     if (_mapController == null) return [];
 
@@ -121,15 +118,15 @@ class _MapPageState extends State<MapPage> {
     final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
     final Canvas canvas = Canvas(pictureRecorder);
 
-    final int size = 150;
+    const int size = 150;
     final Paint paint = Paint()..color = currentTheme.primaryColor;
 
-    canvas.drawCircle(Offset(size / 2, size / 2), size / 2, paint);
+    canvas.drawCircle(const Offset(size / 2, size / 2), size / 2, paint);
 
     final TextPainter textPainter = TextPainter(
       text: TextSpan(
         text: count.toString(),
-        style: TextStyle(color: currentTheme.backgroundColor, fontWeight: FontWeight.bold, fontSize: 70)
+        style: TextStyle(color: currentTheme.colorScheme.background, fontWeight: FontWeight.bold, fontSize: 70)
       ),
       textDirection: TextDirection.ltr,
     );
@@ -166,7 +163,7 @@ class _MapPageState extends State<MapPage> {
             },
           ),
         )
-        : Center(
+        : const Center(
       child: CircularProgressIndicator(),
     );
   }
@@ -198,19 +195,19 @@ class MapObject {
 class CustomMarkerWidget extends StatelessWidget {
   final int count;
 
-  CustomMarkerWidget({required this.count});
+  const CustomMarkerWidget({super.key, required this.count});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(8),
-      decoration: BoxDecoration(
+      padding: const EdgeInsets.all(8),
+      decoration: const BoxDecoration(
         shape: BoxShape.circle,
         color: Colors.blue,
       ),
       child: Text(
         count.toString(),
-        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
       ),
     );
   }

@@ -81,7 +81,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                     ),
                                     const SizedBox(height: 2,),
                                     Text(convertHourTimestamp(widget.ticket.event.startTime!),
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.grey,
@@ -102,13 +102,13 @@ class _MyTicketPageState extends State<MyTicketPage> {
                         child: ClipRRect(
                           borderRadius: defaultWidgetCornerRadius,
                           child: Container(
-                            color: currentTheme.backgroundColor,
+                            color: currentTheme.colorScheme.background,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text("NAME",
+                                  const Text("NAME",
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.normal,
@@ -125,7 +125,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                       )
                                   ),
                                   const SizedBox(height: 7,),
-                                  Text("COST",
+                                  const Text("COST",
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.normal,
@@ -142,7 +142,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                       )
                                   ),
                                   const SizedBox(height: 7,),
-                                  Text("ADDRESS",
+                                  const Text("ADDRESS",
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.normal,
@@ -159,7 +159,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                       )
                                   ),
                                   const SizedBox(height: 7,),
-                                  Text("WAS BOUGHT",
+                                  const Text("WAS BOUGHT",
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.normal,
@@ -167,7 +167,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                         decoration: TextDecoration.none,
                                       )
                                   ),
-                                  Text(convertHourTimestamp(widget.ticket.timeOfSubmission!),
+                                  Text(convertHourTimestamp(widget.ticket.timeOfSubmission),
                                       style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,

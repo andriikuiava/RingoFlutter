@@ -59,5 +59,20 @@
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
     <string>We need access to your location to find the best events near you</string>
 
+    <key>CFBundleURLTypes</key>
+    <array>
+    <dict>
+    <key>CFBundleTypeRole</key>
+    <string>Editor</string>
+    <key>CFBundleURLName</key>
+    <string></string>
+    <key>CFBundleURLSchemes</key>
+    <array>
+    <string>com.googleusercontent.apps.445780816677-on7ff5l41ig1ervle491sc7vuvg4n5ro</string>
+    </array>
+
+    </dict>
+</array>
+
 </dict>
 </plist>

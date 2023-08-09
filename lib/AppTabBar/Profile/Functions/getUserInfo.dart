@@ -6,7 +6,7 @@ import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 
 Future<User> getUserInfo() async {
   checkTimestamp();
-  final storage = new FlutterSecureStorage();
+  const storage = FlutterSecureStorage();
   Uri url = Uri.parse('http://localhost:8080/api/participants');
   var token = await storage.read(key: 'access_token');
   var headers = {

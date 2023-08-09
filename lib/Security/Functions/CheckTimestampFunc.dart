@@ -3,7 +3,7 @@ import 'package:ringoflutter/Security/Functions/LogOutFunc.dart';
 import 'package:ringoflutter/Security/Functions/RefreshTokenFunc.dart';
 
 Future<bool> checkTimestamp() async {
-  final storage = FlutterSecureStorage();
+  const storage = FlutterSecureStorage();
   String currentTime = DateTime.now().toString();
   String? storedTime = await storage.read(key: 'timestamp');
 

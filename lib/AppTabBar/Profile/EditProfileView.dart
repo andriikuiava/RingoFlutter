@@ -100,7 +100,7 @@ class _EditProfileState extends State<EditProfile> {
                       child: Column(
                         children: [
                           CupertinoButton(
-                            color: currentTheme.backgroundColor,
+                            color: currentTheme.colorScheme.background,
                             minSize: 40,
                             padding: EdgeInsets.zero,
                             child: Row(
@@ -130,7 +130,7 @@ class _EditProfileState extends State<EditProfile> {
                           ),
                           const SizedBox(height: 10),
                           CupertinoButton(
-                            color: currentTheme.backgroundColor,
+                            color: currentTheme.colorScheme.background,
                             minSize: 40,
                             padding: EdgeInsets.zero,
                             child: Row(
@@ -168,16 +168,16 @@ class _EditProfileState extends State<EditProfile> {
                 Container(
                   padding: EdgeInsets.only(left: leadingPadding),
                   child: DefaultTextStyle(
-                    child: Text('Full name'),
                     style: TextStyle(
                       color: currentTheme.primaryColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
+                    child: const Text('Full name'),
                   ),
                 ),
                 const SizedBox(height: 4.0),
-                Container(
+                SizedBox(
                   height: 50,
                   child: FractionallySizedBox(
                     widthFactor: 0.9,
@@ -191,7 +191,7 @@ class _EditProfileState extends State<EditProfile> {
                         fontSize: 16,
                       ),
                       decoration: BoxDecoration(
-                        color: currentTheme.backgroundColor,
+                        color: currentTheme.colorScheme.background,
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
@@ -201,16 +201,16 @@ class _EditProfileState extends State<EditProfile> {
                 Container(
                   padding: EdgeInsets.only(left: leadingPadding),
                   child: DefaultTextStyle(
-                    child: Text('Username'),
                     style: TextStyle(
                       color: currentTheme.primaryColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
+                    child: const Text('Username'),
                   ),
                 ),
                 const SizedBox(height: 4.0),
-                Container(
+                SizedBox(
                   height: 50,
                   child: FractionallySizedBox(
                     widthFactor: 0.9,
@@ -224,7 +224,7 @@ class _EditProfileState extends State<EditProfile> {
                         fontSize: 16,
                       ),
                       decoration: BoxDecoration(
-                        color: currentTheme.backgroundColor,
+                        color: currentTheme.colorScheme.background,
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
@@ -234,21 +234,21 @@ class _EditProfileState extends State<EditProfile> {
                 Container(
                   padding: EdgeInsets.only(left: leadingPadding),
                   child: DefaultTextStyle(
-                    child: Text('Date of birth'),
                     style: TextStyle(
                       color: currentTheme.primaryColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
+                    child: const Text('Date of birth'),
                   ),
                 ),
                 const SizedBox(height: 4.0),
-                Container(
+                SizedBox(
                   height: 180,
                   child: ValueListenableBuilder<DateTime>(
                     valueListenable: _dateController,
                     builder: (context, value, _) {
-                      return Container(
+                      return SizedBox(
                         height: 180,
                         child: CupertinoDatePicker(
                           mode: CupertinoDatePickerMode.date,
@@ -266,12 +266,12 @@ class _EditProfileState extends State<EditProfile> {
                 Container(
                   padding: EdgeInsets.only(left: leadingPadding),
                   child: DefaultTextStyle(
-                    child: Text('Gender'),
                     style: TextStyle(
                       color: currentTheme.primaryColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
+                    child: const Text('Gender'),
                   ),
                 ),
                 const SizedBox(height: 4.0),
@@ -319,7 +319,7 @@ class _EditProfileState extends State<EditProfile> {
                     Expanded(
                       flex: 4,
                       child: CupertinoButton(
-                        color: currentTheme.backgroundColor,
+                        color: currentTheme.colorScheme.background,
                         onPressed: () {
                           Navigator.pop(context);
                         },
@@ -339,10 +339,10 @@ class _EditProfileState extends State<EditProfile> {
                     Expanded(
                       flex: 4,
                       child: CupertinoButton(
-                        color: currentTheme.backgroundColor,
+                        color: currentTheme.colorScheme.background,
                         onPressed: () {
                           DateFormat dateFormat = DateFormat('yyyy-MM-dd');
-                          String formattedTimestamp = dateFormat.format(_dateController.value!);
+                          String formattedTimestamp = dateFormat.format(_dateController.value);
                           updateUser(_fullNameController.text, _usernameController.text, image, selectedGender, formattedTimestamp);
                         },
                         child: FittedBox(

@@ -2,18 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ringoflutter/Classes/RegistrationFormClass.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:ringoflutter/UI/Themes.dart';
 
 class FormCompletion extends StatefulWidget {
   final RegistrationForm form;
-  FormCompletion({required this.form});
+  const FormCompletion({super.key, required this.form});
 
   @override
   _FormCompletionState createState() => _FormCompletionState();
 }
 
 class _FormCompletionState extends State<FormCompletion> {
-  final storage = new FlutterSecureStorage();
+  final storage = const FlutterSecureStorage();
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +20,7 @@ class _FormCompletionState extends State<FormCompletion> {
 
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text('FormCompletion'),
+        middle: const Text('FormCompletion'),
         leading: GestureDetector(
           onTap: () {
             Navigator.pop(context);

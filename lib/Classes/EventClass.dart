@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:ringoflutter/Classes/PhotoClasses.dart';
 import 'package:ringoflutter/Classes/CoordinatesClass.dart';
 import 'package:ringoflutter/Classes/CategoryClass.dart';

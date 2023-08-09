@@ -7,7 +7,7 @@ import 'package:ringoflutter/main.dart';
 final GlobalKey<NavigatorState> navigatorKey = App.materialKey;
 
 void checkIsLoggedIn() async {
-  final storage = FlutterSecureStorage();
+  const storage = FlutterSecureStorage();
   String currentTime = DateTime.now().toString();
   String? storedTime = await storage.read(key: 'timestamp');
 
@@ -18,13 +18,11 @@ void checkIsLoggedIn() async {
     if (current.compareTo(stored) > 0) {
       var token = await storage.read(key: 'refresh_token');
       refreshTokens(token!);
-      if (storage.read(key: "refresh_token") != null) {
-        checkIsLoggedIn();
-      }
-    } else {
+      checkIsLoggedIn();
+        } else {
       print(stored);
       navigatorKey.currentState?.pushReplacement(
-        MaterialPageRoute(builder: (_) => Home()),
+        MaterialPageRoute(builder: (_) => const Home()),
       );
     }
   } else {

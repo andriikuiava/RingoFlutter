@@ -1,7 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:ringoflutter/Classes/RegistrationCredentialsClass.dart';
-import 'package:ringoflutter/Classes/UserClass.dart';
 import 'package:ringoflutter/Security/Functions/LoginFunc.dart';
 import 'package:ringoflutter/Classes/LoginCredentialsClass.dart';
 

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ringoflutter/AppTabBar/Map/GetLocation.dart';
 import 'Profile/Profile.dart';
 import 'Tickets/Tickets.dart';
 import 'Map/MapPage.dart';
@@ -16,7 +15,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int _selectedIndex = 1;
+  int _selectedIndex = 2;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +33,7 @@ class _HomeState extends State<Home> {
             ),
             label: 'Map',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.search),
             label: 'Search',
           ),

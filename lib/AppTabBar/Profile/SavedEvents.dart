@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ringoflutter/Classes/EventClass.dart';
 import 'package:ringoflutter/UI/Themes.dart';
-import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -10,6 +9,8 @@ import 'package:ringoflutter/UI/Functions/Formats.dart';
 import 'package:ringoflutter/Event/EventPage.dart';
 
 class SavedEventsScreen extends StatefulWidget {
+  const SavedEventsScreen({super.key});
+
   @override
   _SavedEventsScreenState createState() => _SavedEventsScreenState();
 }
@@ -18,7 +19,7 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
   List<EventInFeed> eventsSaved = [];
 
   Future<List<EventInFeed>> getSavedEvents() async {
-    var storage = new FlutterSecureStorage();
+    var storage = const FlutterSecureStorage();
     var token = await storage.read(key: "access_token");
     Uri url = Uri.parse('http://localhost:8080/api/events/saved');
     var headers = {'Authorization': 'Bearer $token'};
@@ -80,12 +81,12 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
                   itemBuilder: (context, int index) {
                     return buildEvent(eventsSaved[index]);
                   },
-                  separatorBuilder: (BuildContext context, int index) => SizedBox(height: 10),
+                  separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 10),
                 );
               } else if (snapshot.hasError) {
-                return Text('Failed to load events');
+                return const Text('Failed to load events');
               } else {
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               }
             },
           ),
@@ -108,7 +109,7 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: defaultWidgetCornerRadius,
-          color: currentTheme.backgroundColor,
+          color: currentTheme.colorScheme.background,
         ),
         child: Row(
           children: [
