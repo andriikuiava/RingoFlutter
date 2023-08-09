@@ -110,7 +110,7 @@ class _SearchPageState extends State<SearchPage> {
 
   Future<void> fetchEvents() async {
     var userCoordinates = await getUserLocation();
-    checkTimestamp();
+    await checkTimestamp();
     const storage = FlutterSecureStorage();
     String? token = await storage.read(key: 'access_token');
     try {
@@ -151,7 +151,7 @@ class _SearchPageState extends State<SearchPage> {
 
   List<Currency> listOfCurrencies = [];
   void getCurrencies() async {
-    checkTimestamp();
+    await checkTimestamp();
     const storage = FlutterSecureStorage();
     String? token = await storage.read(key: 'access_token');
     var url = Uri.parse('http://localhost:8080/api/currencies');

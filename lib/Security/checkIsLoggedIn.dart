@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ringoflutter/AppTabBar/Home.dart';
-import 'package:ringoflutter/Security/Functions/RefreshTokenFunc.dart';
 import 'package:ringoflutter/main.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = App.materialKey;
@@ -17,7 +16,6 @@ void checkIsLoggedIn() async {
 
     if (current.compareTo(stored) > 0) {
       var token = await storage.read(key: 'refresh_token');
-      refreshTokens(token!);
       checkIsLoggedIn();
         } else {
       print(stored);

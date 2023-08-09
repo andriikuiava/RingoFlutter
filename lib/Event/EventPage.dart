@@ -41,12 +41,20 @@ class _EventPageState extends State<EventPage>
   }
 
   Future<EventFull> getEvent() async {
-    checkTimestamp();
-    const storage = FlutterSecureStorage();
+    final storage = FlutterSecureStorage();
+
+    await checkTimestamp();
+
     var token = await storage.read(key: 'access_token');
     Uri url = Uri.parse('http://localhost:8080/api/events/${widget.eventId}');
-    var headers = {'Authorization': 'Bearer $token'};
+
+    var headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+
     var response = await http.get(url, headers: headers);
+
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
       EventFull event = EventFull.fromJson(jsonResponse);
@@ -56,8 +64,9 @@ class _EventPageState extends State<EventPage>
     }
   }
 
+
   Future<EventFull> saveEvent(bool isSaved) async {
-    checkTimestamp();
+    await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     Uri url = (isSaved ? Uri.parse('http://localhost:8080/api/events/${widget.eventId}/unsave') : Uri.parse('http://localhost:8080/api/events/${widget.eventId}/save'));
@@ -75,7 +84,7 @@ class _EventPageState extends State<EventPage>
   }
 
   Future<EventFull> getTicketNoForm() async {
-    checkTimestamp();
+    await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     Uri url = Uri.parse('http://localhost:8080/api/events/${widget.eventId}/join');
@@ -93,11 +102,13 @@ class _EventPageState extends State<EventPage>
   }
 
   void getBoughtTicket() async {
-    checkTimestamp();
+    await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     Uri url = Uri.parse('http://localhost:8080/api/events/${widget.eventId}/ticket');
-    var headers = {'Authorization': 'Bearer $token'};
+    var headers = {'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json'};
+
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
@@ -422,6 +433,7 @@ class _EventPageState extends State<EventPage>
                         child: ClipRRect(
                           borderRadius: defaultWidgetCornerRadius,
                           child: GoogleMap(
+                            myLocationButtonEnabled: false,
                             buildingsEnabled: true,
                             mapType: MapType.normal,
                             initialCameraPosition: CameraPosition(

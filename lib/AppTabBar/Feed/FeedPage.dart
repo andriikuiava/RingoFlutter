@@ -175,6 +175,7 @@ class FeedPage extends StatelessWidget {
 
 
   Future<List<EventInFeed>> getCloseEvents() async {
+    await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     Uri url = Uri.parse(
@@ -333,6 +334,7 @@ class FeedPage extends StatelessWidget {
   }
 
   Future<List<Category>> getCategories() async {
+    await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     Uri url = Uri.parse('http://localhost:8080/api/categories');
@@ -409,6 +411,7 @@ class FeedPage extends StatelessWidget {
   }
 
   Future<List<EventInFeed>> getFindGo() async {
+    await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     Uri url = Uri.parse(
@@ -567,6 +570,7 @@ class FeedPage extends StatelessWidget {
   }
 
   Future<List<EventInFeed>> getPopularEvents() async {
+    await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     Uri url = Uri.parse(

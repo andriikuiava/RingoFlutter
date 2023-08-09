@@ -27,7 +27,7 @@ Future<XFile?> takeImage() async {
 }
 
 void sendPhoto(File image) async {
-  checkTimestamp();
+  await checkTimestamp();
 
   Uri url = Uri.parse('http://localhost:8080/api/participants/profile-picture');
   const storage = FlutterSecureStorage();

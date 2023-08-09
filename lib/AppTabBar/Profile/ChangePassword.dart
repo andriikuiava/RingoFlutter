@@ -197,6 +197,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
     );
   }
   void changePassword(String oldPassword, String newPassword) async {
+    await checkTimestamp();
     var storage = const FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     Uri url = Uri.parse('http://localhost:8080/api/auth/change-password');
