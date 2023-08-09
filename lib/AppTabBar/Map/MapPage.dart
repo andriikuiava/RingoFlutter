@@ -61,8 +61,6 @@ class _MapPageState extends State<MapPage> {
       'Authorization': "Bearer $token",
     };
     final response = await http.get(Uri.parse(url), headers: headers);
-    print(url);
-    print(response.body);
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonList = json.decode(response.body);

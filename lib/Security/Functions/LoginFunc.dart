@@ -25,7 +25,7 @@ Future<Tokens> loginFunc(LoginCredentials loginCredentials) async {
 
     DateTime currentTime = DateTime.now();
     DateTime futureTime =
-    currentTime.add(const Duration(minutes: 5));
+    currentTime.add(const Duration(seconds: 30));
     storage.write(
         key: "timestamp",
         value: futureTime.toString());

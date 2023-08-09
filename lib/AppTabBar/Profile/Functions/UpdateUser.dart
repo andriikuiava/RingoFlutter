@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:ringoflutter/AppTabBar/Profile/Functions/SendPhoto.dart';
 
 void updateUser(String name, String username, File? image, int genderId, String dateOfBirth) async {
-  checkTimestamp();
+  await checkTimestamp();
   var selectedGender = "";
   if (genderId == 0) {
     selectedGender = "MALE";

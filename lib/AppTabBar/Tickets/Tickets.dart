@@ -21,7 +21,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
   List<Ticket> myTickets = [];
 
   Future<List<Ticket>> getMyTickets() async {
-    checkTimestamp();
+    await checkTimestamp();
     var storage = const FlutterSecureStorage();
     var token = await storage.read(key: "access_token");
     Uri url = Uri.parse('http://localhost:8080/api/tickets');

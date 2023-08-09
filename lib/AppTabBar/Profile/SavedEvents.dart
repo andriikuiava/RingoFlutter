@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:ringoflutter/UI/Functions/Formats.dart';
 import 'package:ringoflutter/Event/EventPage.dart';
+import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 
 class SavedEventsScreen extends StatefulWidget {
   const SavedEventsScreen({super.key});
@@ -19,6 +20,7 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
   List<EventInFeed> eventsSaved = [];
 
   Future<List<EventInFeed>> getSavedEvents() async {
+    await checkTimestamp();
     var storage = const FlutterSecureStorage();
     var token = await storage.read(key: "access_token");
     Uri url = Uri.parse('http://localhost:8080/api/events/saved');

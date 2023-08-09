@@ -10,6 +10,7 @@ import 'dart:convert';
 import 'package:ringoflutter/Classes/ReviewClass.dart';
 import 'package:ringoflutter/Event/EventPage.dart';
 import 'package:ringoflutter/UI/Functions/Formats.dart';
+import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 
 class HostPage extends StatefulWidget {
   final int hostId;
@@ -255,6 +256,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
 
 
   Future<List<Review>> getReviewsByOrganisationId(int id) async {
+    await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     Uri url = Uri.parse('http://localhost:8080/api/organisations/${widget.hostId}/reviews');
@@ -342,6 +344,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
 
 
   Future<List<EventInFeed>> getUpcomingEvents(int id) async {
+    await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     Uri url = Uri.parse('http://localhost:8080/api/events?hostId=${widget.hostId}&startTimeMin=${DateTime.now().toIso8601String()}');
@@ -491,6 +494,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
   }
 
   Future<List<EventInFeed>> getPastEvents(int id) async {
+    await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     Uri url = Uri.parse('http://localhost:8080/api/events?hostId=${widget.hostId}&startTimeMax=${DateTime.now().toIso8601String()}');
