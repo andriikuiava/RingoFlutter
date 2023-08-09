@@ -12,8 +12,10 @@ import 'package:ringoflutter/UI/Functions/Formats.dart';
 
 class FeedBuilder extends StatefulWidget {
   final String request;
+  final String? title;
 
-  const FeedBuilder({Key? key, required this.request}) : super(key: key);
+  const FeedBuilder({Key? key, required this.request, this.title})
+      : super(key: key);
 
   @override
   _FeedBuilderState createState() => _FeedBuilderState();
@@ -23,12 +25,11 @@ class _FeedBuilderState extends State<FeedBuilder> {
   List<EventInFeed> events = [];
   int currentPage = 0;
   bool isLoading = false;
-  bool hasMoreData = true; // Add this flag
+  bool hasMoreData = true;
 
   @override
   void initState() {
     super.initState();
-    // Load initial data when the widget is first built
     fetchEvents();
   }
 
@@ -41,9 +42,8 @@ class _FeedBuilderState extends State<FeedBuilder> {
       setState(() {
         isLoading = true;
       });
-      var url = Uri.parse(
-          'http://localhost:8080/api/events?page=$currentPage&limit=10&latitude=${userCoordinates
-              .latitude}&longitude=${userCoordinates.longitude}&sort=distance');
+      var url = Uri.parse('${widget.request}&page=$currentPage');
+      print(url);
       var headers = {
         'Authorization': 'Bearer $token',
       };
@@ -56,7 +56,6 @@ class _FeedBuilderState extends State<FeedBuilder> {
         setState(() {
           events.addAll(newEvents);
           isLoading = false;
-          // Check if the response has any events, if not, stop further requests
           hasMoreData = newEvents.isNotEmpty;
         });
       } else {
@@ -75,11 +74,10 @@ class _FeedBuilderState extends State<FeedBuilder> {
   }
 
   bool _onNotification(ScrollNotification notification) {
-    // Check if the user has reached the end of the list and load more data if needed
     if (notification is ScrollEndNotification &&
         notification.metrics.extentAfter == 0 &&
         !isLoading &&
-        hasMoreData) { // Check if there's more data available before making a new request
+        hasMoreData) {
       currentPage++;
       fetchEvents();
     }
@@ -94,7 +92,22 @@ class _FeedBuilderState extends State<FeedBuilder> {
       backgroundColor: currentTheme.scaffoldBackgroundColor,
       navigationBar: CupertinoNavigationBar(
         backgroundColor: currentTheme.scaffoldBackgroundColor,
-        middle: const Text('Feed'),
+        middle: Text(
+          widget.title ?? 'Feed',
+          style: TextStyle(
+            color: currentTheme.primaryColor,
+          ),
+        ),
+        leading: CupertinoButton(
+          padding: EdgeInsets.zero,
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Icon(
+            CupertinoIcons.back,
+            color: currentTheme.primaryColor,
+          ),
+        ),
       ),
       child: NotificationListener<ScrollNotification>(
         onNotification: _onNotification,

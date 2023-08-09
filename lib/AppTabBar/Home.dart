@@ -73,19 +73,19 @@ class _HomeState extends State<Home> {
         Widget? tab;
         switch (index) {
           case 0:
-            tab = const MapPage();
+            tab = MapPage();
             break;
           case 1:
-            tab = const SearchPage();
+            tab = SearchPage();
             break;
           case 2:
-            tab = const FeedPage();
+            tab = FeedPage();
             break;
           case 3:
-            tab = const TicketsScreen();
+            tab = TicketsScreen();
             break;
           case 4:
-            tab = const ProfileScreen();
+            tab = ProfileScreen();
             break;
         }
         return CupertinoTabView(builder: (context) => tab!);
