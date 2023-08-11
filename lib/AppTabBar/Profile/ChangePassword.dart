@@ -185,7 +185,8 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                         style: TextStyle(
                           color: currentTheme.primaryColor,
                           fontWeight: FontWeight.bold,
-                        ),),
+                        ),
+                      ),
                     ),
                   ),
                 ),

@@ -7,14 +7,35 @@ import 'package:ringoflutter/AppTabBar/Profile/EditProfileView.dart';
 import 'package:ringoflutter/UI/Functions/Formats.dart';
 import 'package:ringoflutter/AppTabBar/Profile/ChangePassword.dart';
 import 'package:ringoflutter/AppTabBar/Profile/SavedEvents.dart';
+import 'package:visibility_detector/visibility_detector.dart';
+import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  _ProfileScreenState createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  late Future<User> userInfoFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    userInfoFuture = getUserInfo();
+  }
+
+  Future<void> _refreshData() async {
+    await checkTimestamp();
+    setState(() {
+      userInfoFuture = getUserInfo();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final currentTheme = Theme.of(context);
-    // logOut();
     return CupertinoPageScaffold(
       backgroundColor: currentTheme.scaffoldBackgroundColor,
       navigationBar: CupertinoNavigationBar(
@@ -41,178 +62,170 @@ class ProfileScreen extends StatelessWidget {
           ),
         ),
       ),
-      child: CustomScrollView(
-        slivers: [
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                Padding(
-                  padding: defaultWidgetPadding,
-                  child: ClipRRect(
-                    borderRadius: defaultWidgetCornerRadius,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.95,
-                      color: currentTheme.colorScheme.background,
-                      child: FutureBuilder<User>(
-                        future: getUserInfo(),
-                        builder: (BuildContext context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return const Center(
-                              child: CircularProgressIndicator(
-                                color: Colors.deepPurpleAccent,
+      child: VisibilityDetector(
+        key: Key("profile"),
+        onVisibilityChanged: (visibilityInfo) {
+          if (visibilityInfo.visibleFraction == 1) {
+            _refreshData();
+          }
+        },
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: defaultWidgetPadding,
+                child: ClipRRect(
+                  borderRadius: defaultWidgetCornerRadius,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.95,
+                    color: currentTheme.colorScheme.background,
+                    child: FutureBuilder<User>(
+                      future: getUserInfo(),
+                      builder: (BuildContext context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          if (snapshot.hasError) {
+                            return Center(
+                              child: Text(
+                                'An ${snapshot.error} occurred',
+                                style: const TextStyle(fontSize: 18),
                               ),
                             );
-                          }
-                          if (snapshot.connectionState == ConnectionState.done) {
-                            if (snapshot.hasError) {
-                              return Center(
-                                child: Text(
-                                  'An ${snapshot.error} occurred',
-                                  style: const TextStyle(fontSize: 18, color: Colors.red),
-                                ),
-                              );
-                            } else if (snapshot.hasData) {
-                              final data = snapshot.data;
-                              return Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      if (data!.profilePictureId != null)
-                                        Padding(
-                                          padding: defaultWidgetPadding,
-                                          child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(8),
-                                            child: Image.network(
-                                              'http://localhost:8080/api/photos/${data.profilePictureId}',
-                                              width: 100,
-                                              height: 100,
-                                              fit: BoxFit.cover,
-                                            ),
+                          } else if (snapshot.hasData) {
+                            final data = snapshot.data;
+                            return Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    if (data!.profilePictureId != null)
+                                      Padding(
+                                        padding: defaultWidgetPadding,
+                                        child: CircleAvatar(
+                                          radius: 50,
+                                          backgroundImage: NetworkImage(
+                                            'http://localhost:8080/api/photos/${data.profilePictureId}',
                                           ),
                                         ),
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          const SizedBox(width: 10,),
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              const SizedBox(height: 8,),
-                                              Text(
-                                                data.name,
-                                                style: TextStyle(
-                                                  decoration: TextDecoration.none,
-                                                  color: currentTheme.primaryColor,
-                                                  fontSize: 32,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              Text(
-                                                '@${data.username}',
-                                                style: const TextStyle(
-                                                  decoration: TextDecoration.none,
-                                                  color: Colors.grey,
-                                                  fontWeight: FontWeight.normal,
-                                                  fontSize: 20,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 10,),
-                                            ],
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      const SizedBox(width: 12,),
-                                      const Icon(
-                                        CupertinoIcons.calendar,
-                                        size: 22,
                                       ),
-                                      const SizedBox(width: 8,),
-                                      Text(
-                                        (data.dateOfBirth == null) ? 'No date of birth provided' : convertTimestampToBigDate(data.dateOfBirth!),
-                                        style: TextStyle(
-                                          decoration: TextDecoration.none,
-                                          color: currentTheme.primaryColor,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 6,),
-                                  Row(
-                                    children: [
-                                      const SizedBox(width: 12,),
-                                      const Icon(
-                                        CupertinoIcons.person,
-                                        size: 22,
-                                      ),
-                                      const SizedBox(width: 8,),
-                                      Text(
-                                        (data.gender == null) ? 'No gender provided' : capitalizeFirstLetter(data.gender!),
-                                        style: TextStyle(
-                                          decoration: TextDecoration.none,
-                                          color: currentTheme.primaryColor,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10,),
-                                  Row(
-                                    children: [
-                                      const SizedBox(width: 12,),
-                                      ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          foregroundColor: currentTheme.colorScheme.background, backgroundColor: currentTheme.primaryColor,
-                                        ),
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            CupertinoPageRoute(
-                                              builder: (context) => EditProfile(beforeEdit: data),
-                                            ),
-                                          );
-                                        },
-                                        child: const Row(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(width: 10,),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            Icon(
-                                              CupertinoIcons.pencil,
-                                              size: 22,
+                                            const SizedBox(height: 8,),
+                                            Text(
+                                              data.name,
+                                              style: TextStyle(
+                                                decoration: TextDecoration.none,
+                                                color: currentTheme.primaryColor,
+                                                fontSize: 32,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
-                                            SizedBox(width: 5,),
-                                            Text('Edit Profile')
+                                            Text(
+                                              '@${data.username}',
+                                              style: const TextStyle(
+                                                decoration: TextDecoration.none,
+                                                color: Colors.grey,
+                                                fontWeight: FontWeight.normal,
+                                                fontSize: 20,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 10,),
                                           ],
                                         ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    const SizedBox(width: 12,),
+                                    const Icon(
+                                      CupertinoIcons.calendar,
+                                      size: 22,
+                                    ),
+                                    const SizedBox(width: 8,),
+                                    Text(
+                                      (data.dateOfBirth == null) ? 'No date of birth provided' : convertTimestampToBigDate(data.dateOfBirth!),
+                                      style: TextStyle(
+                                        decoration: TextDecoration.none,
+                                        color: currentTheme.primaryColor,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.normal,
                                       ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10,),
-                                ],
-                              );
-                            }
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 6,),
+                                Row(
+                                  children: [
+                                    const SizedBox(width: 12,),
+                                    const Icon(
+                                      CupertinoIcons.person,
+                                      size: 22,
+                                    ),
+                                    const SizedBox(width: 8,),
+                                    Text(
+                                      (data.gender == null) ? 'No gender provided' : capitalizeFirstLetter(data.gender!),
+                                      style: TextStyle(
+                                        decoration: TextDecoration.none,
+                                        color: currentTheme.primaryColor,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 10,),
+                                Row(
+                                  children: [
+                                    const SizedBox(width: 12,),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        foregroundColor: currentTheme.colorScheme.background, backgroundColor: currentTheme.primaryColor,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          CupertinoPageRoute(
+                                            builder: (context) => EditProfile(beforeEdit: data),
+                                          ),
+                                        );
+                                      },
+                                      child: const Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            CupertinoIcons.pencil,
+                                            size: 22,
+                                          ),
+                                          SizedBox(width: 5,),
+                                          Text('Edit Profile')
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 10,),
+                              ],
+                            );
                           }
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        },
-                      ),
+                        }
+                        return const Center();
+                      },
                     ),
                   ),
                 ),
-                const FractionallySizedBox(
-                  widthFactor: 0.95,
-                  child: SavedEventsScreen(),
-                ),
-              ],
-            ),
+              ),
+              FractionallySizedBox(
+                widthFactor: 0.95,
+                child: SavedEventsScreen(),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

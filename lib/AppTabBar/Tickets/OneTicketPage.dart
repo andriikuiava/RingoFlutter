@@ -5,6 +5,9 @@ import 'package:ringoflutter/UI/Themes.dart';
 import 'package:ringoflutter/UI/Functions/Formats.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:ringoflutter/Event/EventPage.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
+import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 
 class MyTicketPage extends StatefulWidget {
   final Ticket ticket;
@@ -16,6 +19,19 @@ class MyTicketPage extends StatefulWidget {
 }
 
 class _MyTicketPageState extends State<MyTicketPage> {
+  void deleteTicket(BuildContext context) async {
+    await checkTimestamp();
+    var storage = const FlutterSecureStorage();
+    var token = await storage.read(key: "access_token");
+    Uri url = Uri.parse('http://localhost:8080/api/events/${widget.ticket.event.id!}/leave');
+    var headers = {'Authorization': 'Bearer $token'};
+    var response = await http.post(url, headers: headers);
+    if (response.statusCode == 200) {
+      Navigator.pop(context);
+    } else {
+      throw Exception('Failed to delete ticket');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     final currentTheme = Theme.of(context);
@@ -48,18 +64,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                 Center(
                   child: Column(
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EventPage(
-                                eventId: widget.ticket.event.id!,
-                              ),
-                            ),
-                          );
-                        },
-                        child: FractionallySizedBox(
+                        FractionallySizedBox(
                           widthFactor: 0.9,
                           child: ClipRRect(
                             borderRadius: defaultWidgetCornerRadius,
@@ -67,35 +72,60 @@ class _MyTicketPageState extends State<MyTicketPage> {
                               color: currentTheme.primaryColor,
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                child: Row(
                                   children: [
-                                    Text(widget.ticket.event.name,
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: currentTheme
-                                              .scaffoldBackgroundColor,
-                                          decoration: TextDecoration.none,
-                                        )
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          CupertinoPageRoute(
+                                            builder: (context) => EventPage(
+                                              eventId: widget.ticket.event.id!,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(widget.ticket.event.name,
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                color: currentTheme
+                                                    .scaffoldBackgroundColor,
+                                                decoration: TextDecoration.none,
+                                              )
+                                          ),
+                                          const SizedBox(height: 2,),
+                                          Text(convertHourTimestamp(widget.ticket.event.startTime!),
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.grey,
+                                                decoration: TextDecoration.none,
+                                              )
+                                          ),
+                                          const SizedBox(height: 1,),
+                                        ],
+                                      ),
                                     ),
-                                    const SizedBox(height: 2,),
-                                    Text(convertHourTimestamp(widget.ticket.event.startTime!),
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.grey,
-                                          decoration: TextDecoration.none,
-                                        )
+                                    Spacer(),
+                                    CupertinoButton(
+                                      onPressed: () {
+                                        deleteTicket(context);
+                                      },
+                                      child: Icon(
+                                        CupertinoIcons.delete,
+                                        color: currentTheme.backgroundColor,
+                                      ),
                                     ),
-                                    const SizedBox(height: 1,),
                                   ],
-                                ),
+                                )
                               ),
                             ),
                           ),
                         ),
-                      ),
                       const SizedBox(height: 10,),
                       FractionallySizedBox(
                         widthFactor: 0.9,

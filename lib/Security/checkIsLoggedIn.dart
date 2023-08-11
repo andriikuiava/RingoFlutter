@@ -18,7 +18,6 @@ void checkIsLoggedIn() async {
       var token = await storage.read(key: 'refresh_token');
       checkIsLoggedIn();
         } else {
-      print(stored);
       navigatorKey.currentState?.pushReplacement(
         MaterialPageRoute(builder: (_) => const Home()),
       );

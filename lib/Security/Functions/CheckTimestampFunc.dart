@@ -19,14 +19,13 @@ Future<bool> checkTimestamp() async {
         final bool refreshSuccess = await refreshTokens(refreshToken);
         return refreshSuccess;
       }
-      logOut();
       return false;
     } else {
       return true;
     }
   } else {
-    logOut();
     throw Exception('No timestamp found');
+    return false;
   }
 }
 
@@ -50,12 +49,15 @@ Future<bool> refreshTokens(String refreshToken) async {
       storage.write(key: "timestamp", value: futureTime.toString());
 
       return true;
-    } else {
+    } else if (response.statusCode == 401) {
       logOut();
+      throw Exception('Token refresh failed, unauthorized');
+      return false;
+    }
+    else {
       return false;
     }
   } catch (e) {
-    logOut();
     throw Exception('An error occurred while refreshing tokens: $e');
   }
 }
