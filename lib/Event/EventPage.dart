@@ -41,9 +41,8 @@ class _EventPageState extends State<EventPage>
   }
 
   Future<EventFull> getEvent() async {
-    final storage = FlutterSecureStorage();
-
     await checkTimestamp();
+    final storage = FlutterSecureStorage();
 
     var token = await storage.read(key: 'access_token');
     Uri url = Uri.parse('http://localhost:8080/api/events/${widget.eventId}');
@@ -348,7 +347,7 @@ class _EventPageState extends State<EventPage>
                                             backgroundColor: currentTheme.scaffoldBackgroundColor,
                                           ),
                                           child: Text(
-                                            "Contact host",
+                                            "Contact host =)",
                                             style: TextStyle(
                                               color: currentTheme.primaryColor,
                                               fontWeight: FontWeight.bold,
@@ -356,7 +355,7 @@ class _EventPageState extends State<EventPage>
                                             ),
                                           ),
                                           onPressed: () {
-                                            logOut();
+
                                           },
                                         ),
                                       ),
@@ -425,11 +424,9 @@ class _EventPageState extends State<EventPage>
                           },
                         ),
                       ),
-                      const SizedBox(
-                        height: 12,
-                      ),
-                      SizedBox(
-                        height: 200,
+                      const SizedBox(height: 12),
+                      Container(
+                        height: 160,
                         child: ClipRRect(
                           borderRadius: defaultWidgetCornerRadius,
                           child: GoogleMap(

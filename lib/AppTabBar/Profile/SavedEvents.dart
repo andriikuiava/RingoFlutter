@@ -8,6 +8,7 @@ import 'dart:convert';
 import 'package:ringoflutter/UI/Functions/Formats.dart';
 import 'package:ringoflutter/Event/EventPage.dart';
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 class SavedEventsScreen extends StatefulWidget {
   const SavedEventsScreen({super.key});
@@ -42,48 +43,64 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
   @override
   Widget build(BuildContext context) {
     final currentTheme = Theme.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: EdgeInsets.only(left: 0.01 * MediaQuery.of(context).size.width),
-          child: Row(
-            children: [
-              Icon(
-                CupertinoIcons.bookmark_solid,
-                color: currentTheme.primaryColor,
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              Text(
-                "Saved Events",
-                style: TextStyle(
+    return VisibilityDetector(
+      key: Key("SavedEventsScreen"),
+      onVisibilityChanged: (visibilityInfo) {
+        if (visibilityInfo.visibleFraction == 1) {
+          getSavedEvents().then((value) {
+            setState(() {
+              eventsSaved = value;
+            });
+          });
+        }
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: EdgeInsets.only(left: 0.01 * MediaQuery.of(context).size.width),
+            child: Row(
+              children: [
+                Icon(
+                  CupertinoIcons.bookmark_solid,
                   color: currentTheme.primaryColor,
-                  fontSize: 32,
-                  decoration: TextDecoration.none,
                 ),
-              ),
-            ],
+                const SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  "Saved Events",
+                  style: TextStyle(
+                    color: currentTheme.primaryColor,
+                    fontSize: 32,
+                    decoration: TextDecoration.none,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        SingleChildScrollView(
-          child: FutureBuilder<List<EventInFeed>>(
+          const SizedBox(
+            height: 10,
+          ),
+          FutureBuilder<List<EventInFeed>>(
             future: getSavedEvents(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 eventsSaved = snapshot.data!;
-                return ListView.separated(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: eventsSaved.length,
-                  itemBuilder: (context, int index) {
-                    return buildEvent(eventsSaved[index]);
-                  },
-                  separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 10),
+                return Column(
+                  children: [
+                    Column(
+                      children: eventsSaved.map((event) {
+                        return Column(
+                          children: [
+                            buildEvent(event),
+                            SizedBox(height: 10),
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 100),
+                  ],
                 );
               } else if (snapshot.hasError) {
                 return const Text('Failed to load events');
@@ -92,8 +109,8 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
               }
             },
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
