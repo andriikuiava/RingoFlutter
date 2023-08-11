@@ -38,10 +38,16 @@ class _HomeState extends State<Home> {
             label: 'Search',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              _selectedIndex == 2
-                  ? CupertinoIcons.smallcircle_circle_fill
-                  : CupertinoIcons.smallcircle_circle,
+            icon: Container(
+              width: 24,
+              height: 24,
+              child: Image.asset(
+                _selectedIndex == 2
+                    ? (currentTheme.brightness == Brightness.dark
+                    ? 'assets/images/ringo-tab-white.png'
+                    : 'assets/images/ringo-tab-black.png')
+                    : 'assets/images/ringo-tab-grey.png',
+              ),
             ),
             label: 'Feed',
           ),
