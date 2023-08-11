@@ -62,8 +62,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final currentTheme = Theme.of(context);
     const storage = FlutterSecureStorage();
-    checkIsLoggedIn();
-    // logOut();
 
     return CupertinoPageScaffold(
       backgroundColor: currentTheme.scaffoldBackgroundColor,
@@ -78,7 +76,8 @@ class _LoginPageState extends State<LoginPage> {
                 height: 145,
                 child: Image.asset(currentTheme.brightness == Brightness.light
                     ? 'assets/images/Ringo-Black.png'
-                    : 'assets/images/Ringo-White.png'),
+                    : 'assets/images/Ringo-White.png'
+                ),
               ),
               const SizedBox(height: 12.0),
               DefaultTextStyle(
