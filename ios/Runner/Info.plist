@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "https://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
     <key>CFBundleDevelopmentRegion</key>
@@ -70,6 +70,11 @@
     <array>
     <string>com.googleusercontent.apps.445780816677-on7ff5l41ig1ervle491sc7vuvg4n5ro</string>
     </array>
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+    <string>sms</string>
+    <string>tel</string>
+</array>
 
     </dict>
 </array>

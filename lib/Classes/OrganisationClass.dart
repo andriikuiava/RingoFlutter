@@ -1,3 +1,4 @@
+import 'package:ringoflutter/Classes/ContactCardClass.dart';
 
 class Organisation {
   int id;
@@ -8,7 +9,7 @@ class Organisation {
   bool isActive;
   String description;
   double? rating;
-  String contacts;
+  List<ContactCard> contacts;
   int? pastEventsCount;
   int? upcomingEventsCount;
 
@@ -36,7 +37,7 @@ class Organisation {
       isActive: json['isActive'],
       description: json['description'],
       rating: json['rating'],
-      contacts: json['contacts'],
+      contacts: json['contacts'].map<ContactCard>((contact) => ContactCard.fromJson(contact)).toList(),
       pastEventsCount: json['pastEventsCount'],
       upcomingEventsCount: json['upcomingEventsCount'],
     );

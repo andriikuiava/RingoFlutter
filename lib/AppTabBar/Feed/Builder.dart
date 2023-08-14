@@ -9,6 +9,7 @@ import 'package:ringoflutter/AppTabBar/Map/GetLocation.dart';
 import 'package:ringoflutter/Classes/EventClass.dart';
 import 'package:ringoflutter/UI/Themes.dart';
 import 'package:ringoflutter/UI/Functions/Formats.dart';
+import 'package:ringoflutter/Event/EventPage.dart';
 
 class FeedBuilder extends StatefulWidget {
   final String request;
@@ -35,7 +36,7 @@ class _FeedBuilderState extends State<FeedBuilder> {
 
   Future<void> fetchEvents() async {
     var userCoordinates = await getUserLocation();
-    checkTimestamp();
+    await checkTimestamp();
     const storage = FlutterSecureStorage();
     String? token = await storage.read(key: 'access_token');
     try {
@@ -116,149 +117,61 @@ class _FeedBuilderState extends State<FeedBuilder> {
           itemBuilder: (context, index) {
             if (index < events.length) {
               final event = events[index];
-              return Column(
-                children: [
-                  ClipRRect(
-                    borderRadius: defaultWidgetCornerRadius,
-                    // Adjust the corner radius as needed
-                    child: SizedBox(
-                      height: MediaQuery
-                          .of(context)
-                          .size
-                          .width * 0.93,
-                      child: Image.network(
-                          "http://localhost:8080/api/photos/${event
-                              .mainPhotoId}"),
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => EventPage(eventId: event.id!),
                     ),
-                  ),
-                  const SizedBox(height: 5),
-                  ClipRRect(
-                    borderRadius: defaultWidgetCornerRadius,
-                    // Adjust the corner radius as needed
-                    child: Container(
-                      width: MediaQuery
-                          .of(context)
-                          .size
-                          .width * 0.93,
-                      color: currentTheme.colorScheme.background,
-                      padding: const EdgeInsets.all(8),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(event.name,
-                            style: TextStyle(
-                              color: currentTheme.primaryColor,
-                              decoration: TextDecoration.none,
-                              fontSize: 26,
-                              fontWeight: FontWeight.bold,
+                  );
+                },
+                child: Column(
+                  children: [
+                    ClipRRect(
+                      borderRadius: defaultWidgetCornerRadius,
+                      // Adjust the corner radius as needed
+                      child: SizedBox(
+                        height: MediaQuery
+                            .of(context)
+                            .size
+                            .width * 0.93,
+                        child: Image.network(
+                            "http://localhost:8080/api/photos/${event
+                                .mainPhotoId}"),
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    ClipRRect(
+                      borderRadius: defaultWidgetCornerRadius,
+                      // Adjust the corner radius as needed
+                      child: Container(
+                        width: MediaQuery
+                            .of(context)
+                            .size
+                            .width * 0.93,
+                        color: currentTheme.colorScheme.background,
+                        padding: const EdgeInsets.all(8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(event.name,
+                              style: TextStyle(
+                                color: currentTheme.primaryColor,
+                                decoration: TextDecoration.none,
+                                fontSize: 26,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          Row(
-                            children: [
-                              const Icon(
-                                CupertinoIcons.map_pin,
-                                color: Colors.grey,
-                                size: 18,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(event.address!,
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                  decoration: TextDecoration.none,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  const Icon(
-                                    CupertinoIcons.calendar_today,
-                                    color: Colors.grey,
-                                    size: 18,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    convertHourTimestamp(event.startTime!),
-                                    style: const TextStyle(
-                                      color: Colors.grey,
-                                      decoration: TextDecoration.none,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                "${event.currency!.symbol} ${event.price}",
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                  decoration: TextDecoration.none,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
-                            ],
-                          ),
-                          if (event.distance != null)
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    const Icon(
-                                      CupertinoIcons.location_fill,
-                                      color: Colors.grey,
-                                      size: 18,
-                                    ),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      "${event.distance!}",
-                                      style: const TextStyle(
-                                        color: Colors.grey,
-                                        decoration: TextDecoration.none,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    const Icon(
-                                      CupertinoIcons.person_2_fill,
-                                      color: Colors.grey,
-                                      size: 18,
-                                    ),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      "${event.peopleCount} / ${event.capacity}",
-                                      style: const TextStyle(
-                                        color: Colors.grey,
-                                        decoration: TextDecoration.none,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          if (event.distance == null)
                             Row(
                               children: [
                                 const Icon(
-                                  CupertinoIcons.person_2_fill,
+                                  CupertinoIcons.map_pin,
                                   color: Colors.grey,
                                   size: 18,
                                 ),
                                 const SizedBox(width: 4),
-                                Text(
-                                  "${event.peopleCount} / ${event.capacity}",
+                                Text(event.address!,
                                   style: const TextStyle(
                                     color: Colors.grey,
                                     decoration: TextDecoration.none,
@@ -268,12 +181,110 @@ class _FeedBuilderState extends State<FeedBuilder> {
                                 ),
                               ],
                             ),
-                        ],
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      CupertinoIcons.calendar_today,
+                                      color: Colors.grey,
+                                      size: 18,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      convertHourTimestamp(event.startTime!),
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                        decoration: TextDecoration.none,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  "${event.currency!.symbol} ${event.price}",
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    decoration: TextDecoration.none,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            if (event.distance != null)
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        CupertinoIcons.location_fill,
+                                        color: Colors.grey,
+                                        size: 18,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        "${event.distance!}",
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                          decoration: TextDecoration.none,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        CupertinoIcons.person_2_fill,
+                                        color: Colors.grey,
+                                        size: 18,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        "${event.peopleCount} / ${event.capacity}",
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                          decoration: TextDecoration.none,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            if (event.distance == null)
+                              Row(
+                                children: [
+                                  const Icon(
+                                    CupertinoIcons.person_2_fill,
+                                    color: Colors.grey,
+                                    size: 18,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    "${event.peopleCount} / ${event.capacity}",
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                      decoration: TextDecoration.none,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 14),
-                ],
+                    const SizedBox(height: 14),
+                  ],
+                ),
               );
             } else if (isLoading) {
               return const Center(child: CircularProgressIndicator());

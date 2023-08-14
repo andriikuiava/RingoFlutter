@@ -194,7 +194,11 @@ class _SearchPageState extends State<SearchPage> {
         backgroundColor: currentTheme.scaffoldBackgroundColor,
         navigationBar: CupertinoNavigationBar(
           backgroundColor: currentTheme.scaffoldBackgroundColor,
-          middle: const Text('Search'),
+          middle: Text('Search',
+          style: TextStyle(
+            color: currentTheme.primaryColor,
+          ),
+          ),
         ),
         child: Column(
           children: [
