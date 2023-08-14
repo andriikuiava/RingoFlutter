@@ -43,7 +43,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
   }
 
   Future<Organisation> getHostById() async {
-    checkTimestamp();
+    await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     Uri url = Uri.parse('http://localhost:8080/api/organisations/${widget.hostId}');

@@ -12,6 +12,7 @@ class Organisation {
   List<ContactCard> contacts;
   int? pastEventsCount;
   int? upcomingEventsCount;
+  bool? emailVerified;
 
   Organisation({
     required this.id,
@@ -25,6 +26,7 @@ class Organisation {
     required this.contacts,
     this.pastEventsCount,
     this.upcomingEventsCount,
+    this.emailVerified,
   });
 
   static Organisation fromJson(Map<String, dynamic> json) {
@@ -40,6 +42,7 @@ class Organisation {
       contacts: json['contacts'].map<ContactCard>((contact) => ContactCard.fromJson(contact)).toList(),
       pastEventsCount: json['pastEventsCount'],
       upcomingEventsCount: json['upcomingEventsCount'],
+      emailVerified: json['emailVerified'],
     );
   }
 }

@@ -2,27 +2,50 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ringoflutter/AppTabBar/Home.dart';
 import 'package:ringoflutter/main.dart';
+import 'package:ringoflutter/Security/LoginPage.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = App.materialKey;
 
-void checkIsLoggedIn() async {
-  const storage = FlutterSecureStorage();
-  String currentTime = DateTime.now().toString();
-  String? storedTime = await storage.read(key: 'timestamp');
+class CheckerPage extends StatefulWidget {
+  const CheckerPage({Key? key}) : super(key: key);
 
-  if (storedTime != null) {
-    DateTime current = DateTime.parse(currentTime);
-    DateTime stored = DateTime.parse(storedTime);
+  @override
+  _CheckerPageState createState() => _CheckerPageState();
+}
 
-    if (current.compareTo(stored) > 0) {
-      var token = await storage.read(key: 'refresh_token');
-      checkIsLoggedIn();
-        } else {
+class _CheckerPageState extends State<CheckerPage> {
+  @override
+  void initState() {
+    super.initState();
+    doWhenLoaded();
+  }
+
+  void doWhenLoaded() async {
+    final storage = FlutterSecureStorage();
+    String currentTime = DateTime.now().toString();
+    String? storedTime = await storage.read(key: 'timestamp');
+    print(storedTime);
+
+    if (storedTime != null) {
+      DateTime current = DateTime.parse(currentTime);
+      DateTime stored = DateTime.parse(storedTime);
       navigatorKey.currentState?.pushReplacement(
         MaterialPageRoute(builder: (_) => const Home()),
       );
+    } else {
+      navigatorKey.currentState?.pushReplacement(
+        MaterialPageRoute(builder: (_) => const LoginPage()),
+      );
+      throw Exception('No timestamp found');
     }
-  } else {
-    throw Exception('No timestamp found');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
   }
 }
