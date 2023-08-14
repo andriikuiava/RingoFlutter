@@ -438,10 +438,19 @@ class _EventPageState extends State<EventPage>
                                                                           fontSize: 16,
                                                                         ),
                                                                       ),
-                                                                      Text(
+                                                                      (iconData == CupertinoIcons.link)
+                                                                          ? Text(
                                                                         contactCard.content,
                                                                         maxLines: 1,
                                                                         overflow: TextOverflow.ellipsis,
+                                                                        style: TextStyle(
+                                                                          color: Colors.blue,
+                                                                          fontWeight: FontWeight.normal,
+                                                                          fontSize: 16,
+                                                                        ),
+                                                                      )
+                                                                          : Text(
+                                                                        contactCard.content,
                                                                         style: TextStyle(
                                                                           color: currentTheme.primaryColor,
                                                                           fontWeight: FontWeight.normal,

@@ -9,6 +9,9 @@ import 'Registration.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:developer';
+import 'package:ringoflutter/AppTabBar/Home.dart';
+import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 
 Future<void> signInWithGoogle() async {
   try {
@@ -22,7 +25,6 @@ Future<void> signInWithGoogle() async {
       var url = Uri.parse('http://localhost:8080/api/participants/sign-up/google');
       var body = {'token': idToken};
       var headers = {'Content-Type': 'application/json'};
-      debugPrint(idToken);
       var encodedBody = jsonEncode(body);
 
       var response = await http.post(url, body: encodedBody, headers: headers);

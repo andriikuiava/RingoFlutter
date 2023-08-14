@@ -181,10 +181,23 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                       onPressed: () {
                         logOut();
                       },
-                      child: Text('Log out',
-                        style: TextStyle(
-                          color: currentTheme.primaryColor,
-                          fontWeight: FontWeight.bold,
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center, // Align icon and text in the center
+                          children: [
+                            Icon(
+                              CupertinoIcons.square_arrow_left,
+                              color: currentTheme.primaryColor,
+                              size: 20,
+                            ),
+                            SizedBox(width: 10,),
+                            Text('Log out',
+                              style: TextStyle(
+                                color: currentTheme.primaryColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),

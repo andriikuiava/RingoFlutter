@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'Security/LoginPage.dart';
 import 'UI/Themes.dart';
+import 'package:ringoflutter/Security/checkIsLoggedIn.dart';
 
 void main() {
   runApp(
@@ -10,7 +11,7 @@ void main() {
       darkTheme: darkTheme,
       home: const Directionality(
         textDirection: TextDirection.ltr,
-        child: LoginPage(),
+        child: CheckerPage(),
       ),
       debugShowCheckedModeBanner: false,
     ),
