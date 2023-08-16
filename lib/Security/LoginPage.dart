@@ -21,6 +21,7 @@ Future<void> signInWithGoogle() async {
     if (account != null) {
       GoogleSignInAuthentication authentication = await account.authentication;
       String idToken = authentication.idToken ?? '';
+      log('Google Sign-In idToken: $idToken');
 
       var url = Uri.parse('http://localhost:8080/api/participants/sign-up/google');
       var body = {'token': idToken};
@@ -31,7 +32,7 @@ Future<void> signInWithGoogle() async {
       if (response.statusCode == 200) {
         print('Google Sign-In success: $response');
       } else {
-        print('Google Sign-In failed: ${response.statusCode}');
+        print('Google Sign-In failed: ${response.body}');
       }
     } else {
       print('Google Sign-In cancelled.');
@@ -203,7 +204,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10.0), // Added space between the buttons
+                  const SizedBox(height: 10.0),
                   Row(
                     children: [
                       Expanded(
