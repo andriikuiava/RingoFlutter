@@ -10,6 +10,7 @@ final lightTheme = ThemeData(
   backgroundColor: Colors.white,
   shadowColor: Colors.grey.withOpacity(0.5),
   bottomAppBarColor: Colors.grey.shade200,
+  errorColor: Colors.red[400],
 );
 
 final darkTheme = ThemeData(
@@ -19,4 +20,5 @@ final darkTheme = ThemeData(
   backgroundColor: Colors.grey.shade900,
   shadowColor: Colors.grey.withOpacity(0.0),
   bottomAppBarColor: Colors.grey.shade900,
+  errorColor: Colors.red[400],
 );

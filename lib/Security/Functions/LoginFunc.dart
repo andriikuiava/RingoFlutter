@@ -6,6 +6,7 @@ import 'package:ringoflutter/Classes/TokensClass.dart';
 import 'package:ringoflutter/AppTabBar/Home.dart';
 import 'package:ringoflutter/Security/checkIsLoggedIn.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:ringoflutter/Security/EmailVerificationPage.dart';
 
 
 Future<Tokens> loginFunc(LoginCredentials loginCredentials) async {
@@ -18,11 +19,6 @@ Future<Tokens> loginFunc(LoginCredentials loginCredentials) async {
 
   if (response.statusCode == 200) {
     final jsonResponse = jsonDecode(response.body);
-
-    navigatorKey.currentState?.pushReplacement(
-      MaterialPageRoute(builder: (_) => const Home()),
-    );
-
     DateTime currentTime = DateTime.now();
     DateTime futureTime =
     currentTime.add(const Duration(seconds: 30));
@@ -47,6 +43,15 @@ Future<Tokens> loginFunc(LoginCredentials loginCredentials) async {
       storage.write(
           key: "id",
           value: jsonResponse['id'].toString());
+      if (jsonResponse['emailVerified']) {
+        navigatorKey.currentState?.pushReplacement(
+          MaterialPageRoute(builder: (_) => const Home()),
+        );
+      } else {
+        navigatorKey.currentState?.pushReplacement(
+          MaterialPageRoute(builder: (_) => EmailVerificationPage(usersEmail: jsonResponse['email'],)),
+        );
+      }
     } else {
       throw Exception('Failed to load participants');
     }

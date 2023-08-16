@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:ringoflutter/Classes/RegistrationCredentialsClass.dart';
 import 'package:ringoflutter/Security/Functions/LoginFunc.dart';
 import 'package:ringoflutter/Classes/LoginCredentialsClass.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> registerUser(RegistrationCredentials registrationCredentials) async {
   try {
