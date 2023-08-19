@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:ringoflutter/AppTabBar/Profile/Functions/SendPhoto.dart';
 import 'package:ringoflutter/AppTabBar/Profile/Functions/UpdateUser.dart';
 import 'package:intl/intl.dart';
+import 'package:ringoflutter/api_endpoints.dart';
 
 class EditProfile extends StatefulWidget {
   final User beforeEdit;
@@ -90,7 +91,7 @@ class _EditProfileState extends State<EditProfile> {
                     )
                     : CircleAvatar(
                     radius: 60,
-                    backgroundImage: NetworkImage("http://localhost:8080/api/photos/${widget.beforeEdit.profilePictureId}"),)
+                    backgroundImage: NetworkImage("${ApiEndpoints.GET_PHOTO}/${widget.beforeEdit.profilePictureId}"),)
                         : CircleAvatar(
                       radius: 60,
                       backgroundImage: FileImage(image!),
@@ -340,10 +341,11 @@ class _EditProfileState extends State<EditProfile> {
                       flex: 4,
                       child: CupertinoButton(
                         color: currentTheme.colorScheme.background,
-                        onPressed: () {
+                        onPressed: () async {
                           DateFormat dateFormat = DateFormat('yyyy-MM-dd');
                           String formattedTimestamp = dateFormat.format(_dateController.value);
                           updateUser(_fullNameController.text, _usernameController.text, image, selectedGender, formattedTimestamp);
+                          Navigator.pop(context);
                         },
                         child: FittedBox(
                           fit: BoxFit.scaleDown,

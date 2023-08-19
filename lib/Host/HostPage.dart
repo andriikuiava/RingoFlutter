@@ -15,6 +15,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
 import 'package:ringoflutter/Classes/ContactCardClass.dart';
+import 'package:ringoflutter/api_endpoints.dart';
 
 class HostPage extends StatefulWidget {
   final int hostId;
@@ -46,7 +47,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
     await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
-    Uri url = Uri.parse('http://localhost:8080/api/organisations/${widget.hostId}');
+    Uri url = Uri.parse('${ApiEndpoints.GET_ORGANISATION}/${widget.hostId}');
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -108,7 +109,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                       child: CircleAvatar(
                                         radius: 40.0,
                                         backgroundImage: NetworkImage(
-                                          'http://localhost:8080/api/photos/${snapshot.data!.profilePictureId!}',
+                                          '${ApiEndpoints.GET_PHOTO}/${snapshot.data!.profilePictureId}',
                                         ),
                                       ),
                                     ),
@@ -366,7 +367,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
     await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
-    Uri url = Uri.parse('http://localhost:8080/api/organisations/${widget.hostId}/reviews');
+    Uri url = Uri.parse('${ApiEndpoints.GET_ORGANISATION}/${widget.hostId}/${ApiEndpoints.REVIEWS}');
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -403,7 +404,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                           ? CircleAvatar(
                         radius: 20.0,
                         backgroundImage: NetworkImage(
-                          'http://localhost:8080/api/photos/${review.participant.profilePictureId!}',
+                          '${ApiEndpoints.GET_PHOTO}/${review.participant.profilePictureId}',
                         ),
                       )
                           : CircleAvatar(
@@ -454,7 +455,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
     await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
-    Uri url = Uri.parse('http://localhost:8080/api/events?hostId=${widget.hostId}&startTimeMin=${DateTime.now().toIso8601String()}');
+    Uri url = Uri.parse('${ApiEndpoints.SEARCH}?hostId=${widget.hostId}&startTimeMin=${DateTime.now().toIso8601String()}');
     print(url);
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
@@ -508,7 +509,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                               child: ClipRRect(
                                 borderRadius: defaultWidgetCornerRadius,
                                 child: Image.network(
-                                    'http://localhost:8080/api/photos/${event.mainPhotoId}'
+                                    '${ApiEndpoints.GET_PHOTO}/${event.mainPhotoId}}'
                                 ),
                               ),
                             ),
@@ -604,7 +605,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
     await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
-    Uri url = Uri.parse('http://localhost:8080/api/events?hostId=${widget.hostId}&startTimeMax=${DateTime.now().toIso8601String()}');
+    Uri url = Uri.parse('${ApiEndpoints.SEARCH}?hostId=${widget.hostId}&startTimeMax=${DateTime.now().toIso8601String()}');
     print(url);
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
@@ -658,7 +659,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                 child: ClipRRect(
                                   borderRadius: defaultWidgetCornerRadius,
                                   child: Image.network(
-                                      'http://localhost:8080/api/photos/${event.mainPhotoId}'
+                                      '${ApiEndpoints.GET_PHOTO}/${event.mainPhotoId}}'
                                   ),
                                 ),
                               ),

@@ -11,6 +11,7 @@ import 'package:ringoflutter/UI/Functions/Formats.dart';
 import 'package:ringoflutter/Event/EventPage.dart';
 import 'package:ringoflutter/Classes/CategoryClass.dart';
 import 'package:ringoflutter/AppTabBar/Feed/Builder.dart';
+import 'package:ringoflutter/api_endpoints.dart';
 
 class FeedPage extends StatelessWidget {
   FeedPage({Key? key}) : super(key: key);
@@ -52,7 +53,7 @@ class FeedPage extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => FeedBuilder(request:
-                              "http://localhost:8080/api/events?latitude=${location.latitude}&longitude=${location.longitude}&limit=10&sort=distance",
+                              "${ApiEndpoints.SEARCH}?latitude=${location.latitude}&longitude=${location.longitude}&limit=10&sort=distance",
                             title: "Close Events",
                           ),
                         ),
@@ -108,7 +109,7 @@ class FeedPage extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => FeedBuilder(request:
-                          "http://localhost:8080/api/events?latitude=${location.latitude}&longitude=${location.longitude}&limit=10&sort=peopleCount",
+                          "${ApiEndpoints.SEARCH}?latitude=${location.latitude}&longitude=${location.longitude}&limit=10&sort=peopleCount",
                             title: "Popular Events",
                           ),
                         ),
@@ -147,7 +148,7 @@ class FeedPage extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => FeedBuilder(request:
-                          "http://localhost:8080/api/events?latitude=${location.latitude}&longitude=${location.longitude}&limit=10&sort=distance&price=0",
+                          "${ApiEndpoints.SEARCH}?latitude=${location.latitude}&longitude=${location.longitude}&limit=10&sort=distance&price=0",
                             title: "Find & Go",
                           ),
                         ),
@@ -179,7 +180,7 @@ class FeedPage extends StatelessWidget {
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     Uri url = Uri.parse(
-        'http://localhost:8080/api/events?startTimeMin=${DateTime.now()
+        '${ApiEndpoints.SEARCH}?startTimeMin=${DateTime.now()
             .toIso8601String()}&limit=20');
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
@@ -229,7 +230,7 @@ class FeedPage extends StatelessWidget {
                             ClipRRect(
                               borderRadius: defaultWidgetCornerRadius,
                               child: Image.network(
-                                "http://localhost:8080/api/photos/${event
+                                "${ApiEndpoints.GET_PHOTO}/${event
                                     .mainPhotoId}",
                                 width: MediaQuery
                                     .of(context)
@@ -337,7 +338,7 @@ class FeedPage extends StatelessWidget {
     await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
-    Uri url = Uri.parse('http://localhost:8080/api/categories');
+    Uri url = Uri.parse('${ApiEndpoints.GET_CATEGORY}');
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -374,7 +375,7 @@ class FeedPage extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    FeedBuilder(request: 'http://localhost:8080/api/events?category=${category.id}', title: category.name,)
+                                    FeedBuilder(request: '${ApiEndpoints.SEARCH}?category=${category.id}', title: category.name,)
                               ),
                             );
                           },
@@ -415,7 +416,7 @@ class FeedPage extends StatelessWidget {
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     Uri url = Uri.parse(
-        'http://localhost:8080/api/events?startTimeMin=${DateTime.now()
+        '${ApiEndpoints.SEARCH}?startTimeMin=${DateTime.now()
             .toIso8601String()}&limit=20');
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
@@ -465,7 +466,7 @@ class FeedPage extends StatelessWidget {
                             ClipRRect(
                               borderRadius: defaultWidgetCornerRadius,
                               child: Image.network(
-                                "http://localhost:8080/api/photos/${event
+                                "${ApiEndpoints.GET_PHOTO}/${event
                                     .mainPhotoId}",
                                 width: MediaQuery
                                     .of(context)
@@ -574,7 +575,7 @@ class FeedPage extends StatelessWidget {
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     Uri url = Uri.parse(
-        'http://localhost:8080/api/events?startTimeMin=${DateTime.now()
+        '${ApiEndpoints.SEARCH}?startTimeMin=${DateTime.now()
             .toIso8601String()}&limit=3');
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
@@ -626,7 +627,7 @@ class FeedPage extends StatelessWidget {
                                   ClipRRect(
                                     borderRadius: defaultWidgetCornerRadius,
                                     child: Image.network(
-                                      "http://localhost:8080/api/photos/${event.mainPhotoId}",
+                                      "${ApiEndpoints.GET_PHOTO}/${event.mainPhotoId}",
                                       width: 100,
                                       height: 100,
                                     ),

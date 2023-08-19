@@ -13,6 +13,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:ringoflutter/api_endpoints.dart';
 
 class TicketsScreen extends StatefulWidget {
   const TicketsScreen({super.key});
@@ -47,7 +48,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
     List<String> savedTicketsToSave = [];
     var storage = const FlutterSecureStorage();
     var token = await storage.read(key: "access_token");
-    Uri url = Uri.parse('http://localhost:8080/api/tickets');
+    Uri url = Uri.parse('${ApiEndpoints.GET_TICKETS}');
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -180,7 +181,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
       await checkTimestamp();
       var storage = const FlutterSecureStorage();
       var token = await storage.read(key: "access_token");
-      Uri url = Uri.parse('http://localhost:8080/api/events/${ticket.event.id!}/leave');
+      Uri url = Uri.parse('${ApiEndpoints.SEARCH}/${ticket.event.id!}/${ApiEndpoints.LEAVE}');
       var headers = {'Authorization': 'Bearer $token'};
       var response = await http.post(url, headers: headers);
       if (response.statusCode == 200) {
@@ -222,7 +223,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                 decoration: BoxDecoration(
                   borderRadius: defaultWidgetCornerRadius,
                   image: DecorationImage(
-                    image: NetworkImage("http://localhost:8080/api/photos/${ticket.event.mainPhotoId}"),
+                    image: NetworkImage("${ApiEndpoints.GET_PHOTO}/${ticket.event.mainPhotoId}"),
                     fit: BoxFit.cover,
                   ),
                 ),

@@ -7,6 +7,7 @@ import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:ringoflutter/Classes/CoordinatesClass.dart';
 import 'dart:ui' as ui;
 import 'package:ringoflutter/Event/EventPage.dart';
+import 'package:ringoflutter/api_endpoints.dart';
 
 
 class MapPage extends StatefulWidget {
@@ -56,7 +57,7 @@ class _MapPageState extends State<MapPage> {
     final double lonMin = visibleRegion.southwest.longitude;
     final double lonMax = visibleRegion.northeast.longitude;
 
-    final url = 'http://localhost:8080/api/events/geo/area?latMin=$latMin&latMax=$latMax&lonMin=$lonMin&lonMax=$lonMax';
+    final url = '${ApiEndpoints.SEARCH}/geo/area?latMin=$latMin&latMax=$latMax&lonMin=$lonMin&lonMax=$lonMax';
     var headers = {
       'Authorization': "Bearer $token",
     };

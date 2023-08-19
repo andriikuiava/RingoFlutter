@@ -9,6 +9,7 @@ import 'package:ringoflutter/AppTabBar/Map/GetLocation.dart';
 import 'package:ringoflutter/Classes/EventClass.dart';
 import 'package:ringoflutter/UI/Functions/Formats.dart';
 import 'package:ringoflutter/Event/EventPage.dart';
+import 'package:ringoflutter/api_endpoints.dart';
 
 class PopularForFeed extends StatefulWidget {
   const PopularForFeed({super.key});
@@ -43,7 +44,7 @@ class _PopularForFeedState extends State<PopularForFeed>
     String? token = await storage.read(key: 'access_token');
 
     final url = Uri.parse(
-        'http://localhost:8080/api/events?page=0&limit=5&latitude=${userCoordinates.latitude}&longitude=${userCoordinates.longitude}&sort=peopleCount');
+        '${ApiEndpoints.SEARCH}?page=0&limit=5&latitude=${userCoordinates.latitude}&longitude=${userCoordinates.longitude}&sort=peopleCount');
     var headers = {
       'Authorization': 'Bearer $token',
     };
@@ -93,7 +94,7 @@ class _PopularForFeedState extends State<PopularForFeed>
                         ClipRRect(
                           borderRadius: BorderRadius.circular(12),
                           child: Image.network(
-                            "http://localhost:8080/api/photos/${event.mainPhotoId}",
+                            "${ApiEndpoints.GET_PHOTO}/${event.mainPhotoId}",
                             width: 95,
                             height: 95,
                           ),

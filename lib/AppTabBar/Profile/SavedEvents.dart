@@ -9,6 +9,7 @@ import 'package:ringoflutter/UI/Functions/Formats.dart';
 import 'package:ringoflutter/Event/EventPage.dart';
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:visibility_detector/visibility_detector.dart';
+import 'package:ringoflutter/api_endpoints.dart';
 
 class SavedEventsScreen extends StatefulWidget {
   const SavedEventsScreen({super.key});
@@ -24,7 +25,7 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
     await checkTimestamp();
     var storage = const FlutterSecureStorage();
     var token = await storage.read(key: "access_token");
-    Uri url = Uri.parse('http://localhost:8080/api/events/saved');
+    Uri url = Uri.parse('${ApiEndpoints.GET_SAVED_EVENTS}');
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -135,7 +136,7 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
             ClipRRect(
               borderRadius: defaultWidgetCornerRadius,
               child: Image.network(
-                'http://localhost:8080/api/photos/${event.mainPhotoId}',
+                '${ApiEndpoints.GET_PHOTO}/${event.mainPhotoId}',
                 width: 100,
                 height: 100,
                 fit: BoxFit.cover,

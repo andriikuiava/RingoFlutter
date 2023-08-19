@@ -9,6 +9,7 @@ import 'package:ringoflutter/AppTabBar/Map/GetLocation.dart';
 import 'package:ringoflutter/Classes/EventClass.dart';
 import 'package:ringoflutter/UI/Functions/Formats.dart';
 import 'package:ringoflutter/Event/EventPage.dart';
+import 'package:ringoflutter/api_endpoints.dart';
 
 class TabBarForFeed extends StatefulWidget {
   const TabBarForFeed({super.key});
@@ -62,7 +63,7 @@ class _TabBarForFeedState extends State<TabBarForFeed>
     String? token = await storage.read(key: 'access_token');
 
     final url = Uri.parse(
-        'http://localhost:8080/api/events?page=$page&limit=10&latitude=${userCoordinates.latitude}&longitude=${userCoordinates.longitude}&sort=distance');
+        '${ApiEndpoints.SEARCH}?page=$page&limit=10&latitude=${userCoordinates.latitude}&longitude=${userCoordinates.longitude}&sort=distance');
     var headers = {
       'Authorization': 'Bearer $token',
     };
@@ -123,7 +124,7 @@ class _TabBarForFeedState extends State<TabBarForFeed>
                             ClipRRect(
                               borderRadius: BorderRadius.circular(10.0),
                               child: Image.network(
-                                "http://localhost:8080/api/photos/${_data[index].mainPhotoId}",
+                                "${ApiEndpoints.GET_PHOTO}/${_data[index].mainPhotoId}",
                                 fit: BoxFit.cover,
                               ),
                             ),

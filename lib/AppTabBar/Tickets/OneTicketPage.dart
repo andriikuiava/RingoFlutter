@@ -8,6 +8,7 @@ import 'package:ringoflutter/Event/EventPage.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
+import 'package:ringoflutter/api_endpoints.dart';
 
 class MyTicketPage extends StatefulWidget {
   final Ticket ticket;
@@ -23,7 +24,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
     await checkTimestamp();
     var storage = const FlutterSecureStorage();
     var token = await storage.read(key: "access_token");
-    Uri url = Uri.parse('http://localhost:8080/api/events/${widget.ticket.event.id!}/leave');
+    Uri url = Uri.parse('${ApiEndpoints.SEARCH}/${widget.ticket.event.id!}/${ApiEndpoints.LEAVE}');
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.post(url, headers: headers);
     if (response.statusCode == 200) {

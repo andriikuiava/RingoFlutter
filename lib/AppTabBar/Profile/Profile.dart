@@ -9,6 +9,7 @@ import 'package:ringoflutter/AppTabBar/Profile/ChangePassword.dart';
 import 'package:ringoflutter/AppTabBar/Profile/SavedEvents.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
+import 'package:ringoflutter/api_endpoints.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -102,7 +103,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         child: CircleAvatar(
                                           radius: 50,
                                           backgroundImage: NetworkImage(
-                                            'http://localhost:8080/api/photos/${data.profilePictureId}',
+                                            '${ApiEndpoints.GET_PHOTO}/${data.profilePictureId}',
                                           ),
                                         ),
                                       ),
@@ -114,22 +115,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             const SizedBox(height: 8,),
-                                            Text(
-                                              data.name,
-                                              style: TextStyle(
-                                                decoration: TextDecoration.none,
-                                                color: currentTheme.primaryColor,
-                                                fontSize: 32,
-                                                fontWeight: FontWeight.bold,
+                                            Container(
+                                              width: data.profilePictureId == null ? MediaQuery.of(context).size.width * 0.9 : MediaQuery.of(context).size.width * 0.6,
+                                              child: Text(
+                                                data.name,
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  decoration: TextDecoration.none,
+                                                  color: currentTheme.primaryColor,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 24,
+                                                ),
                                               ),
                                             ),
-                                            Text(
-                                              '@${data.username}',
-                                              style: const TextStyle(
-                                                decoration: TextDecoration.none,
-                                                color: Colors.grey,
-                                                fontWeight: FontWeight.normal,
-                                                fontSize: 20,
+                                            Container(
+                                              width: data.profilePictureId == null ? MediaQuery.of(context).size.width * 0.9 : MediaQuery.of(context).size.width * 0.6,
+                                              child: Text(
+                                                '@${data.username}',
+                                                style: const TextStyle(
+                                                  decoration: TextDecoration.none,
+                                                  color: Colors.grey,
+                                                  fontWeight: FontWeight.normal,
+                                                  fontSize: 20,
+                                                ),
                                               ),
                                             ),
                                             const SizedBox(height: 10,),

@@ -3,6 +3,7 @@ import 'package:ringoflutter/Security/Functions/LogOutFunc.dart';
 import 'package:ringoflutter/Classes/TokensClass.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:ringoflutter/api_endpoints.dart';
 
 Future<bool> checkTimestamp() async {
   final storage = FlutterSecureStorage();
@@ -31,7 +32,7 @@ Future<bool> checkTimestamp() async {
 
 Future<bool> refreshTokens(String refreshToken) async {
   final storage = FlutterSecureStorage();
-  final url = Uri.parse('http://localhost:8080/api/auth/refresh-token');
+  final url = Uri.parse('${ApiEndpoints.REFRESH_TOKENS}');
   final headers = {
     'Authorization': 'Bearer $refreshToken',
   };

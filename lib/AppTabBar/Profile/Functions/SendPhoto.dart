@@ -5,6 +5,7 @@ import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'dart:io';
+import 'package:ringoflutter/api_endpoints.dart';
 
 Future<XFile?> pickImage() async {
   try {
@@ -29,7 +30,7 @@ Future<XFile?> takeImage() async {
 void sendPhoto(File image) async {
   await checkTimestamp();
 
-  Uri url = Uri.parse('http://localhost:8080/api/participants/profile-picture');
+  Uri url = Uri.parse('${ApiEndpoints.SET_PROFILE_PICTURE}');
   const storage = FlutterSecureStorage();
   var token = await storage.read(key: "access_token");
 

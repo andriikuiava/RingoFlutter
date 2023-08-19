@@ -4,6 +4,7 @@ import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'package:ringoflutter/AppTabBar/Profile/Functions/SendPhoto.dart';
+import 'package:ringoflutter/api_endpoints.dart';
 
 void updateUser(String name, String username, File? image, int genderId, String dateOfBirth) async {
   await checkTimestamp();
@@ -17,7 +18,7 @@ void updateUser(String name, String username, File? image, int genderId, String 
   if (genderId == 2) {
     selectedGender = "OTHER";
   }
-  Uri url = Uri.parse('http://localhost:8080/api/participants');
+  Uri url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
   var storage = const FlutterSecureStorage();
   var token = await storage.read(key: "access_token");
   var headers = {
