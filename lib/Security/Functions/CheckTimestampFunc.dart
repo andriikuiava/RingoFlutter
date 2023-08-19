@@ -41,7 +41,7 @@ Future<bool> refreshTokens(String refreshToken) async {
     final response = await http.get(url, headers: headers);
 
     if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(response.body);
+      final jsonResponse = customJsonDecode(response.body);
       await storage.write(key: "access_token", value: jsonResponse['accessToken']);
       await storage.write(key: "refresh_token", value: jsonResponse['refreshToken']);
 

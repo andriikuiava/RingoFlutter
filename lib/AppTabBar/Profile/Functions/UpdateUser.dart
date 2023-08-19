@@ -31,7 +31,7 @@ void updateUser(String name, String username, File? image, int genderId, String 
     'gender': selectedGender,
     'dateOfBirth': dateOfBirth,
   });
-  print(jsonDecode(body));
+  print(customJsonDecode(body));
   var response = await http.put(url, headers: headers, body: body);
   if (response.statusCode == 200) {
     print("Uploaded!");

@@ -1,3 +1,9 @@
+import 'dart:convert';
+
+dynamic customJsonDecode(String responseBody) {
+  return jsonDecode(utf8.decode(responseBody.codeUnits));
+}
+
 class ApiEndpoints {
   static const String BASE_URL = "http://localhost:8080/api";
 

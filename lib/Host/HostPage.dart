@@ -51,7 +51,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
-      return Organisation.fromJson(jsonDecode(response.body));
+      return Organisation.fromJson(customJsonDecode(response.body));
     } else {
       throw Exception('Failed to load host');
     }
@@ -371,7 +371,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
-      var reviewList = jsonDecode(response.body) as List<dynamic>;
+      var reviewList = customJsonDecode(response.body) as List<dynamic>;
       return reviewList.map((item) => Review.fromJson(item)).toList();
     } else {
       throw Exception('Failed to load reviews');
@@ -460,7 +460,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
-      var eventList = jsonDecode(response.body) as List<dynamic>;
+      var eventList = customJsonDecode(response.body) as List<dynamic>;
       return eventList.map((item) => EventInFeed.fromJson(item)).toList();
     } else {
       throw Exception('Failed to load events');
@@ -610,7 +610,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
-      var eventList = jsonDecode(response.body) as List<dynamic>;
+      var eventList = customJsonDecode(response.body) as List<dynamic>;
       return eventList.map((item) => EventInFeed.fromJson(item)).toList();
     } else {
       throw Exception('Failed to load events');

@@ -32,7 +32,7 @@ Future<void> signInWithGoogle() async {
       var response = await http.post(Uri.parse(ApiEndpoints.LOGIN_GOOGLE), body: jsonEncode({"idToken": idToken}), headers: {"Content-Type": "application/json"});
       if (response.statusCode == 200) {
         print("Logged in with Google");
-        final jsonResponse = jsonDecode(response.body);
+        final jsonResponse = customJsonDecode(response.body);
         DateTime currentTime = DateTime.now();
         DateTime futureTime =
         currentTime.add(const Duration(seconds: 30));
@@ -52,7 +52,7 @@ Future<void> signInWithGoogle() async {
           'Authorization': 'Bearer ${jsonResponse['accessToken']}'
         });
         if (responseCheckIfActivated.statusCode == 200) {
-          final jsonResponse = jsonDecode(responseCheckIfActivated.body);
+          final jsonResponse = customJsonDecode(responseCheckIfActivated.body);
           print(jsonResponse);
           storage.write(
               key: "id",
@@ -78,7 +78,7 @@ Future<void> signInWithGoogle() async {
           if (responseAfterSigningUp.statusCode == 200) {
             print("Logged in with Google");
             print(responseAfterSigningUp.body);
-            final jsonResponse = jsonDecode(responseAfterSigningUp.body);
+            final jsonResponse = customJsonDecode(responseAfterSigningUp.body);
             DateTime currentTime = DateTime.now();
             DateTime futureTime =
             currentTime.add(const Duration(seconds: 30));
@@ -98,7 +98,7 @@ Future<void> signInWithGoogle() async {
               'Authorization': 'Bearer ${jsonResponse['accessToken']}'
             });
             if (responseCheckIfActivated.statusCode == 200) {
-              final jsonResponse = jsonDecode(responseCheckIfActivated.body);
+              final jsonResponse = customJsonDecode(responseCheckIfActivated.body);
               print(jsonResponse);
               storage.write(
                   key: "id",
@@ -370,7 +370,7 @@ class _LoginPageState extends State<LoginPage> {
                                   var response = await http.post(Uri.parse(ApiEndpoints.LOGIN_APPLE), body: jsonEncode({"idToken": idToken}), headers: {"Content-Type": "application/json"});
                                   if (response.statusCode == 200) {
                                     print("Logged in with Apple");
-                                    final jsonResponse = jsonDecode(response.body);
+                                    final jsonResponse = customJsonDecode(response.body);
                                     DateTime currentTime = DateTime.now();
                                     DateTime futureTime =
                                     currentTime.add(const Duration(seconds: 30));
@@ -390,7 +390,7 @@ class _LoginPageState extends State<LoginPage> {
                                       'Authorization': 'Bearer ${jsonResponse['accessToken']}'
                                     });
                                     if (responseCheckIfActivated.statusCode == 200) {
-                                      final jsonResponse = jsonDecode(responseCheckIfActivated.body);
+                                      final jsonResponse = customJsonDecode(responseCheckIfActivated.body);
                                       print(jsonResponse);
                                       storage.write(
                                           key: "id",
@@ -416,7 +416,7 @@ class _LoginPageState extends State<LoginPage> {
                                       if (responseAfterSigningUp.statusCode == 200) {
                                         print("Logged in with Apple");
                                         print(responseAfterSigningUp.body);
-                                        final jsonResponse = jsonDecode(responseAfterSigningUp.body);
+                                        final jsonResponse = customJsonDecode(responseAfterSigningUp.body);
                                         DateTime currentTime = DateTime.now();
                                         DateTime futureTime =
                                         currentTime.add(const Duration(seconds: 30));
@@ -436,7 +436,7 @@ class _LoginPageState extends State<LoginPage> {
                                           'Authorization': 'Bearer ${jsonResponse['accessToken']}'
                                         });
                                         if (responseCheckIfActivated.statusCode == 200) {
-                                          final jsonResponse = jsonDecode(responseCheckIfActivated.body);
+                                          final jsonResponse = customJsonDecode(responseCheckIfActivated.body);
                                           print(jsonResponse);
                                           storage.write(
                                               key: "id",
