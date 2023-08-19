@@ -110,7 +110,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     if (response.statusCode == 200) {
                       Navigator.pop(context);
                     } else {
-                      var body = jsonDecode(response.body);
+                      var body = customJsonDecode(response.body);
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {

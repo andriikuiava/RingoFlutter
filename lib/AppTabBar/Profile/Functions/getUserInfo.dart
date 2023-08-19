@@ -15,7 +15,7 @@ Future<User> getUserInfo() async {
   };
   var response = await http.get(url, headers: headers);
   if (response.statusCode == 200) {
-    return User.fromJson(jsonDecode(response.body));
+    return User.fromJson(customJsonDecode(response.body));
   } else {
     throw Exception('Failed to load user');
   }

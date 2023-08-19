@@ -40,12 +40,11 @@ class _CheckerPageState extends State<CheckerPage> {
       DateTime stored = DateTime.parse(storedTime);
       Uri url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
       var responseId = await http.get(url, headers: {
-        'Content-Type': 'application/json; charset=utf-8',
+        'Content-Type': 'application/json',
         'Authorization': 'Bearer ${token}'
       });
-      print(responseId.body);
       if (responseId.statusCode == 200) {
-        final jsonResponse = jsonDecode(responseId.body);
+        final jsonResponse = customJsonDecode(responseId.body);
         storage.write(
             key: "id",
             value: jsonResponse['id'].toString());

@@ -341,7 +341,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
     print(headers);
     var response = await http.post(url, headers: headers, body: json.encode(body));
     if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(response.body);
+      final jsonResponse = customJsonDecode(response.body);
       await storage.write(key: "access_token", value: jsonResponse['accessToken']);
       await storage.write(key: "refresh_token", value: jsonResponse['refreshToken']);
 

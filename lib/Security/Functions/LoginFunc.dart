@@ -20,7 +20,7 @@ Future<Tokens> loginFunc(LoginCredentials loginCredentials) async {
   const storage = FlutterSecureStorage();
 
   if (response.statusCode == 200) {
-    final jsonResponse = jsonDecode(response.body);
+    final jsonResponse = customJsonDecode(response.body);
     DateTime currentTime = DateTime.now();
     DateTime futureTime =
     currentTime.add(const Duration(seconds: 30));
@@ -40,7 +40,7 @@ Future<Tokens> loginFunc(LoginCredentials loginCredentials) async {
       'Authorization': 'Bearer ${jsonResponse['accessToken']}'
     });
     if (responseId.statusCode == 200) {
-      final jsonResponse = jsonDecode(responseId.body);
+      final jsonResponse = customJsonDecode(responseId.body);
       print(jsonResponse);
       storage.write(
           key: "id",

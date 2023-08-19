@@ -185,7 +185,7 @@ class FeedPage extends StatelessWidget {
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
-      var eventList = jsonDecode(response.body) as List<dynamic>;
+      var eventList = customJsonDecode(response.body) as List<dynamic>;
       return eventList.map((item) => EventInFeed.fromJson(item)).toList();
     } else {
       throw Exception('Failed to load events');
@@ -342,7 +342,7 @@ class FeedPage extends StatelessWidget {
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
-      var categoryList = jsonDecode(response.body) as List<dynamic>;
+      var categoryList = customJsonDecode(response.body) as List<dynamic>;
       return categoryList.map((item) => Category.fromJson(item)).toList();
     } else {
       throw Exception('Failed to load categories');
@@ -421,7 +421,7 @@ class FeedPage extends StatelessWidget {
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
-      var eventList = jsonDecode(response.body) as List<dynamic>;
+      var eventList = customJsonDecode(response.body) as List<dynamic>;
       return eventList.map((item) => EventInFeed.fromJson(item)).toList();
     } else {
       throw Exception('Failed to load events');
@@ -580,7 +580,7 @@ class FeedPage extends StatelessWidget {
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
-      var eventList = jsonDecode(response.body) as List<dynamic>;
+      var eventList = customJsonDecode(response.body) as List<dynamic>;
       return eventList.map((item) => EventInFeed.fromJson(item)).toList();
     } else {
       throw Exception('Failed to load events');

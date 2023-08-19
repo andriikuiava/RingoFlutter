@@ -51,7 +51,7 @@ class _PopularForFeedState extends State<PopularForFeed>
     final response = await http.get(url, headers: headers);
 
     if (response.statusCode == 200) {
-      final List<dynamic> newData = jsonDecode(response.body);
+      final List<dynamic> newData = customJsonDecode(response.body);
       setState(() {
         _data.addAll(newData.map((item) =>
             EventInFeed.fromJson(item))); // Convert dynamic list to EventInFeed objects
