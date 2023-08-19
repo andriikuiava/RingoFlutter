@@ -3,11 +3,12 @@ import 'dart:convert';
 import 'package:ringoflutter/Classes/UserClass.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
+import 'package:ringoflutter/api_endpoints.dart';
 
 Future<User> getUserInfo() async {
   await checkTimestamp();
   const storage = FlutterSecureStorage();
-  Uri url = Uri.parse('http://localhost:8080/api/participants');
+  Uri url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
   var token = await storage.read(key: 'access_token');
   var headers = {
     'Authorization': 'Bearer $token',

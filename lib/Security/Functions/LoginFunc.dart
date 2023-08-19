@@ -7,10 +7,12 @@ import 'package:ringoflutter/AppTabBar/Home.dart';
 import 'package:ringoflutter/Security/checkIsLoggedIn.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ringoflutter/Security/EmailVerificationPage.dart';
+import 'package:ringoflutter/main.dart';
+import 'package:ringoflutter/api_endpoints.dart';
 
 
 Future<Tokens> loginFunc(LoginCredentials loginCredentials) async {
-  final Uri url = Uri.parse('http://localhost:8080/api/auth/login');
+  final Uri url = Uri.parse('${ApiEndpoints.LOGIN_RINGO}');
   final jsonBody = jsonEncode(loginCredentials.toJson());
   final headers = {'Content-Type': 'application/json'};
 
@@ -32,7 +34,7 @@ Future<Tokens> loginFunc(LoginCredentials loginCredentials) async {
         key: "refresh_token",
         value: jsonResponse['refreshToken']);
 
-    Uri url = Uri.parse('http://localhost:8080/api/participants');
+    Uri url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
     var responseId = await http.get(url, headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ${jsonResponse['accessToken']}'

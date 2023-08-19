@@ -13,6 +13,7 @@ import 'package:ringoflutter/Event/EventPage.dart';
 import 'package:pull_down_button/pull_down_button.dart';
 import 'package:ringoflutter/Classes/CurrencyClass.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ringoflutter/api_endpoints.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -119,7 +120,7 @@ class _SearchPageState extends State<SearchPage> {
       });
       var getRequest = buildRequest();
       var url = Uri.parse(
-          'http://localhost:8080/api/events?page=$currentPage&limit=10&$getRequest');
+          '${ApiEndpoints.SEARCH}?page=$currentPage&limit=10&$getRequest');
       print(url);
       var headers = {
         'Authorization': 'Bearer $token',
@@ -154,7 +155,7 @@ class _SearchPageState extends State<SearchPage> {
     await checkTimestamp();
     const storage = FlutterSecureStorage();
     String? token = await storage.read(key: 'access_token');
-    var url = Uri.parse('http://localhost:8080/api/currencies');
+    var url = Uri.parse('${ApiEndpoints.GET_CURRENCY}');
     var headers = {
       'Authorization': 'Bearer $token'
     };
@@ -850,7 +851,7 @@ class _SearchPageState extends State<SearchPage> {
                               child: SizedBox(
                                 height: MediaQuery.of(context).size.width * 0.93,
                                 child: Image.network(
-                                    "http://localhost:8080/api/photos/${event.mainPhotoId}"),
+                                    "${ApiEndpoints.GET_PHOTO}/${event.mainPhotoId}"),
                               ),
                             ),
                             const SizedBox(height: 5),

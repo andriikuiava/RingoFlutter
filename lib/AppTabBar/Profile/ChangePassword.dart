@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:ringoflutter/Security/Functions/LogOutFunc.dart';
 import 'package:flutter/animation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ringoflutter/api_endpoints.dart';
 
 class ChangePasswordView extends StatefulWidget {
   const ChangePasswordView({super.key});
@@ -41,7 +42,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
     await checkTimestamp();
     var storage = const FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
-    Uri url = Uri.parse('http://localhost:8080/api/participants');
+    Uri url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
     var headers = {
       'Authorization': 'Bearer ${token}',
     };
@@ -328,7 +329,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
     await checkTimestamp();
     var storage = const FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
-    Uri url = Uri.parse('http://localhost:8080/api/auth/change-password');
+    Uri url = Uri.parse('${ApiEndpoints.CHANGE_PASSWORD}');
     var headers = {
       'Authorization': "Bearer $token",
       'Content-Type': "application/json",

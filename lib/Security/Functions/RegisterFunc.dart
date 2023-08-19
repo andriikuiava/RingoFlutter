@@ -4,10 +4,11 @@ import 'package:ringoflutter/Classes/RegistrationCredentialsClass.dart';
 import 'package:ringoflutter/Security/Functions/LoginFunc.dart';
 import 'package:ringoflutter/Classes/LoginCredentialsClass.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ringoflutter/api_endpoints.dart';
 
 Future<void> registerUser(RegistrationCredentials registrationCredentials) async {
   try {
-    Uri url = Uri.parse('http://localhost:8080/api/participants/sign-up');
+    Uri url = Uri.parse('${ApiEndpoints.REGISTER}');
     var headers = {'Content-Type': 'application/json'};
     var jsonBody = jsonEncode(registrationCredentials.toJson());
 

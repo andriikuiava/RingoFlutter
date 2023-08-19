@@ -12,8 +12,16 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:ringoflutter/AppTabBar/Home.dart';
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
+import 'package:ringoflutter/api_endpoints.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'dart:io';
+import 'EmailVerificationPage.dart';
+import 'package:ringoflutter/Classes/TokensClass.dart';
+import 'package:ringoflutter/Security/Functions/ActivateAccount.dart';
+import 'package:ringoflutter/Security/ForgotPassword.dart';
 
 Future<void> signInWithGoogle() async {
+  const storage = FlutterSecureStorage();
   try {
     GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email'], clientId: "445780816677-on7ff5l41ig1ervle491sc7vuvg4n5ro.apps.googleusercontent.com");
     GoogleSignInAccount? account = await googleSignIn.signIn();
@@ -21,21 +29,102 @@ Future<void> signInWithGoogle() async {
     if (account != null) {
       GoogleSignInAuthentication authentication = await account.authentication;
       String idToken = authentication.idToken ?? '';
-      log('Google Sign-In idToken: $idToken');
-
-      var url = Uri.parse('http://localhost:8080/api/participants/sign-up/google');
-      var body = {'token': idToken};
-      var headers = {'Content-Type': 'application/json'};
-      var encodedBody = jsonEncode(body);
-
-      var response = await http.post(url, body: encodedBody, headers: headers);
+      var response = await http.post(Uri.parse(ApiEndpoints.LOGIN_GOOGLE), body: jsonEncode({"idToken": idToken}), headers: {"Content-Type": "application/json"});
       if (response.statusCode == 200) {
-        print('Google Sign-In success: $response');
-      } else {
-        print('Google Sign-In failed: ${response.body}');
+        print("Logged in with Google");
+        final jsonResponse = jsonDecode(response.body);
+        DateTime currentTime = DateTime.now();
+        DateTime futureTime =
+        currentTime.add(const Duration(seconds: 30));
+        storage.write(
+            key: "timestamp",
+            value: futureTime.toString());
+        storage.write(
+            key: "access_token",
+            value: jsonResponse['accessToken']);
+        storage.write(
+            key: "refresh_token",
+            value: jsonResponse['refreshToken']);
+        await checkTimestamp();
+        var url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
+        var responseCheckIfActivated = await http.get(url, headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${jsonResponse['accessToken']}'
+        });
+        if (responseCheckIfActivated.statusCode == 200) {
+          final jsonResponse = jsonDecode(responseCheckIfActivated.body);
+          print(jsonResponse);
+          storage.write(
+              key: "id",
+              value: jsonResponse['id'].toString());
+          if (jsonResponse['dateOfBirth'] == null) {
+            navigatorKey.currentState?.pushReplacement(
+              MaterialPageRoute(builder: (_) => ActivateAccountPage(usersEmail: jsonResponse['email'], usersUsername: jsonResponse['username'], usersName: jsonResponse['name'],),),
+            );
+          } else {
+            navigatorKey.currentState?.pushReplacement(
+              MaterialPageRoute(builder: (_) => const Home()),
+            );
+          }
+        } else {
+          print("Failed to check if account is activated");
+          throw Exception('Failed to load participants');
+        }
+      } else if (response.statusCode == 401) {
+        print("User not registered with Google");
+        var responseSignUp = await http.post(Uri.parse(ApiEndpoints.SIGNUP_GOOGLE), body: jsonEncode({"idToken": idToken}), headers: {"Content-Type": "application/json"});
+        if (responseSignUp.statusCode == 200) {
+          var responseAfterSigningUp = await http.post(Uri.parse(ApiEndpoints.LOGIN_GOOGLE), body: jsonEncode({"idToken": idToken}), headers: {"Content-Type": "application/json"});
+          if (responseAfterSigningUp.statusCode == 200) {
+            print("Logged in with Google");
+            print(responseAfterSigningUp.body);
+            final jsonResponse = jsonDecode(responseAfterSigningUp.body);
+            DateTime currentTime = DateTime.now();
+            DateTime futureTime =
+            currentTime.add(const Duration(seconds: 30));
+            storage.write(
+                key: "timestamp",
+                value: futureTime.toString());
+            storage.write(
+                key: "access_token",
+                value: jsonResponse['accessToken']);
+            storage.write(
+                key: "refresh_token",
+                value: jsonResponse['refreshToken']);
+            await checkTimestamp();
+            var url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
+            var responseCheckIfActivated = await http.get(url, headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ${jsonResponse['accessToken']}'
+            });
+            if (responseCheckIfActivated.statusCode == 200) {
+              final jsonResponse = jsonDecode(responseCheckIfActivated.body);
+              print(jsonResponse);
+              storage.write(
+                  key: "id",
+                  value: jsonResponse['id'].toString());
+              if (jsonResponse['dateOfBirth'] == null) {
+                navigatorKey.currentState?.pushReplacement(
+                  MaterialPageRoute(builder: (_) => ActivateAccountPage(usersEmail: jsonResponse['email'], usersUsername: jsonResponse['username'], usersName: jsonResponse['name'],),),
+                );
+              } else {
+                navigatorKey.currentState?.pushReplacement(
+                  MaterialPageRoute(builder: (_) => const Home()),
+                );
+              }
+            } else {
+              print("Failed to check if account is activated");
+              throw Exception('Failed to load participants');
+            }
+          } else {
+            print("Failed to register with Google");
+            throw Exception('Failed to load participants');
+          }
+        } else {
+          print("Failed to register with Google");
+          throw Exception('Failed to load participants');
+        }
       }
-    } else {
-      print('Google Sign-In cancelled.');
     }
   } catch (error) {
     print('Error occurred during Google Sign-In: $error');
@@ -157,12 +246,12 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 36.0),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Row(
                     children: [
                       Expanded(
                         child: Container(
-                          height: 50,
                           decoration: BoxDecoration(
                             boxShadow: [
                               BoxShadow(
@@ -173,6 +262,8 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ],
                           ),
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          height: 50,
                           child: CupertinoButton(
                             color: currentTheme.colorScheme.background,
                             onPressed: () async {
@@ -207,82 +298,170 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 10.0),
                   Row(
                     children: [
-                      Expanded(
-                        child: Container(
-                          height: 50,
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: currentTheme.shadowColor,
-                                spreadRadius: 2,
-                                blurRadius: 5,
-                                offset: const Offset(0, 3),
-                              ),
-                            ],
-                          ),
-                          child: CupertinoButton(
-                            color: currentTheme.colorScheme.background,
-                            onPressed: () async {
-                              signInWithGoogle();
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  'assets/images/google-logo.png',
-                                  width: 24,
-                                  height: 24,
-                                ),
-                                const SizedBox(width: 8.0),
-                                Text(
-                                  'Continue with Google',
-                                  style: TextStyle(
-                                    color: currentTheme.primaryColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
+                      Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: currentTheme.shadowColor,
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: const Offset(0, 3),
                             ),
-                          ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10.0), // Added space between the buttons
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          height: 50,
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: currentTheme.shadowColor,
-                                spreadRadius: 2,
-                                blurRadius: 5,
-                                offset: const Offset(0, 3),
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        height: 50,
+                        child: CupertinoButton(
+                          color: currentTheme.colorScheme.background,
+                          onPressed: () async {
+                            signInWithGoogle();
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'assets/images/google-logo.png',
+                                width: 24,
+                                height: 24,
                               ),
-                            ],
-                          ),
-                          child: CupertinoButton(
-                            color: currentTheme.primaryColor,
-                            onPressed: () {},
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                'Login',
+                              const SizedBox(width: 8.0),
+                              Text(
+                                'Continue with Google',
                                 style: TextStyle(
-                                  color: currentTheme.colorScheme.background,
+                                  color: currentTheme.primaryColor,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            ),
+                            ],
                           ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20.0), // Added space between the buttons
+                  const SizedBox(height: 12.0),
+                  if (Platform.isIOS)
+                    Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: currentTheme.shadowColor,
+                                spreadRadius: 2,
+                                blurRadius: 5,
+                              ),
+                            ],
+                          ),
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          child: Column(
+                            children: [
+                              SignInWithAppleButton(
+                                style: currentTheme.brightness == Brightness.light
+                                    ? SignInWithAppleButtonStyle.black
+                                    : SignInWithAppleButtonStyle.white,
+                                onPressed: () async {
+                                  final credential = await SignInWithApple.getAppleIDCredential(
+                                    scopes: [
+                                      AppleIDAuthorizationScopes.email,
+                                      AppleIDAuthorizationScopes.fullName,
+                                    ],
+                                  );
+                                  var idToken = credential.identityToken;
+                                  var response = await http.post(Uri.parse(ApiEndpoints.LOGIN_APPLE), body: jsonEncode({"idToken": idToken}), headers: {"Content-Type": "application/json"});
+                                  if (response.statusCode == 200) {
+                                    print("Logged in with Apple");
+                                    final jsonResponse = jsonDecode(response.body);
+                                    DateTime currentTime = DateTime.now();
+                                    DateTime futureTime =
+                                    currentTime.add(const Duration(seconds: 30));
+                                    storage.write(
+                                        key: "timestamp",
+                                        value: futureTime.toString());
+                                    storage.write(
+                                        key: "access_token",
+                                        value: jsonResponse['accessToken']);
+                                    storage.write(
+                                        key: "refresh_token",
+                                        value: jsonResponse['refreshToken']);
+                                    await checkTimestamp();
+                                    var url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
+                                    var responseCheckIfActivated = await http.get(url, headers: {
+                                      'Content-Type': 'application/json',
+                                      'Authorization': 'Bearer ${jsonResponse['accessToken']}'
+                                    });
+                                    if (responseCheckIfActivated.statusCode == 200) {
+                                      final jsonResponse = jsonDecode(responseCheckIfActivated.body);
+                                      print(jsonResponse);
+                                      storage.write(
+                                          key: "id",
+                                          value: jsonResponse['id'].toString());
+                                      if (jsonResponse['dateOfBirth'] == null) {
+                                        navigatorKey.currentState?.pushReplacement(
+                                          MaterialPageRoute(builder: (_) => ActivateAccountPage(usersEmail: jsonResponse['email'], usersUsername: jsonResponse['username'], usersName: jsonResponse['name'],),),
+                                        );
+                                      } else {
+                                        navigatorKey.currentState?.pushReplacement(
+                                          MaterialPageRoute(builder: (_) => const Home()),
+                                        );
+                                      }
+                                    } else {
+                                      print("Failed to check if account is activated");
+                                      throw Exception('Failed to load participants');
+                                    }
+                                  } else if (response.statusCode == 401) {
+                                    print("User not registered with Apple");
+                                    var responseSignUp = await http.post(Uri.parse(ApiEndpoints.SIGNUP_APPLE), body: jsonEncode({"idToken": idToken}), headers: {"Content-Type": "application/json"});
+                                    if (responseSignUp.statusCode == 200) {
+                                      var responseAfterSigningUp = await http.post(Uri.parse(ApiEndpoints.LOGIN_APPLE), body: jsonEncode({"idToken": idToken}), headers: {"Content-Type": "application/json"});
+                                      if (responseAfterSigningUp.statusCode == 200) {
+                                        print("Logged in with Apple");
+                                        print(responseAfterSigningUp.body);
+                                        final jsonResponse = jsonDecode(responseAfterSigningUp.body);
+                                        DateTime currentTime = DateTime.now();
+                                        DateTime futureTime =
+                                        currentTime.add(const Duration(seconds: 30));
+                                        storage.write(
+                                            key: "timestamp",
+                                            value: futureTime.toString());
+                                        storage.write(
+                                            key: "access_token",
+                                            value: jsonResponse['accessToken']);
+                                        storage.write(
+                                            key: "refresh_token",
+                                            value: jsonResponse['refreshToken']);
+                                        await checkTimestamp();
+                                        var url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
+                                        var responseCheckIfActivated = await http.get(url, headers: {
+                                          'Content-Type': 'application/json',
+                                          'Authorization': 'Bearer ${jsonResponse['accessToken']}'
+                                        });
+                                        if (responseCheckIfActivated.statusCode == 200) {
+                                          final jsonResponse = jsonDecode(responseCheckIfActivated.body);
+                                          print(jsonResponse);
+                                          storage.write(
+                                              key: "id",
+                                              value: jsonResponse['id'].toString());
+                                          if (jsonResponse['dateOfBirth'] == null) {
+                                            navigatorKey.currentState?.pushReplacement(
+                                              MaterialPageRoute(builder: (_) => ActivateAccountPage(usersEmail: jsonResponse['email'], usersUsername: jsonResponse['username'], usersName: jsonResponse['name'],),),
+                                            );
+                                          } else {
+                                            navigatorKey.currentState?.pushReplacement(
+                                              MaterialPageRoute(builder: (_) => const Home()),
+                                            );
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  const SizedBox(height: 20.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -290,9 +469,16 @@ class _LoginPageState extends State<LoginPage> {
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: TextButton(
                           style: TextButton.styleFrom(
-                            padding: EdgeInsets.zero, // Remove padding around the text
+                            padding: EdgeInsets.zero,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ForgotPassword(),
+                              ),
+                            );
+                          },
                           child: Text(
                             'Forgot Password?',
                             style: TextStyle(
@@ -319,7 +505,7 @@ class _LoginPageState extends State<LoginPage> {
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: TextButton(
                           style: TextButton.styleFrom(
-                            padding: EdgeInsets.zero, // Remove padding around the text
+                            padding: EdgeInsets.zero,
                           ),
                           onPressed: () {
                             Navigator.push(

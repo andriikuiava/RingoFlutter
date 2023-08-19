@@ -7,6 +7,8 @@ import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:ringoflutter/Security/EmailVerificationPage.dart';
+import 'package:ringoflutter/api_endpoints.dart';
+import 'package:ringoflutter/Security/Functions/ActivateAccount.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = App.materialKey;
 
@@ -36,14 +38,14 @@ class _CheckerPageState extends State<CheckerPage> {
       var token = await storage.read(key: "access_token");
       DateTime current = DateTime.parse(currentTime);
       DateTime stored = DateTime.parse(storedTime);
-      Uri url = Uri.parse('http://localhost:8080/api/participants');
+      Uri url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
       var responseId = await http.get(url, headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json; charset=utf-8',
         'Authorization': 'Bearer ${token}'
       });
+      print(responseId.body);
       if (responseId.statusCode == 200) {
         final jsonResponse = jsonDecode(responseId.body);
-        print(jsonResponse);
         storage.write(
             key: "id",
             value: jsonResponse['id'].toString());
@@ -52,9 +54,15 @@ class _CheckerPageState extends State<CheckerPage> {
             MaterialPageRoute(builder: (_) => EmailVerificationPage(usersEmail: jsonResponse['email'],)),
           );
         } else {
-          navigatorKey.currentState?.pushReplacement(
-            MaterialPageRoute(builder: (_) => const Home()),
-          );
+          if (jsonResponse['dateOfBirth'] == null) {
+            navigatorKey.currentState?.pushReplacement(
+              MaterialPageRoute(builder: (_) => ActivateAccountPage(usersEmail: jsonResponse['email'], usersUsername: jsonResponse['username'], usersName: jsonResponse['name'],),),
+            );
+          } else {
+            navigatorKey.currentState?.pushReplacement(
+              MaterialPageRoute(builder: (_) => const Home()),
+            );
+          }
         }
       } else {
         throw Exception('Failed to load participants');

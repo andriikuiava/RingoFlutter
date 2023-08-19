@@ -17,6 +17,7 @@ import 'package:ringoflutter/Event/FormCompletion.dart';
 import 'package:ringoflutter/Classes/ContactCardClass.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
+import 'package:ringoflutter/api_endpoints.dart';
 
 
 class EventPage extends StatefulWidget {
@@ -49,7 +50,7 @@ class _EventPageState extends State<EventPage>
     final storage = FlutterSecureStorage();
 
     var token = await storage.read(key: 'access_token');
-    Uri url = Uri.parse('http://localhost:8080/api/events/${widget.eventId}');
+    Uri url = Uri.parse('${ApiEndpoints.SEARCH}/${widget.eventId}');
 
     var headers = {
       'Authorization': 'Bearer $token',
@@ -72,7 +73,7 @@ class _EventPageState extends State<EventPage>
     await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
-    Uri url = (isSaved ? Uri.parse('http://localhost:8080/api/events/${widget.eventId}/unsave') : Uri.parse('http://localhost:8080/api/events/${widget.eventId}/save'));
+    Uri url = (isSaved ? Uri.parse('${ApiEndpoints.SEARCH}/${widget.eventId}/${ApiEndpoints.UNSAVE}') : Uri.parse('${ApiEndpoints.SEARCH}/${widget.eventId}/${ApiEndpoints.SAVE}}'));
     print(url);
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.post(url, headers: headers);
@@ -90,7 +91,7 @@ class _EventPageState extends State<EventPage>
     await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
-    Uri url = Uri.parse('http://localhost:8080/api/events/${widget.eventId}/join');
+    Uri url = Uri.parse('${ApiEndpoints.SEARCH}/${widget.eventId}/${ApiEndpoints.JOIN}');
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.post(url, headers: headers);
     print(response.body);
@@ -108,7 +109,7 @@ class _EventPageState extends State<EventPage>
     await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
-    Uri url = Uri.parse('http://localhost:8080/api/events/${widget.eventId}/ticket');
+    Uri url = Uri.parse('${ApiEndpoints.SEARCH}/${widget.eventId}/${ApiEndpoints.GET_TICKET}');
     var headers = {'Authorization': 'Bearer $token',
       'Content-Type': 'application/json'};
 
@@ -148,9 +149,9 @@ class _EventPageState extends State<EventPage>
         if (snapshot.hasData) {
           EventFull event = snapshot.data!;
           List<String> imgList = [];
-          imgList.add("http://localhost:8080/api/photos/${event.mainPhoto.mediumQualityId}");
+          imgList.add("${ApiEndpoints.GET_PHOTO}/${event.mainPhoto.mediumQualityId}");
           for(var photoLoop in event.photos) {
-            imgList.add("http://localhost:8080/api/photos/${photoLoop.normalId}");
+            imgList.add("${ApiEndpoints.GET_PHOTO}/${photoLoop.normalId}");
           }
 
           return Material(
@@ -228,7 +229,7 @@ class _EventPageState extends State<EventPage>
                                             child: CircleAvatar(
                                               radius: 32.0,
                                               backgroundImage: NetworkImage(
-                                                'http://localhost:8080/api/photos/${event.host.profilePictureId}',
+                                                '${ApiEndpoints.GET_PHOTO}/${event.host.profilePictureId}',
                                               ),
                                             ),
                                           ),

@@ -5,6 +5,7 @@ import 'package:ringoflutter/Security/Functions/LogoutFunc.dart';
 import 'dart:async';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:ringoflutter/api_endpoints.dart';
 
 class EmailVerificationPage extends StatefulWidget {
   final String usersEmail;
@@ -29,7 +30,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
     await checkTimestamp();
     var storage = const FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
-    Uri url = Uri.parse('http://localhost:8080/api/participants');
+    Uri url = Uri.parse("${ApiEndpoints.CURRENT_PARTICIPANT}");
     var headers = {
       'Authorization': 'Bearer ${token}',
     };
@@ -61,7 +62,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
     await checkTimestamp();
     var storage = FlutterSecureStorage();
     var token = await storage.read(key: "access_token");
-    Uri url = Uri.parse('http://localhost:8080/api/auth/send-verification-email');
+    Uri url = Uri.parse('${ApiEndpoints.RESEND_CONFIRMATION_LINK}');
     var headers = {
       'Authorization': 'Bearer ${token}'
     };

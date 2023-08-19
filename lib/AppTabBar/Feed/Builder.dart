@@ -10,6 +10,7 @@ import 'package:ringoflutter/Classes/EventClass.dart';
 import 'package:ringoflutter/UI/Themes.dart';
 import 'package:ringoflutter/UI/Functions/Formats.dart';
 import 'package:ringoflutter/Event/EventPage.dart';
+import 'package:ringoflutter/api_endpoints.dart';
 
 class FeedBuilder extends StatefulWidget {
   final String request;
@@ -137,7 +138,7 @@ class _FeedBuilderState extends State<FeedBuilder> {
                             .size
                             .width * 0.93,
                         child: Image.network(
-                            "http://localhost:8080/api/photos/${event
+                            "${ApiEndpoints.GET_PHOTO}/${event
                                 .mainPhotoId}"),
                       ),
                     ),
