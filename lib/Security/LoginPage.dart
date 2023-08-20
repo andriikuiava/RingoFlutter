@@ -131,7 +131,6 @@ Future<void> signInWithGoogle() async {
   }
 }
 
-
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -150,6 +149,7 @@ class _LoginPageState extends State<LoginPage> {
     _passwordController = TextEditingController();
   }
 
+
   @override
   Widget build(BuildContext context) {
     final currentTheme = Theme.of(context);
@@ -157,13 +157,15 @@ class _LoginPageState extends State<LoginPage> {
 
     return CupertinoPageScaffold(
       backgroundColor: currentTheme.scaffoldBackgroundColor,
-      child: SafeArea(
+      child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 30.0),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.1,
+              ),
               SizedBox(
                 height: 145,
                 child: Image.asset(currentTheme.brightness == Brightness.light
@@ -184,13 +186,17 @@ class _LoginPageState extends State<LoginPage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  DefaultTextStyle(
-                    style: TextStyle(
-                      color: currentTheme.primaryColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                    child: const Text('Email'),
+                  Row(
+                    children: [
+                      DefaultTextStyle(
+                        style: TextStyle(
+                          color: currentTheme.primaryColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                        child: const Text('Email'),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 8.0),
                   SizedBox(

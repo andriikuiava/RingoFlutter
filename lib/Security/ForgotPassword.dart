@@ -14,6 +14,19 @@ class ForgotPassword extends StatefulWidget {
 class _ForgotPasswordState extends State<ForgotPassword> {
   TextEditingController _emailController = TextEditingController();
 
+  bool isEmailValid = false;
+
+  void validateEmail() {
+    setState(() {
+      if (RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+          .hasMatch(_emailController.text)) {
+        isEmailValid = true;
+      } else {
+        isEmailValid = false;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final currentTheme = Theme.of(context);
@@ -67,6 +80,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 child:  SizedBox(
                   height: 50,
                   child: CupertinoTextField(
+                    onChanged: (value) {
+                      validateEmail();
+                    },
                     cursorColor: currentTheme.primaryColor,
                     controller: _emailController,
                     placeholder: 'Enter your email',
@@ -83,7 +99,27 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 ),
               ),
               const SizedBox(
-                height: 20,
+                height: 10,
+              ),
+              Row(
+                children: [
+                  const SizedBox(
+                    width: 25,
+                  ),
+                  if (!isEmailValid)
+                    Text(
+                      'Please enter a valid email',
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 12,
+                        decoration: TextDecoration.none,
+                      ),
+                    ),
+                  Spacer(),
+                ],
+              ),
+              const SizedBox(
+                height: 10,
               ),
               Container(
                 width: MediaQuery.of(context).size.width * 0.9,

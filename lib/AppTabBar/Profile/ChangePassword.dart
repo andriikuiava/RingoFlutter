@@ -38,6 +38,43 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
     super.dispose();
   }
 
+  bool isPasswordValid = false;
+  bool isRepeatPasswordValid = false;
+  bool isFormValid = false;
+
+  void validatePasswords() {
+    if (RegExp(r"((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,64})").hasMatch(
+        _newPasswordController.text)) {
+      setState(() {
+        isPasswordValid = true;
+      });
+    } else {
+      setState(() {
+        isPasswordValid = false;
+      });
+    }
+
+    if (_newPasswordController.text == _repeatNewPasswordController.text) {
+      setState(() {
+        isRepeatPasswordValid = true;
+      });
+    } else {
+      setState(() {
+        isRepeatPasswordValid = false;
+      });
+    }
+
+    if (isPasswordValid && isRepeatPasswordValid) {
+      setState(() {
+        isFormValid = true;
+      });
+    } else {
+      setState(() {
+        isFormValid = false;
+      });
+    }
+  }
+
   Future<void> deleteAccount() async {
     await checkTimestamp();
     var storage = const FlutterSecureStorage();
@@ -140,6 +177,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                         child: FractionallySizedBox(
                           widthFactor: 0.9,
                           child: CupertinoTextField(
+                            obscureText: true,
                             cursorColor: currentTheme.primaryColor,
                             controller: _oldPasswordController,
                             placeholder: 'Enter your current password',
@@ -178,6 +216,11 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                         child: FractionallySizedBox(
                           widthFactor: 0.9,
                           child: CupertinoTextField(
+                            obscureText: true,
+                            onChanged: (value) {
+                              validatePasswords();
+                            },
+                            maxLength: 64,
                             cursorColor: currentTheme.primaryColor,
                             controller: _newPasswordController,
                             placeholder: 'Enter your new password',
@@ -193,6 +236,24 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                           ),
                         ),
                       ),
+                      const SizedBox(height: 8.0),
+                      if (!isPasswordValid)
+                        Container(
+                          padding: const EdgeInsets.only(left: 24),
+                          child: Row(
+                            children: [
+                              DefaultTextStyle(
+                                style: TextStyle(
+                                  color: currentTheme.errorColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
+                                child: const Text('Enter a valid password'),
+                              ),
+                              Spacer(),
+                            ],
+                          ),
+                        ),
                       const SizedBox(height: 12.0),
                       Container(
                         padding: const EdgeInsets.only(left: 24),
@@ -216,6 +277,11 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                         child: FractionallySizedBox(
                           widthFactor: 0.9,
                           child: CupertinoTextField(
+                          obscureText: true,
+                            onChanged: (value) {
+                              validatePasswords();
+                            },
+                            maxLength: 64,
                             cursorColor: currentTheme.primaryColor,
                             controller: _repeatNewPasswordController,
                             placeholder: 'Repeat your new password',
@@ -231,22 +297,43 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                           ),
                         ),
                       ),
+                      const SizedBox(height: 8.0),
+                      if (!isRepeatPasswordValid)
+                        Container(
+                          padding: const EdgeInsets.only(left: 24),
+                          child: Row(
+                            children: [
+                              DefaultTextStyle(
+                                style: TextStyle(
+                                  color: currentTheme.errorColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
+                                child: const Text('Passwords do not match'),
+                              ),
+                              Spacer(),
+                            ],
+                          ),
+                        ),
                       const SizedBox(height: 20.0),
                       SizedBox(
                         height: 50,
                         child: FractionallySizedBox(
                           widthFactor: 0.9,
                           child: CupertinoButton(
-                            color: currentTheme.colorScheme.background,
-                            onPressed: () {
-                              checkTimestamp();
-                              changePassword(_oldPasswordController.text,
-                                  _newPasswordController.text
+                            color: isFormValid ? currentTheme.colorScheme.background : currentTheme.colorScheme.background.withOpacity(0.5),
+                            onPressed: () async {
+                              if (isFormValid) {
+                              await checkTimestamp();
+                              changePassword(_oldPasswordController.text, _newPasswordController.text
                               );
+                              } else {
+                                null;
+                              }
                             },
                             child: Text('Change password',
                               style: TextStyle(
-                                color: currentTheme.primaryColor,
+                                color: isFormValid ? currentTheme.primaryColor : currentTheme.primaryColor.withOpacity(0.5),
                                 fontWeight: FontWeight.bold,
                               ),),
                           ),
@@ -268,7 +355,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                       },
                       child: Center(
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center, // Align icon and text in the center
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
                               CupertinoIcons.square_arrow_left,
@@ -289,14 +376,16 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                   ),
                 ),
                 const SizedBox(height: 30.0),
-                SizedBox(
-                  height: 50,
-                  child: FractionallySizedBox(
-                    widthFactor: 0.9,
-                    child: CupertinoButton(
-                      color: currentTheme.colorScheme.background,
-                      onPressed: deleteAccount,
-                      child: Center(
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.05,),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      height: 50,
+                      child: CupertinoButton(
+                        color: currentTheme.errorColor,
+                        onPressed: deleteAccount,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -316,7 +405,8 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                         ),
                       ),
                     ),
-                  ),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.05,),
+                  ],
                 ),
               ],
             ),

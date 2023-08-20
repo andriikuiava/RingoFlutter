@@ -24,6 +24,34 @@ class _EditProfileState extends State<EditProfile> {
   int selectedGender = 2;
   File? image;
 
+  bool isFullNameValid = true;
+  bool isUsernameValid = true;
+  bool isFormValid = true;
+
+  void validateFields() {
+    setState(() {
+      if (RegExp(r"^.{3,49}$").hasMatch(_fullNameController.text)) {
+        isFullNameValid = true;
+      } else {
+        isFullNameValid = false;
+      }
+
+      if (RegExp(r"^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{2,29}$")
+          .hasMatch(_usernameController.text)) {
+        isUsernameValid = true;
+      } else {
+        isUsernameValid = false;
+      }
+
+      if (isFullNameValid && isUsernameValid) {
+        isFormValid = true;
+      } else {
+        isFormValid = false;
+      }
+    });
+  }
+
+
   @override
   void initState() {
     super.initState();
@@ -183,6 +211,10 @@ class _EditProfileState extends State<EditProfile> {
                   child: FractionallySizedBox(
                     widthFactor: 0.9,
                     child: CupertinoTextField(
+                      onChanged: (value) {
+                        validateFields();
+                      },
+                      maxLength: 49,
                       cursorColor: currentTheme.primaryColor,
                       controller: _fullNameController,
                       placeholder: 'Enter your name',
@@ -198,6 +230,19 @@ class _EditProfileState extends State<EditProfile> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 8.0),
+                if (!isFullNameValid)
+                  Container(
+                    padding: EdgeInsets.only(left: leadingPadding),
+                    child: const DefaultTextStyle(
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                      child: const Text('Full name is required'),
+                    ),
+                  ),
                 const SizedBox(height: 12.0),
                 Container(
                   padding: EdgeInsets.only(left: leadingPadding),
@@ -216,6 +261,10 @@ class _EditProfileState extends State<EditProfile> {
                   child: FractionallySizedBox(
                     widthFactor: 0.9,
                     child: CupertinoTextField(
+                      maxLength: 30,
+                      onChanged: (value) {
+                        validateFields();
+                      },
                       cursorColor: currentTheme.primaryColor,
                       controller: _usernameController,
                       placeholder: 'Enter your username',
@@ -231,6 +280,19 @@ class _EditProfileState extends State<EditProfile> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 8.0),
+                if (!isUsernameValid)
+                  Container(
+                    padding: EdgeInsets.only(left: leadingPadding),
+                    child: const DefaultTextStyle(
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                      child: const Text('Username is required'),
+                    ),
+                  ),
                 const SizedBox(height: 12.0),
                 Container(
                   padding: EdgeInsets.only(left: leadingPadding),
@@ -252,6 +314,8 @@ class _EditProfileState extends State<EditProfile> {
                       return SizedBox(
                         height: 180,
                         child: CupertinoDatePicker(
+                          minimumDate: DateTime(1900),
+                          maximumDate: DateTime.now(),
                           mode: CupertinoDatePickerMode.date,
                           showDayOfWeek: true,
                           initialDateTime: value,
@@ -340,19 +404,28 @@ class _EditProfileState extends State<EditProfile> {
                     Expanded(
                       flex: 4,
                       child: CupertinoButton(
-                        color: currentTheme.colorScheme.background,
+                        color: isFormValid
+                            ? currentTheme.backgroundColor
+                            : currentTheme.backgroundColor.withOpacity(0.5),
                         onPressed: () async {
-                          DateFormat dateFormat = DateFormat('yyyy-MM-dd');
-                          String formattedTimestamp = dateFormat.format(_dateController.value);
-                          updateUser(_fullNameController.text, _usernameController.text, image, selectedGender, formattedTimestamp);
-                          Navigator.pop(context);
+                          validateFields();
+                          if (isFormValid) {
+                            DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+                            String formattedTimestamp = dateFormat.format(_dateController.value);
+                            updateUser(_fullNameController.text, _usernameController.text, image, selectedGender, formattedTimestamp);
+                            Navigator.pop(context);
+                          } else {
+                            null;
+                          }
                         },
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(
                             'Save',
                             style: TextStyle(
-                              color: currentTheme.primaryColor,
+                              color: isFormValid
+                                  ? currentTheme.primaryColor
+                                  : currentTheme.primaryColor.withOpacity(0.5),
                               fontWeight: FontWeight.bold,
                             ),
                           ),

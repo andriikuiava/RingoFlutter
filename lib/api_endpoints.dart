@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
+import 'package:status_alert/status_alert.dart';
 
 dynamic customJsonDecode(String responseBody) {
   return jsonDecode(utf8.decode(responseBody.codeUnits));
@@ -46,4 +48,43 @@ class ApiEndpoints {
   //CURRENCY & CATEGORY
   static const String GET_CURRENCY = "$BASE_URL/currencies";
   static const String GET_CATEGORY = "$BASE_URL/categories";
+}
+
+
+void showSuccessAlert(String title, String message, context) {
+  StatusAlert.show(
+    context,
+    duration: Duration(seconds: 2),
+    title: 'Success',
+    subtitle: message,
+    configuration: IconConfiguration(icon: CupertinoIcons.check_mark, size: MediaQuery.of(context).size.width * 0.4),
+  );
+}
+
+void showErrorAlert(String? title, String? message, context) {
+  StatusAlert.show(
+    context,
+    duration: Duration(seconds: 2),
+    title: 'Error',
+    subtitle: message,
+    configuration: IconConfiguration(icon: CupertinoIcons.exclamationmark_triangle, size: MediaQuery.of(context).size.width * 0.4),
+  );
+}
+
+void showSavedAlert(context) {
+  StatusAlert.show(
+    context,
+    duration: Duration(seconds: 2),
+    title: 'Saved',
+    configuration: IconConfiguration(icon: CupertinoIcons.bookmark_fill, size: MediaQuery.of(context).size.width * 0.4),
+  );
+}
+
+void showUnsavedAlert(context) {
+  StatusAlert.show(
+    context,
+    duration: Duration(seconds: 2),
+    title: 'Unsaved',
+    configuration: IconConfiguration(icon: CupertinoIcons.bookmark, size: MediaQuery.of(context).size.width * 0.4),
+  );
 }

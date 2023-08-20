@@ -31,6 +31,7 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   url_launcher: ^6.1.12
   sign_in_with_apple: ^5.0.0
+  status_alert: ^1.0.1
 
 dev_dependencies:
   flutter_test:
