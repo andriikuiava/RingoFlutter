@@ -34,6 +34,49 @@ class _RegistrationPageState extends State<RegistrationPage> {
     dateController = DateTime.now();
   }
 
+  bool isNameValid = false;
+  bool isUsernameValid = false;
+  bool isEmailValid = false;
+  bool isPasswordValid = false;
+  bool isFormValid = false;
+
+  void validateForm() {
+    setState(() {
+      if (RegExp(r"^.{3,49}$").hasMatch(_fullNameController.text)) {
+        isNameValid = true;
+      } else {
+        isNameValid = false;
+      }
+
+      if (RegExp(r"^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{2,29}$")
+          .hasMatch(_usernameController.text)) {
+        isUsernameValid = true;
+      } else {
+        isUsernameValid = false;
+      }
+
+      if (RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+          .hasMatch(_emailController.text)) {
+        isEmailValid = true;
+      } else {
+        isEmailValid = false;
+      }
+
+      if (RegExp(r"((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,64})")
+          .hasMatch(_passwordController.text)) {
+        isPasswordValid = true;
+      } else {
+        isPasswordValid = false;
+      }
+
+      if (isNameValid && isUsernameValid && isEmailValid && isPasswordValid) {
+        isFormValid = true;
+      } else {
+        isFormValid = false;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final currentTheme = Theme.of(context);
@@ -50,7 +93,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           padding: EdgeInsets.zero,
           child: Icon(
             CupertinoIcons.back,
-            color: currentTheme.primaryColor, // Set the desired color here
+            color: currentTheme.primaryColor,
           ),
           onPressed: () {
             Navigator.pop(context);
@@ -76,11 +119,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               radius: 60,
                               backgroundImage: FileImage(image!),
                             ),
-                      // Icon(
-                      //   CupertinoIcons.person_circle,
-                      //   color: currentTheme.primaryColor,
-                      //   size: 120,
-                      // )
                       const SizedBox(width: 20),
                       Expanded(
                         child: Column(
@@ -171,6 +209,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   SizedBox(
                     height: 50,
                     child: CupertinoTextField(
+                      maxLength: 49,
                       cursorColor: currentTheme.primaryColor,
                       controller: _fullNameController,
                       placeholder: 'Enter your name',
@@ -183,8 +222,22 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         color: currentTheme.colorScheme.background,
                         borderRadius: BorderRadius.circular(8.0),
                       ),
+                      onChanged: (value) {
+                        validateForm();
+                      },
                     ),
                   ),
+                  const SizedBox(height: 8.0),
+                  if (!isNameValid)
+                    const Text(
+                      "Name is required",
+                      style: TextStyle(
+                        color: Colors.red,
+                        decoration: TextDecoration.none,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -195,13 +248,51 @@ class _RegistrationPageState extends State<RegistrationPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  DefaultTextStyle(
-                    style: TextStyle(
-                      color: currentTheme.primaryColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                    child: const Text('Username'),
+
+                  const SizedBox(width: 8.0),
+                  Row(
+                    children: [
+                      DefaultTextStyle(
+                        style: TextStyle(
+                          color: currentTheme.primaryColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                        child: const Text('Username'),
+                      ),
+                      const SizedBox(width: 8.0),
+                      GestureDetector(
+                        onTap: () {
+                          showModalBottomSheet<void>(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return CupertinoActionSheet(
+                                title: const Text('Username should be unique, and can contain only letters, numbers, underscores and dots',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),),
+                                actions: <CupertinoActionSheetAction>[
+                                  CupertinoActionSheetAction(
+                                    child: Text('Close',
+                                      style: TextStyle(
+                                        color: currentTheme.primaryColor,
+                                      ),),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  )
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        child: Icon(
+                          CupertinoIcons.info,
+                          size: 16.0,
+                          color: currentTheme.primaryColor,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 8.0),
                   SizedBox(
@@ -219,8 +310,23 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         color: currentTheme.colorScheme.background,
                         borderRadius: BorderRadius.circular(8.0),
                       ),
+                      maxLength: 30,
+                      onChanged: (value) {
+                        validateForm();
+                      },
                     ),
                   ),
+                  const SizedBox(height: 8.0),
+                  if (!isUsernameValid)
+                    const Text(
+                      "Username is required",
+                      style: TextStyle(
+                        color: Colors.red,
+                        decoration: TextDecoration.none,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -243,6 +349,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   SizedBox(
                     height: 50,
                     child: CupertinoTextField(
+                      maxLength: 256,
                       cursorColor: currentTheme.primaryColor,
                       controller: _emailController,
                       placeholder: 'Enter your email',
@@ -255,8 +362,22 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         color: currentTheme.colorScheme.background,
                         borderRadius: BorderRadius.circular(8.0),
                       ),
+                      onChanged: (value) {
+                        validateForm();
+                      },
                     ),
                   ),
+                  const SizedBox(height: 8.0),
+                  if (!isEmailValid)
+                    const Text(
+                      "Email is required",
+                      style: TextStyle(
+                        color: Colors.red,
+                        decoration: TextDecoration.none,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -267,13 +388,49 @@ class _RegistrationPageState extends State<RegistrationPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  DefaultTextStyle(
-                    style: TextStyle(
-                      color: currentTheme.primaryColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                    child: const Text('Password'),
+                  Row(
+                    children: [
+                      DefaultTextStyle(
+                        style: TextStyle(
+                          color: currentTheme.primaryColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                        child: const Text('Password'),
+                      ),
+                      const SizedBox(width: 8.0),
+                      GestureDetector(
+                        onTap: () {
+                          showModalBottomSheet<void>(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return CupertinoActionSheet(
+                                title: const Text('Password should be at least 8 characters long, and contain at least one uppercase letter, one lowercase letter, one number and one special character',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),),
+                                actions: <CupertinoActionSheetAction>[
+                                  CupertinoActionSheetAction(
+                                    child: Text('Close',
+                                      style: TextStyle(
+                                        color: currentTheme.primaryColor,
+                                      ),),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  )
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        child: Icon(
+                          CupertinoIcons.info,
+                          size: 16.0,
+                          color: currentTheme.primaryColor,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 8.0),
                   SizedBox(
@@ -292,8 +449,23 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         color: currentTheme.colorScheme.background,
                         borderRadius: BorderRadius.circular(8.0),
                       ),
+                      onChanged: (value) {
+                        validateForm();
+                      },
+                      maxLength: 64,
                     ),
                   ),
+                  const SizedBox(height: 8.0),
+                  if (!isPasswordValid)
+                    const Text(
+                      "Password is required",
+                      style: TextStyle(
+                        color: Colors.red,
+                        decoration: TextDecoration.none,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -321,6 +493,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       onDateTimeChanged: (DateTime newDate) {
                         setState(() => dateController = newDate);
                       },
+                      minimumDate: DateTime(1900),
+                      maximumDate: DateTime.now().add(Duration(seconds: 5)),
                     ),
                   ),
                 ],
@@ -343,9 +517,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                   const SizedBox(height: 8.0),
                   SizedBox(
-                    width: double.infinity, // Take up the full available width
+                    width: double.infinity,
                     child: SizedBox(
-                      width: 320, // Set the desired width for the gender picker
+                      width: 320,
                       child: CupertinoSlidingSegmentedControl<int>(
                         groupValue: selectedGender,
                         onValueChanged: (value) {
@@ -406,38 +580,46 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         ],
                       ),
                       child: CupertinoButton(
-                        color: currentTheme.colorScheme.background,
+                        color: isFormValid
+                            ? currentTheme.primaryColor
+                            : currentTheme.backgroundColor,
                         onPressed: () {
-                          String genderText = '';
-                          if (selectedGender == 0) {
-                            genderText = "MALE";
-                          }
-                          if (selectedGender == 1) {
-                            genderText = "FEMALE";
-                          }
-                          if (selectedGender == 2) {
-                            genderText = "OTHER";
-                          }
+                          if (isFormValid) {
+                            String genderText = '';
+                            if (selectedGender == 0) {
+                              genderText = "MALE";
+                            }
+                            if (selectedGender == 1) {
+                              genderText = "FEMALE";
+                            }
+                            if (selectedGender == 2) {
+                              genderText = "OTHER";
+                            }
 
-                          DateFormat dateFormat = DateFormat('yyyy-MM-dd');
-                          String formattedTimestamp = dateFormat.format(dateController);
-                          registerUser(
-                            RegistrationCredentials(
-                                name: _fullNameController.text,
-                                username: _usernameController.text,
-                                email: _emailController.text,
-                                password: _passwordController.text,
-                                dateOfBirth: formattedTimestamp,
-                                gender: genderText,
-                              )
-                          );
+                            DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+                            String formattedTimestamp = dateFormat.format(dateController);
+                            registerUser(
+                                RegistrationCredentials(
+                                  name: _fullNameController.text,
+                                  username: _usernameController.text,
+                                  email: _emailController.text,
+                                  password: _passwordController.text,
+                                  dateOfBirth: formattedTimestamp,
+                                  gender: genderText,
+                                )
+                            );
+                          } else {
+                            null;
+                          }
                         },
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(
                             'Register',
                             style: TextStyle(
-                              color: currentTheme.primaryColor,
+                              color: isFormValid
+                                  ? currentTheme.backgroundColor
+                                  : currentTheme.primaryColor,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
