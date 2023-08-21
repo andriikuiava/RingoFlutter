@@ -73,7 +73,7 @@ class _EventPageState extends State<EventPage>
     await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
-    Uri url = (isSaved ? Uri.parse('${ApiEndpoints.SEARCH}/${widget.eventId}/${ApiEndpoints.UNSAVE}') : Uri.parse('${ApiEndpoints.SEARCH}/${widget.eventId}/${ApiEndpoints.SAVE}}'));
+    Uri url = (isSaved ? Uri.parse('${ApiEndpoints.SEARCH}/${widget.eventId}/${ApiEndpoints.UNSAVE}') : Uri.parse('${ApiEndpoints.SEARCH}/${widget.eventId}/${ApiEndpoints.SAVE}'));
     print(url);
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.post(url, headers: headers);
@@ -345,138 +345,139 @@ class _EventPageState extends State<EventPage>
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      SizedBox(
-                                        width: MediaQuery.of(context).size.width * 0.43,
-                                        child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: currentTheme.scaffoldBackgroundColor,
-                                          ),
-                                          child: Text(
-                                            "Contact host",
-                                            style: TextStyle(
-                                              color: currentTheme.primaryColor,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
+                                      if (event.host.contacts.isNotEmpty)
+                                        SizedBox(
+                                          width: MediaQuery.of(context).size.width * 0.43,
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: currentTheme.scaffoldBackgroundColor,
                                             ),
-                                          ),
-                                          onPressed: () {
-                                            showModalBottomSheet<void>(
-                                              context: context,
-                                              builder: (context) => Container(
-                                                height: 370,
-                                                width: MediaQuery.of(context).size.width,
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    const SizedBox(height: 16,),
-                                                    ListView.builder(
-                                                      shrinkWrap: true,
-                                                      itemCount: event.host.contacts.length,
-                                                      itemBuilder: (context, index) {
-                                                        ContactCard contactCard = event.host.contacts[index];
-                                                        bool _isNumeric(String str) {
-                                                          if (str == null) {
-                                                            return false;
-                                                          }
-                                                          return double.tryParse(str) != null;
-                                                        }
-
-                                                        IconData iconData;
-                                                        if (RegExp(r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)').hasMatch(contactCard.content)) {
-                                                          iconData = CupertinoIcons.link;
-                                                        } else if (RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
-                                                            .hasMatch(contactCard.content)) {
-                                                          iconData = CupertinoIcons.mail;
-                                                        } else if (RegExp(r'^\+?[1-9][0-9\s-\(\)]{7,14}$').hasMatch(contactCard.content)) {
-                                                          iconData = CupertinoIcons.phone;
-                                                        } else {
-                                                          iconData = CupertinoIcons.doc_on_doc;
-                                                        }
-
-
-                                                        return GestureDetector(
-                                                          onTap: () async {
-                                                            if (iconData == CupertinoIcons.link) {
-                                                              launch(contactCard.content);
-                                                            } else if (iconData == CupertinoIcons.mail) {
-                                                              launch("mailto:${contactCard.content}");
-                                                            } else if (iconData == CupertinoIcons.phone) {
-                                                              launch("tel:${contactCard.content}");
-                                                            } else if (iconData == CupertinoIcons.doc_on_doc) {
-                                                              await Clipboard.setData(ClipboardData(text: contactCard.content));
-                                                              Fluttertoast.showToast(
-                                                                msg: "Copied to clipboard",
-                                                                gravity: ToastGravity.CENTER,
-                                                                backgroundColor: currentTheme.colorScheme.background,
-                                                                textColor: currentTheme.primaryColor,
-                                                                fontSize: 24,
-                                                              );
+                                            child: Text(
+                                              "Contact host",
+                                              style: TextStyle(
+                                                color: currentTheme.primaryColor,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              showModalBottomSheet<void>(
+                                                context: context,
+                                                builder: (context) => Container(
+                                                  height: 370,
+                                                  width: MediaQuery.of(context).size.width,
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      const SizedBox(height: 16,),
+                                                      ListView.builder(
+                                                        shrinkWrap: true,
+                                                        itemCount: event.host.contacts.length,
+                                                        itemBuilder: (context, index) {
+                                                          ContactCard contactCard = event.host.contacts[index];
+                                                          bool _isNumeric(String str) {
+                                                            if (str == null) {
+                                                              return false;
                                                             }
-                                                          },
-                                                          child: Padding(
-                                                            padding: const EdgeInsets.all(10.0),
-                                                            child: Container(
-                                                              width: MediaQuery.of(context).size.width * 0.9,
-                                                              child: Row(
-                                                                children: [
-                                                                  const SizedBox(width: 10,),
-                                                                  Icon(
-                                                                    iconData,
-                                                                    size: 16,
-                                                                    color: currentTheme.primaryColor,
-                                                                  ),
-                                                                  SizedBox(width: 16,),
-                                                                  Column(
-                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                    children: [
-                                                                      Text(
-                                                                        contactCard.title,
-                                                                        maxLines: 1,
-                                                                        overflow: TextOverflow.ellipsis,
-                                                                        style: TextStyle(
-                                                                          color: currentTheme.primaryColor,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          fontSize: 16,
+                                                            return double.tryParse(str) != null;
+                                                          }
+
+                                                          IconData iconData;
+                                                          if (RegExp(r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)').hasMatch(contactCard.content)) {
+                                                            iconData = CupertinoIcons.link;
+                                                          } else if (RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+                                                              .hasMatch(contactCard.content)) {
+                                                            iconData = CupertinoIcons.mail;
+                                                          } else if (RegExp(r'^\+?[1-9][0-9\s-\(\)]{7,14}$').hasMatch(contactCard.content)) {
+                                                            iconData = CupertinoIcons.phone;
+                                                          } else {
+                                                            iconData = CupertinoIcons.doc_on_doc;
+                                                          }
+
+
+                                                          return GestureDetector(
+                                                            onTap: () async {
+                                                              if (iconData == CupertinoIcons.link) {
+                                                                launch(contactCard.content);
+                                                              } else if (iconData == CupertinoIcons.mail) {
+                                                                launch("mailto:${contactCard.content}");
+                                                              } else if (iconData == CupertinoIcons.phone) {
+                                                                launch("tel:${contactCard.content}");
+                                                              } else if (iconData == CupertinoIcons.doc_on_doc) {
+                                                                await Clipboard.setData(ClipboardData(text: contactCard.content));
+                                                                Fluttertoast.showToast(
+                                                                  msg: "Copied to clipboard",
+                                                                  gravity: ToastGravity.CENTER,
+                                                                  backgroundColor: currentTheme.colorScheme.background,
+                                                                  textColor: currentTheme.primaryColor,
+                                                                  fontSize: 24,
+                                                                );
+                                                              }
+                                                            },
+                                                            child: Padding(
+                                                              padding: const EdgeInsets.all(10.0),
+                                                              child: Container(
+                                                                width: MediaQuery.of(context).size.width * 0.9,
+                                                                child: Row(
+                                                                  children: [
+                                                                    const SizedBox(width: 10,),
+                                                                    Icon(
+                                                                      iconData,
+                                                                      size: 16,
+                                                                      color: currentTheme.primaryColor,
+                                                                    ),
+                                                                    SizedBox(width: 16,),
+                                                                    Column(
+                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                      children: [
+                                                                        Text(
+                                                                          contactCard.title,
+                                                                          maxLines: 1,
+                                                                          overflow: TextOverflow.ellipsis,
+                                                                          style: TextStyle(
+                                                                            color: currentTheme.primaryColor,
+                                                                            fontWeight: FontWeight.bold,
+                                                                            fontSize: 16,
+                                                                          ),
                                                                         ),
-                                                                      ),
-                                                                      (iconData == CupertinoIcons.link)
-                                                                          ? Text(
-                                                                        contactCard.content,
-                                                                        maxLines: 1,
-                                                                        overflow: TextOverflow.ellipsis,
-                                                                        style: TextStyle(
-                                                                          color: Colors.blue,
-                                                                          fontWeight: FontWeight.normal,
-                                                                          fontSize: 16,
+                                                                        (iconData == CupertinoIcons.link)
+                                                                            ? Text(
+                                                                          contactCard.content,
+                                                                          maxLines: 1,
+                                                                          overflow: TextOverflow.ellipsis,
+                                                                          style: TextStyle(
+                                                                            color: Colors.blue,
+                                                                            fontWeight: FontWeight.normal,
+                                                                            fontSize: 16,
+                                                                          ),
+                                                                        )
+                                                                            : Text(
+                                                                          contactCard.content,
+                                                                          style: TextStyle(
+                                                                            color: currentTheme.primaryColor,
+                                                                            fontWeight: FontWeight.normal,
+                                                                            fontSize: 16,
+                                                                          ),
                                                                         ),
-                                                                      )
-                                                                          : Text(
-                                                                        contactCard.content,
-                                                                        style: TextStyle(
-                                                                          color: currentTheme.primaryColor,
-                                                                          fontWeight: FontWeight.normal,
-                                                                          fontSize: 16,
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                ],
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),
                                                               ),
                                                             ),
-                                                          ),
-                                                        );
-                                                      },
-                                                    ),
-                                                  ],
+                                                          );
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            );
-                                          },
+                                              );
+                                            },
+                                          ),
                                         ),
-                                      ),
                                       const SizedBox(height: 6,),
                                       SizedBox(
-                                        width: MediaQuery.of(context).size.width * 0.43,
+                                        width: (event.host.contacts.isNotEmpty) ? MediaQuery.of(context).size.width * 0.43 : MediaQuery.of(context).size.width * 0.9,
                                         child: OutlinedButton(
                                           style: OutlinedButton.styleFrom(
                                             backgroundColor: currentTheme.colorScheme.background,

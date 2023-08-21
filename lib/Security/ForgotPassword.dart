@@ -80,6 +80,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 child:  SizedBox(
                   height: 50,
                   child: CupertinoTextField(
+                    maxLength: 256,
                     onChanged: (value) {
                       validateEmail();
                     },
@@ -124,12 +125,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               Container(
                 width: MediaQuery.of(context).size.width * 0.9,
                 child: CupertinoButton(
-                  color: currentTheme.primaryColor,
+                  color: isEmailValid ? currentTheme.primaryColor : currentTheme.backgroundColor,
                   child: Text(
                     'Send',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: currentTheme.backgroundColor,
+                      color: isEmailValid ? currentTheme.backgroundColor : currentTheme.primaryColor,
                       fontSize: 16,
                     ),
                   ),

@@ -6,6 +6,7 @@ class User {
   String username;
   int? profilePictureId;
   bool isActive;
+  bool withIdProvider;
   String? dateOfBirth;
   String? gender;
 
@@ -14,6 +15,7 @@ class User {
     this.email,
     required this.name,
     required this.username,
+    required this.withIdProvider,
     this.profilePictureId,
     required this.isActive,
     this.dateOfBirth,
@@ -26,6 +28,7 @@ class User {
       email: json['email'],
       name: json['name'],
       username: json['username'],
+      withIdProvider: json['withIdProvider'],
       profilePictureId: json['profilePictureId'],
       isActive: json['isActive'],
       dateOfBirth: json['dateOfBirth'],
