@@ -16,6 +16,10 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
 import 'package:ringoflutter/Classes/ContactCardClass.dart';
 import 'package:ringoflutter/api_endpoints.dart';
+import 'package:ringoflutter/Host/RateHost.dart';
+import 'package:visibility_detector/visibility_detector.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+
 
 class HostPage extends StatefulWidget {
   final int hostId;
@@ -29,6 +33,7 @@ class HostPage extends StatefulWidget {
 class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
   late Future<Organisation> _organisationFuture;
   late TabController _tabController;
+  Review? firstReview;
 
   @override
   void initState() {
@@ -64,7 +69,17 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
       future: _organisationFuture,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return CupertinoPageScaffold(
+          return VisibilityDetector(
+            key: Key('host_page_visibility_key'), // Provide a unique key
+            onVisibilityChanged: (visibilityInfo) {
+              if (visibilityInfo.visibleFraction == 1) {
+                // Page is fully visible, trigger a refresh here
+                setState(() {
+                  _organisationFuture = getHostById();
+                });
+              }
+            },
+            child: CupertinoPageScaffold(
             backgroundColor: currentTheme.scaffoldBackgroundColor,
             navigationBar: CupertinoNavigationBar(
               backgroundColor: currentTheme.scaffoldBackgroundColor,
@@ -92,11 +107,12 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                     borderRadius: defaultWidgetCornerRadius,
                     child: Container(
                         width: MediaQuery.of(context).size.width * 0.95,
-                        color: currentTheme.colorScheme.background,
+                        color: currentTheme.backgroundColor,
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            const SizedBox(height: 8,),
                             Row(
                               children: [
                                 if (snapshot.data!.profilePictureId != null)
@@ -118,7 +134,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                 Align(
                                   alignment: Alignment.centerLeft,
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         snapshot.data!.name,
@@ -139,19 +155,19 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                         ),
                                       ),
                                       const SizedBox(height: 10),
+                                      Text(
+                                        snapshot.data!.description,
+                                        style: TextStyle(
+                                          decoration: TextDecoration.none,
+                                          color: currentTheme.primaryColor,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
                               ],
-                            ),
-                            Text(
-                              snapshot.data!.description,
-                              style: TextStyle(
-                                decoration: TextDecoration.none,
-                                color: currentTheme.primaryColor,
-                                fontSize: 20,
-                                fontWeight: FontWeight.normal,
-                              ),
                             ),
                             const SizedBox(height: 10),
                           ],
@@ -160,133 +176,134 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                   ),
                 ),
                 const SizedBox(height: 8),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.95,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: currentTheme.scaffoldBackgroundColor,
-                    ),
-                    onPressed: () {
-                      showModalBottomSheet<void>(
-                        context: context,
-                        builder: (context) => Container(
-                          height: 370,
-                          width: MediaQuery.of(context).size.width,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 16,),
-                              ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: snapshot.data!.contacts.length,
-                                itemBuilder: (context, index) {
-                                  ContactCard contactCard = snapshot.data!.contacts[index];
-                                  bool _isNumeric(String str) {
-                                    if (str == null) {
-                                      return false;
-                                    }
-                                    return double.tryParse(str) != null;
-                                  }
-
-                                  IconData iconData;
-                                  if (RegExp(r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)').hasMatch(contactCard.content)) {
-                                    iconData = CupertinoIcons.link;
-                                  } else if (RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
-                                      .hasMatch(contactCard.content)) {
-                                    iconData = CupertinoIcons.mail;
-                                  } else if (RegExp(r'^\+?[1-9][0-9\s-\(\)]{7,14}$').hasMatch(contactCard.content)) {
-                                    iconData = CupertinoIcons.phone;
-                                  } else {
-                                    iconData = CupertinoIcons.doc_on_doc;
-                                  }
-
-
-                                  return GestureDetector(
-                                    onTap: () async {
-                                      if (iconData == CupertinoIcons.link) {
-                                        launch(contactCard.content);
-                                      } else if (iconData == CupertinoIcons.mail) {
-                                        launch("mailto:${contactCard.content}");
-                                      } else if (iconData == CupertinoIcons.phone) {
-                                        launch("tel:${contactCard.content}");
-                                      } else if (iconData == CupertinoIcons.doc_on_doc) {
-                                        await Clipboard.setData(ClipboardData(text: contactCard.content));
-                                        Fluttertoast.showToast(
-                                          msg: "Copied to clipboard",
-                                          gravity: ToastGravity.CENTER,
-                                          backgroundColor: currentTheme.colorScheme.background,
-                                          textColor: currentTheme.primaryColor,
-                                          fontSize: 24,
-                                        );
+                if (snapshot.data!.contacts.isNotEmpty)
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.95,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: currentTheme.backgroundColor,
+                      ),
+                      onPressed: () {
+                        showModalBottomSheet<void>(
+                          context: context,
+                          builder: (context) => Container(
+                            height: 370,
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 16,),
+                                ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: snapshot.data!.contacts.length,
+                                  itemBuilder: (context, index) {
+                                    ContactCard contactCard = snapshot.data!.contacts[index];
+                                    bool _isNumeric(String str) {
+                                      if (str == null) {
+                                        return false;
                                       }
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Container(
-                                        width: MediaQuery.of(context).size.width * 0.9,
-                                        child: Row(
-                                          children: [
-                                            const SizedBox(width: 10,),
-                                            Icon(
-                                              iconData,
-                                              size: 16,
-                                              color: currentTheme.primaryColor,
-                                            ),
-                                            SizedBox(width: 16,),
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  contactCard.title,
-                                                  maxLines: 1,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                    color: currentTheme.primaryColor,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 16,
+                                      return double.tryParse(str) != null;
+                                    }
+
+                                    IconData iconData;
+                                    if (RegExp(r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)').hasMatch(contactCard.content)) {
+                                      iconData = CupertinoIcons.link;
+                                    } else if (RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+                                        .hasMatch(contactCard.content)) {
+                                      iconData = CupertinoIcons.mail;
+                                    } else if (RegExp(r'^\+?[1-9][0-9\s-\(\)]{7,14}$').hasMatch(contactCard.content)) {
+                                      iconData = CupertinoIcons.phone;
+                                    } else {
+                                      iconData = CupertinoIcons.doc_on_doc;
+                                    }
+
+
+                                    return GestureDetector(
+                                      onTap: () async {
+                                        if (iconData == CupertinoIcons.link) {
+                                          launch(contactCard.content);
+                                        } else if (iconData == CupertinoIcons.mail) {
+                                          launch("mailto:${contactCard.content}");
+                                        } else if (iconData == CupertinoIcons.phone) {
+                                          launch("tel:${contactCard.content}");
+                                        } else if (iconData == CupertinoIcons.doc_on_doc) {
+                                          await Clipboard.setData(ClipboardData(text: contactCard.content));
+                                          Fluttertoast.showToast(
+                                            msg: "Copied to clipboard",
+                                            gravity: ToastGravity.CENTER,
+                                            backgroundColor: currentTheme.backgroundColor,
+                                            textColor: currentTheme.primaryColor,
+                                            fontSize: 24,
+                                          );
+                                        }
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Container(
+                                          width: MediaQuery.of(context).size.width * 0.9,
+                                          child: Row(
+                                            children: [
+                                              const SizedBox(width: 10,),
+                                              Icon(
+                                                iconData,
+                                                size: 16,
+                                                color: currentTheme.primaryColor,
+                                              ),
+                                              SizedBox(width: 16,),
+                                              Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    contactCard.title,
+                                                    maxLines: 1,
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                      color: currentTheme.primaryColor,
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize: 16,
+                                                    ),
                                                   ),
-                                                ),
-                                                Text(
-                                                  contactCard.content,
-                                                  maxLines: 1,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                    color: currentTheme.primaryColor,
-                                                    fontWeight: FontWeight.normal,
-                                                    fontSize: 16,
+                                                  Text(
+                                                    contactCard.content,
+                                                    maxLines: 1,
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                      color: currentTheme.primaryColor,
+                                                      fontWeight: FontWeight.normal,
+                                                      fontSize: 16,
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
+                                                ],
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
+                        );
+                      },
+                      child: Text(
+                        "Contact host",
+                        style: TextStyle(
+                          decoration: TextDecoration.none,
+                          color: currentTheme.primaryColor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
-                      );
-                    },
-                    child: Text(
-                      "Contact host",
-                      style: TextStyle(
-                        decoration: TextDecoration.none,
-                        color: currentTheme.primaryColor,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                ),
                 const SizedBox(height: 8),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.95,
                   height: 60,
                   child: Card(
-                    color: currentTheme.colorScheme.background,
+                    color: currentTheme.backgroundColor,
                     child: TabBar(
                       controller: _tabController,
                       tabs: [
@@ -294,12 +311,20 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                           height: 60,
                           child: Column(
                             children: [
-                              Text(
-                                '${snapshot.data!.rating}',
-                                style: const TextStyle(
-                                  fontSize: 20,
+                              if (snapshot.data!.rating != null)
+                                Text(
+                                  '${snapshot.data?.rating}',
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                  ),
                                 ),
-                              ),
+                              if (snapshot.data!.rating == null)
+                                Text(
+                                  '-',
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                ),
                               const Text('Rating'),
                             ],
                           ),
@@ -353,6 +378,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                 ),
               ],
             ),
+          ),
           );
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
@@ -365,6 +391,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
 
   Future<List<Review>> getReviewsByOrganisationId(int id) async {
     await checkTimestamp();
+    firstReview = null;
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     Uri url = Uri.parse('${ApiEndpoints.GET_ORGANISATION}/${widget.hostId}/${ApiEndpoints.REVIEWS}');
@@ -372,7 +399,10 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
       var reviewList = customJsonDecode(response.body) as List<dynamic>;
-      return reviewList.map((item) => Review.fromJson(item)).toList();
+      var participantId = await storage.read(key: 'id');
+      var decoded = reviewList.map((item) => Review.fromJson(item)).toList();
+      firstReview = decoded[0];
+      return decoded;
     } else {
       throw Exception('Failed to load reviews');
     }
@@ -380,72 +410,139 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
 
   Widget ratingSection(Organisation? data) {
     final currentTheme = Theme.of(context);
-    return Expanded(
-      child: Card(
-        color: currentTheme.colorScheme.background,
-        child: FutureBuilder<List<Review>>(
-          future: getReviewsByOrganisationId(data?.id ?? 0),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else if (!snapshot.hasData) {
-              return const Text('No reviews found.');
-            } else {
-              List<Review> reviews = snapshot.data!;
-              return ListView.builder(
-                itemCount: reviews.length,
-                itemBuilder: (context, index) {
-                  var review = reviews[index];
-                  return Container(
-                    child: ListTile(
-                      leading: review.participant.profilePictureId != null
-                          ? CircleAvatar(
-                        radius: 20.0,
-                        backgroundImage: NetworkImage(
-                          '${ApiEndpoints.GET_PHOTO}/${review.participant.profilePictureId}',
-                        ),
-                      )
-                          : CircleAvatar(
-                        backgroundColor: currentTheme.primaryColor,
-                        radius: 20.0,
-                        child: Icon(
-                          CupertinoIcons.person,
-                          color: currentTheme.colorScheme.background,
-                        ),
-                      ),
-                      title: Row(
-                        children: [
-                          Text(review.participant.name),
-                          const Text(" • ",
-                          style: TextStyle(
-                            color: Colors.grey
-                          ),),
-                          Text("@${review.participant.username}",
-                          style: const TextStyle(
-                            color: Colors.grey
-                          ),)
-                        ],
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(review.comment),
-                          const Row(
-                            //review.rate
-                          )
-                        ],
-                      ),
+    return Column(
+      children: [
+          ClipRRect(
+            borderRadius: defaultWidgetCornerRadius,
+            child: Container(
+              color: currentTheme.backgroundColor,
+              width: MediaQuery.of(context).size.width * 0.95,
+              child: CupertinoButton(
+                child: Text(
+                  "Manage review",
+                  style: TextStyle(
+                    decoration: TextDecoration.none,
+                    color: currentTheme.primaryColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                onPressed: () async {
+                  var isReviewCreated = false;
+                  var storage = await FlutterSecureStorage();
+                  var participantId = await storage.read(key: "id");
+                  if (participantId.toString() == firstReview?.participant.id.toString()) {
+                    isReviewCreated = true;
+                  } else {
+                    isReviewCreated = false;
+                  }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => RateHost(review: firstReview, createdReview: isReviewCreated, organisationId: widget.hostId,),
                     ),
-                    // You can add additional widgets here if needed.
                   );
                 },
-              );
-            }
-          },
-        ),
+              ),
+            ),
+          ),
+        const SizedBox(height: 6),
+        Expanded(
+        child: Card(
+        color: currentTheme.backgroundColor,
+          child: FutureBuilder<List<Review>>(
+            future: getReviewsByOrganisationId(data?.id ?? 0),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Container(
+                  width: MediaQuery.of(context).size.width * 0.95,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(),
+                    ],
+                  ),
+                );
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else if (!snapshot.hasData) {
+                return const Text('No reviews found.');
+              } else {
+                List<Review> reviews = snapshot.data!;
+
+                return ListView.builder(
+              itemCount: reviews.length,
+              itemBuilder: (context, index) {
+                var review = reviews[index];
+                return Container(
+                  child: ListTile(
+                    leading: review.participant.profilePictureId != null
+                        ? CircleAvatar(
+                      radius: 20.0,
+                      backgroundImage: NetworkImage(
+                        '${ApiEndpoints.GET_PHOTO}/${review.participant.profilePictureId}',
+                      ),
+                    )
+                        : CircleAvatar(
+                      backgroundColor: currentTheme.primaryColor,
+                      radius: 20.0,
+                      child: Icon(
+                        CupertinoIcons.person,
+                        color: currentTheme.backgroundColor,
+                      ),
+                    ),
+                    title: Row(
+                      children: [
+                        Text(review.participant.name),
+                        const Text(" • ",
+                          style: TextStyle(
+                              color: Colors.grey
+                          ),),
+                        Text("@${review.participant.username}",
+                          style: const TextStyle(
+                              color: Colors.grey
+                          ),)
+                      ],
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (review.comment != "")
+                          Text(review.comment!)
+                        else if (review.comment == "")
+                          Column(
+                            children: [
+                              const SizedBox(height: 4,),
+                            ],
+                          ),
+                        Row(
+                          children: [
+                            RatingBarIndicator(
+                              itemBuilder: (context, _) => Icon(
+                                CupertinoIcons.star_fill,
+                                color: currentTheme.primaryColor,
+                              ),
+                              rating: review.rate.toDouble(),
+                              itemCount: 5,
+                              itemSize: 16.0,
+                              direction: Axis.horizontal,
+
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                  // You can add additional widgets here if needed.
+                );
+              },
+            );
+          }
+        },
       ),
+    ),
+    ),
+      ],
     );
   }
 
@@ -471,7 +568,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
     final currentTheme = Theme.of(context);
     return Expanded(
       child: Card(
-        color: currentTheme.colorScheme.background,
+        color: currentTheme.backgroundColor,
         child: FutureBuilder<List<EventInFeed>>(
           future: getUpcomingEvents(data?.id ?? 0),
           builder: (context, snapshot) {
@@ -509,7 +606,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                               child: ClipRRect(
                                 borderRadius: defaultWidgetCornerRadius,
                                 child: Image.network(
-                                    '${ApiEndpoints.GET_PHOTO}/${event.mainPhotoId}}'
+                                    '${ApiEndpoints.GET_PHOTO}/${event.mainPhotoId}'
                                 ),
                               ),
                             ),
@@ -601,6 +698,8 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
     );
   }
 
+
+
   Future<List<EventInFeed>> getPastEvents(int id) async {
     await checkTimestamp();
     const storage = FlutterSecureStorage();
@@ -621,7 +720,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
     final currentTheme = Theme.of(context);
     return Expanded(
       child: Card(
-        color: currentTheme.colorScheme.background,
+        color: currentTheme.backgroundColor,
         child: FutureBuilder<List<EventInFeed>>(
           future: getPastEvents(data?.id ?? 0),
           builder: (context, snapshot) {

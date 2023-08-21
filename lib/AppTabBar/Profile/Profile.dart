@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ringoflutter/UI/Themes.dart';
-import 'package:ringoflutter/AppTabBar/Profile/Functions/getUserInfo.dart';
 import 'package:ringoflutter/Classes/UserClass.dart';
 import 'package:ringoflutter/AppTabBar/Profile/EditProfileView.dart';
 import 'package:ringoflutter/UI/Functions/Formats.dart';
@@ -10,6 +9,13 @@ import 'package:ringoflutter/AppTabBar/Profile/SavedEvents.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:ringoflutter/api_endpoints.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:ringoflutter/Classes/UserClass.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
+import 'package:ringoflutter/api_endpoints.dart';
+
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -20,6 +26,8 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   late Future<User> userInfoFuture;
+
+  User? userForProvider;
 
   @override
   void initState() {
@@ -34,6 +42,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
+  Future<User> getUserInfo() async {
+    await checkTimestamp();
+    const storage = FlutterSecureStorage();
+    Uri url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
+    var token = await storage.read(key: 'access_token');
+    var headers = {
+      'Authorization': 'Bearer $token',
+    };
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      var decoded = User.fromJson(customJsonDecode(response.body));
+      userForProvider = decoded;
+      return decoded;
+    } else {
+      throw Exception('Failed to load user');
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final currentTheme = Theme.of(context);
@@ -42,10 +69,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       navigationBar: CupertinoNavigationBar(
         trailing: GestureDetector(
           onTap: () {
+            var shouldShowChangePassword = !userForProvider!.withIdProvider;
             Navigator.push(
               context,
               CupertinoPageRoute(
-                builder: (context) => const ChangePasswordView(),
+                builder: (context) => ChangePasswordView(shouldShowChangePassword: shouldShowChangePassword,),
               ),
             );
           },

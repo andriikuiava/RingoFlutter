@@ -3,14 +3,14 @@ import 'package:ringoflutter/Classes/UserClass.dart';
 class Review {
   int id;
   User participant;
-  String comment;
+  String? comment;
   int rate;
   String createdAt;
 
   Review({
     required this.id,
     required this.participant,
-    required this.comment,
+    this.comment,
     required this.rate,
     required this.createdAt,
   });
