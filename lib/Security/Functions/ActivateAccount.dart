@@ -140,317 +140,322 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
             ),
         ),
       ),
-      child: SingleChildScrollView(
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
-                    children: [
-                      Row(
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        child: SingleChildScrollView(
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            (image == null)
+                                ? Icon(
+                              CupertinoIcons.person_circle,
+                              color: currentTheme.primaryColor,
+                              size: 120,
+                            )
+                                : CircleAvatar(
+                              radius: 60,
+                              backgroundImage: FileImage(image!),
+                            ),
+                            const SizedBox(width: 20),
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  CupertinoButton(
+                                    color: currentTheme.colorScheme.background,
+                                    minSize: 40,
+                                    padding: EdgeInsets.zero,
+                                    child: Row(
+                                      children: [
+                                        const SizedBox(width: 15),
+                                        Icon(
+                                          CupertinoIcons.photo_fill,
+                                          color: currentTheme.primaryColor,
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          "Choose from photos",
+                                          style: TextStyle(
+                                            color: currentTheme.primaryColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    onPressed: () async {
+                                      final pickedImage = await pickImage();
+                                      if (pickedImage != null) {
+                                        setState(() {
+                                          image = File(pickedImage.path);
+                                        });
+                                      }
+                                    },
+                                  ),
+                                  const SizedBox(height: 10),
+                                  CupertinoButton(
+                                    color: currentTheme.colorScheme.background,
+                                    minSize: 40,
+                                    padding: EdgeInsets.zero,
+                                    child: Row(
+                                      children: [
+                                        const SizedBox(width: 15),
+                                        Icon(
+                                          CupertinoIcons.camera_fill,
+                                          color: currentTheme.primaryColor,
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          "Take a photo",
+                                          style: TextStyle(
+                                            color: currentTheme.primaryColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    onPressed: () async {
+                                      final pickedImage = await takeImage();
+                                      if (pickedImage != null) {
+                                        setState(() {
+                                          image = File(pickedImage.path);
+                                        });
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    Text('Full Name',
+                      style: TextStyle(
+                        color: currentTheme.primaryColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.none,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    SizedBox(
+                      height: 50,
+                      child: CupertinoTextField(
+                        cursorColor: currentTheme.primaryColor,
+                        controller: _nameController,
+                        maxLength: 50,
+                        placeholder: 'Enter your full name',
+                        keyboardType: TextInputType.text,
+                        onChanged: (value) {
+                          if (!isNameValid) {
+                            validateName();
+                          }
+                        },
+                        style: TextStyle(
+                          color: currentTheme.primaryColor,
+                          fontSize: 16,
+                        ),
+                        decoration: BoxDecoration(
+                          color: currentTheme.colorScheme.background,
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                    ),
+                    if (!isNameValid)
+                      Column(
                         children: [
-                          (image == null)
-                              ? Icon(
-                            CupertinoIcons.person_circle,
-                            color: currentTheme.primaryColor,
-                            size: 120,
-                          )
-                              : CircleAvatar(
-                            radius: 60,
-                            backgroundImage: FileImage(image!),
-                          ),
-                          const SizedBox(width: 20),
-                          Expanded(
-                            child: Column(
-                              children: [
-                                CupertinoButton(
-                                  color: currentTheme.colorScheme.background,
-                                  minSize: 40,
-                                  padding: EdgeInsets.zero,
-                                  child: Row(
-                                    children: [
-                                      const SizedBox(width: 15),
-                                      Icon(
-                                        CupertinoIcons.photo_fill,
-                                        color: currentTheme.primaryColor,
-                                      ),
-                                      const SizedBox(width: 10),
-                                      Text(
-                                        "Choose from photos",
-                                        style: TextStyle(
-                                          color: currentTheme.primaryColor,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  onPressed: () async {
-                                    final pickedImage = await pickImage();
-                                    if (pickedImage != null) {
-                                      setState(() {
-                                        image = File(pickedImage.path);
-                                      });
-                                    }
-                                  },
-                                ),
-                                const SizedBox(height: 10),
-                                CupertinoButton(
-                                  color: currentTheme.colorScheme.background,
-                                  minSize: 40,
-                                  padding: EdgeInsets.zero,
-                                  child: Row(
-                                    children: [
-                                      const SizedBox(width: 15),
-                                      Icon(
-                                        CupertinoIcons.camera_fill,
-                                        color: currentTheme.primaryColor,
-                                      ),
-                                      const SizedBox(width: 10),
-                                      Text(
-                                        "Take a photo",
-                                        style: TextStyle(
-                                          color: currentTheme.primaryColor,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  onPressed: () async {
-                                    final pickedImage = await takeImage();
-                                    if (pickedImage != null) {
-                                      setState(() {
-                                        image = File(pickedImage.path);
-                                      });
-                                    }
-                                  },
-                                ),
-                              ],
+                          const SizedBox(height: 10),
+                          const Text(
+                            'Please enter your full name',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 14,
+                              decoration: TextDecoration.none,
                             ),
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Text('Full Name',
-                    style: TextStyle(
-                      color: currentTheme.primaryColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      decoration: TextDecoration.none,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  SizedBox(
-                    height: 50,
-                    child: CupertinoTextField(
-                      cursorColor: currentTheme.primaryColor,
-                      controller: _nameController,
-                      maxLength: 50,
-                      placeholder: 'Enter your full name',
-                      keyboardType: TextInputType.text,
-                      onChanged: (value) {
-                        if (!isNameValid) {
-                          validateName();
-                        }
-                      },
+                    SizedBox(height: 20),
+                    Text('Username',
                       style: TextStyle(
                         color: currentTheme.primaryColor,
                         fontSize: 16,
-                      ),
-                      decoration: BoxDecoration(
-                        color: currentTheme.colorScheme.background,
-                        borderRadius: BorderRadius.circular(8.0),
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.none,
                       ),
                     ),
-                  ),
-                  if (!isNameValid)
-                    Column(
-                      children: [
-                        const SizedBox(height: 10),
-                        const Text(
-                          'Please enter your full name',
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontSize: 14,
-                            decoration: TextDecoration.none,
-                          ),
+                    SizedBox(height: 10),
+                    SizedBox(
+                      height: 50,
+                      child: CupertinoTextField(
+                        cursorColor: currentTheme.primaryColor,
+                        controller: _usernameController,
+                        onChanged: (value) {
+                          validateUsername();
+                        },
+                        maxLength: 30,
+                        placeholder: 'Enter your username',
+                        keyboardType: TextInputType.text,
+                        style: TextStyle(
+                          color: currentTheme.primaryColor,
+                          fontSize: 16,
                         ),
-                      ],
+                        decoration: BoxDecoration(
+                          color: currentTheme.colorScheme.background,
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
                     ),
-                  SizedBox(height: 20),
-                  Text('Username',
-                    style: TextStyle(
-                      color: currentTheme.primaryColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      decoration: TextDecoration.none,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  SizedBox(
-                    height: 50,
-                    child: CupertinoTextField(
-                      cursorColor: currentTheme.primaryColor,
-                      controller: _usernameController,
-                      onChanged: (value) {
-                        validateUsername();
-                      },
-                      maxLength: 30,
-                      placeholder: 'Enter your username',
-                      keyboardType: TextInputType.text,
+                    if (!isUsernameValid)
+                      Column(
+                        children: [
+                          const SizedBox(height: 10),
+                          const Text(
+                            'Please enter a valid username',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 14,
+                              decoration: TextDecoration.none,
+                            ),
+                          ),
+                        ],
+                      ),
+                    SizedBox(height: 20),
+                    Text('Email',
                       style: TextStyle(
                         color: currentTheme.primaryColor,
                         fontSize: 16,
-                      ),
-                      decoration: BoxDecoration(
-                        color: currentTheme.colorScheme.background,
-                        borderRadius: BorderRadius.circular(8.0),
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.none,
                       ),
                     ),
-                  ),
-                  if (!isUsernameValid)
-                    Column(
-                      children: [
-                        const SizedBox(height: 10),
-                        const Text(
-                          'Please enter a valid username',
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontSize: 14,
-                            decoration: TextDecoration.none,
-                          ),
+                    SizedBox(height: 10),
+                    SizedBox(
+                      height: 50,
+                      child: CupertinoTextField(
+                        enabled: false,
+                        controller: _emailController,
+                        placeholder: 'Enter your email',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
                         ),
-                      ],
+                        decoration: BoxDecoration(
+                          color: currentTheme.colorScheme.background,
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
                     ),
-                  SizedBox(height: 20),
-                  Text('Email',
-                    style: TextStyle(
-                      color: currentTheme.primaryColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      decoration: TextDecoration.none,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  SizedBox(
-                    height: 50,
-                    child: CupertinoTextField(
-                      enabled: false,
-                      controller: _emailController,
-                      placeholder: 'Enter your email',
+                    SizedBox(height: 20),
+                    Text('Date of Birth',
                       style: TextStyle(
-                        color: Colors.grey,
+                        color: currentTheme.primaryColor,
                         fontSize: 16,
-                      ),
-                      decoration: BoxDecoration(
-                        color: currentTheme.colorScheme.background,
-                        borderRadius: BorderRadius.circular(8.0),
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.none,
                       ),
                     ),
-                  ),
-                  SizedBox(height: 20),
-                  Text('Date of Birth',
-                    style: TextStyle(
-                      color: currentTheme.primaryColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      decoration: TextDecoration.none,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 180,
-                    child: CupertinoDatePicker(
-                      mode: CupertinoDatePickerMode.date,
-                      showDayOfWeek: true,
-                      onDateTimeChanged: (DateTime newDate) {
-                        setState(() => dateController = newDate);
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Text('Gender',
-                    style: TextStyle(
-                      color: currentTheme.primaryColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      decoration: TextDecoration.none,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  SizedBox(
-                    width: double.infinity, // Take up the full available width
-                    child: SizedBox(
-                      width: 320, // Set the desired width for the gender picker
-                      child: CupertinoSlidingSegmentedControl<int>(
-                        groupValue: selectedGender,
-                        onValueChanged: (value) {
-                          setState(() {
-                            selectedGender = value!;
-                          });
-                        },
-                        children: {
-                          0: Text(
-                            'Male',
-                            style: TextStyle(
-                              color: currentTheme.primaryColor,
-                              fontSize: 16,
-                              decoration: TextDecoration.none,
-                            ),
-                          ),
-                          1: Text(
-                            'Female',
-                            style: TextStyle(
-                              color: currentTheme.primaryColor,
-                              fontSize: 16,
-                              decoration: TextDecoration.none,
-
-                            ),
-                          ),
-                          2: Text(
-                            'Other',
-                            style: TextStyle(
-                              color: currentTheme.primaryColor,
-                              fontSize: 16,
-                              decoration: TextDecoration.none,
-                            ),
-                          ),
+                    SizedBox(
+                      height: 180,
+                      child: CupertinoDatePicker(
+                        mode: CupertinoDatePickerMode.date,
+                        showDayOfWeek: true,
+                        onDateTimeChanged: (DateTime newDate) {
+                          setState(() => dateController = newDate);
                         },
                       ),
                     ),
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Spacer(),
-                      ClipRRect(
-                        borderRadius: defaultWidgetCornerRadius,
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.9,
-                          height: 50,
-                          color: currentTheme.backgroundColor,
-                          child: CupertinoButton(
-                            onPressed: () async {
-                              if (validateForm()) {
-                                activateAccount();
-                              }
-                            },
-                            child: Text('Finish Registration',
+                    SizedBox(height: 20),
+                    Text('Gender',
+                      style: TextStyle(
+                        color: currentTheme.primaryColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.none,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    SizedBox(
+                      width: double.infinity, // Take up the full available width
+                      child: SizedBox(
+                        width: 320, // Set the desired width for the gender picker
+                        child: CupertinoSlidingSegmentedControl<int>(
+                          groupValue: selectedGender,
+                          onValueChanged: (value) {
+                            setState(() {
+                              selectedGender = value!;
+                            });
+                          },
+                          children: {
+                            0: Text(
+                              'Male',
                               style: TextStyle(
                                 color: currentTheme.primaryColor,
                                 fontSize: 16,
-                                fontWeight: FontWeight.bold,
                                 decoration: TextDecoration.none,
+                              ),
+                            ),
+                            1: Text(
+                              'Female',
+                              style: TextStyle(
+                                color: currentTheme.primaryColor,
+                                fontSize: 16,
+                                decoration: TextDecoration.none,
+
+                              ),
+                            ),
+                            2: Text(
+                              'Other',
+                              style: TextStyle(
+                                color: currentTheme.primaryColor,
+                                fontSize: 16,
+                                decoration: TextDecoration.none,
+                              ),
+                            ),
+                          },
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      children: [
+                        Spacer(),
+                        ClipRRect(
+                          borderRadius: defaultWidgetCornerRadius,
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            height: 50,
+                            color: currentTheme.backgroundColor,
+                            child: CupertinoButton(
+                              onPressed: () async {
+                                if (validateForm()) {
+                                  activateAccount();
+                                }
+                              },
+                              child: Text('Finish Registration',
+                                style: TextStyle(
+                                  color: currentTheme.primaryColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  decoration: TextDecoration.none,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      Spacer(),
-                    ],
-                  ),
-                ],
+                        Spacer(),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

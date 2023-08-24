@@ -114,152 +114,26 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
         ),),
       ),
       backgroundColor: currentTheme.scaffoldBackgroundColor,
-      child: CustomScrollView(
-        slivers: [
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                const SizedBox(height: 10.0),
-                if (widget.shouldShowChangePassword)
-                  Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _expandChangePassword = !_expandChangePassword;
-                        });
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.only(left: 24),
-                        child: Row(
-                          children: [
-                            DefaultTextStyle(
-                              style: TextStyle(
-                                color: currentTheme.primaryColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 24,
-                              ),
-                              child: const Text('Change Password'),
-                            ),
-                            const SizedBox(width: 10.0),
-                            Icon(
-                              _expandChangePassword
-                                  ? CupertinoIcons.chevron_up
-                                  : CupertinoIcons.chevron_down,
-                              color: currentTheme.primaryColor,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    AnimatedSize(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                      child: _expandChangePassword
-                          ? Column(
-                        children: [
-                          const SizedBox(height: 20.0),
-                          Container(
-                              padding: const EdgeInsets.only(left: 24),
-                              child: Row(
-                                children: [
-                                  DefaultTextStyle(
-                                    style: TextStyle(
-                                      color: currentTheme.primaryColor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                    child: const Text('Current password'),
-                                  ),
-                                  Spacer(),
-                                ],
-                              )
-                          ),
-                          const SizedBox(height: 6.0),
-                          SizedBox(
-                            height: 50,
-                            child: FractionallySizedBox(
-                              widthFactor: 0.9,
-                              child: CupertinoTextField(
-                                obscureText: true,
-                                cursorColor: currentTheme.primaryColor,
-                                controller: _oldPasswordController,
-                                placeholder: 'Enter your current password',
-                                keyboardType: TextInputType.text,
-                                style: TextStyle(
-                                  color: currentTheme.primaryColor,
-                                  fontSize: 16,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: currentTheme.colorScheme.background,
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 12.0),
-                          Container(
-                              padding: const EdgeInsets.only(left: 24),
-                              child: Row(
-                                children: [
-                                  DefaultTextStyle(
-                                    style: TextStyle(
-                                      color: currentTheme.primaryColor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                    child: const Text('New password'),
-                                  ),
-                                  Spacer(),
-                                ],
-                              )
-                          ),
-                          const SizedBox(height: 6.0),
-                          SizedBox(
-                            height: 50,
-                            child: FractionallySizedBox(
-                              widthFactor: 0.9,
-                              child: CupertinoTextField(
-                                obscureText: true,
-                                onChanged: (value) {
-                                  validatePasswords();
-                                },
-                                maxLength: 64,
-                                cursorColor: currentTheme.primaryColor,
-                                controller: _newPasswordController,
-                                placeholder: 'Enter your new password',
-                                keyboardType: TextInputType.text,
-                                style: TextStyle(
-                                  color: currentTheme.primaryColor,
-                                  fontSize: 16,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: currentTheme.colorScheme.background,
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 8.0),
-                          if (!isPasswordValid)
-                            Container(
-                              padding: const EdgeInsets.only(left: 24),
-                              child: Row(
-                                children: [
-                                  DefaultTextStyle(
-                                    style: TextStyle(
-                                      color: currentTheme.errorColor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                    ),
-                                    child: const Text('Enter a valid password'),
-                                  ),
-                                  Spacer(),
-                                ],
-                              ),
-                            ),
-                          const SizedBox(height: 12.0),
-                          Container(
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        child: CustomScrollView(
+          slivers: [
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  const SizedBox(height: 10.0),
+                  if (widget.shouldShowChangePassword)
+                    Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _expandChangePassword = !_expandChangePassword;
+                            });
+                          },
+                          child: Container(
                             padding: const EdgeInsets.only(left: 24),
                             child: Row(
                               children: [
@@ -267,158 +141,289 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                                   style: TextStyle(
                                     color: currentTheme.primaryColor,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 16,
+                                    fontSize: 24,
                                   ),
-                                  child: const Text('Repeat new password'),
+                                  child: const Text('Change Password'),
                                 ),
-                                Spacer(),
+                                const SizedBox(width: 10.0),
+                                Icon(
+                                  _expandChangePassword
+                                      ? CupertinoIcons.chevron_up
+                                      : CupertinoIcons.chevron_down,
+                                  color: currentTheme.primaryColor,
+                                ),
                               ],
                             ),
                           ),
-                          const SizedBox(height: 6.0),
-                          SizedBox(
-                            height: 50,
-                            child: FractionallySizedBox(
-                              widthFactor: 0.9,
-                              child: CupertinoTextField(
-                                obscureText: true,
-                                onChanged: (value) {
-                                  validatePasswords();
-                                },
-                                maxLength: 64,
-                                cursorColor: currentTheme.primaryColor,
-                                controller: _repeatNewPasswordController,
-                                placeholder: 'Repeat your new password',
-                                keyboardType: TextInputType.text,
+                        ),
+                        AnimatedSize(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          child: _expandChangePassword
+                              ? Column(
+                            children: [
+                              const SizedBox(height: 20.0),
+                              Container(
+                                  padding: const EdgeInsets.only(left: 24),
+                                  child: Row(
+                                    children: [
+                                      DefaultTextStyle(
+                                        style: TextStyle(
+                                          color: currentTheme.primaryColor,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                        child: const Text('Current password'),
+                                      ),
+                                      Spacer(),
+                                    ],
+                                  )
+                              ),
+                              const SizedBox(height: 6.0),
+                              SizedBox(
+                                height: 50,
+                                child: FractionallySizedBox(
+                                  widthFactor: 0.9,
+                                  child: CupertinoTextField(
+                                    obscureText: true,
+                                    cursorColor: currentTheme.primaryColor,
+                                    controller: _oldPasswordController,
+                                    placeholder: 'Enter your current password',
+                                    keyboardType: TextInputType.text,
+                                    style: TextStyle(
+                                      color: currentTheme.primaryColor,
+                                      fontSize: 16,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: currentTheme.colorScheme.background,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 12.0),
+                              Container(
+                                  padding: const EdgeInsets.only(left: 24),
+                                  child: Row(
+                                    children: [
+                                      DefaultTextStyle(
+                                        style: TextStyle(
+                                          color: currentTheme.primaryColor,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                        child: const Text('New password'),
+                                      ),
+                                      Spacer(),
+                                    ],
+                                  )
+                              ),
+                              const SizedBox(height: 6.0),
+                              SizedBox(
+                                height: 50,
+                                child: FractionallySizedBox(
+                                  widthFactor: 0.9,
+                                  child: CupertinoTextField(
+                                    obscureText: true,
+                                    onChanged: (value) {
+                                      validatePasswords();
+                                    },
+                                    maxLength: 64,
+                                    cursorColor: currentTheme.primaryColor,
+                                    controller: _newPasswordController,
+                                    placeholder: 'Enter your new password',
+                                    keyboardType: TextInputType.text,
+                                    style: TextStyle(
+                                      color: currentTheme.primaryColor,
+                                      fontSize: 16,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: currentTheme.colorScheme.background,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 8.0),
+                              if (!isPasswordValid)
+                                Container(
+                                  padding: const EdgeInsets.only(left: 24),
+                                  child: Row(
+                                    children: [
+                                      DefaultTextStyle(
+                                        style: TextStyle(
+                                          color: currentTheme.errorColor,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12,
+                                        ),
+                                        child: const Text('Enter a valid password'),
+                                      ),
+                                      Spacer(),
+                                    ],
+                                  ),
+                                ),
+                              const SizedBox(height: 12.0),
+                              Container(
+                                padding: const EdgeInsets.only(left: 24),
+                                child: Row(
+                                  children: [
+                                    DefaultTextStyle(
+                                      style: TextStyle(
+                                        color: currentTheme.primaryColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                      child: const Text('Repeat new password'),
+                                    ),
+                                    Spacer(),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 6.0),
+                              SizedBox(
+                                height: 50,
+                                child: FractionallySizedBox(
+                                  widthFactor: 0.9,
+                                  child: CupertinoTextField(
+                                    obscureText: true,
+                                    onChanged: (value) {
+                                      validatePasswords();
+                                    },
+                                    maxLength: 64,
+                                    cursorColor: currentTheme.primaryColor,
+                                    controller: _repeatNewPasswordController,
+                                    placeholder: 'Repeat your new password',
+                                    keyboardType: TextInputType.text,
+                                    style: TextStyle(
+                                      color: currentTheme.primaryColor,
+                                      fontSize: 16,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: currentTheme.colorScheme.background,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 8.0),
+                              if (!isRepeatPasswordValid)
+                                Container(
+                                  padding: const EdgeInsets.only(left: 24),
+                                  child: Row(
+                                    children: [
+                                      DefaultTextStyle(
+                                        style: TextStyle(
+                                          color: currentTheme.errorColor,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12,
+                                        ),
+                                        child: const Text('Passwords do not match'),
+                                      ),
+                                      Spacer(),
+                                    ],
+                                  ),
+                                ),
+                              const SizedBox(height: 20.0),
+                              SizedBox(
+                                height: 50,
+                                child: FractionallySizedBox(
+                                  widthFactor: 0.9,
+                                  child: CupertinoButton(
+                                    color: isFormValid ? currentTheme.colorScheme.background : currentTheme.colorScheme.background.withOpacity(0.5),
+                                    onPressed: () async {
+                                      if (isFormValid) {
+                                        await checkTimestamp();
+                                        changePassword(_oldPasswordController.text, _newPasswordController.text
+                                        );
+                                      } else {
+                                        null;
+                                      }
+                                    },
+                                    child: Text('Change password',
+                                      style: TextStyle(
+                                        color: isFormValid ? currentTheme.primaryColor : currentTheme.primaryColor.withOpacity(0.5),
+                                        fontWeight: FontWeight.bold,
+                                      ),),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                              : const SizedBox.shrink(),
+                        ),
+                        const SizedBox(height: 30.0),
+                      ],
+                    ),
+                  SizedBox(
+                    height: 50,
+                    child: FractionallySizedBox(
+                      widthFactor: 0.9,
+                      child: CupertinoButton(
+                        color: currentTheme.colorScheme.background,
+                        onPressed: () {
+                          logOut();
+                        },
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                CupertinoIcons.square_arrow_left,
+                                color: currentTheme.primaryColor,
+                                size: 20,
+                              ),
+                              SizedBox(width: 10,),
+                              Text('Log out',
                                 style: TextStyle(
                                   color: currentTheme.primaryColor,
-                                  fontSize: 16,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: currentTheme.colorScheme.background,
-                                  borderRadius: BorderRadius.circular(8.0),
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            ),
+                            ],
                           ),
-                          const SizedBox(height: 8.0),
-                          if (!isRepeatPasswordValid)
-                            Container(
-                              padding: const EdgeInsets.only(left: 24),
-                              child: Row(
-                                children: [
-                                  DefaultTextStyle(
-                                    style: TextStyle(
-                                      color: currentTheme.errorColor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                    ),
-                                    child: const Text('Passwords do not match'),
-                                  ),
-                                  Spacer(),
-                                ],
-                              ),
-                            ),
-                          const SizedBox(height: 20.0),
-                          SizedBox(
-                            height: 50,
-                            child: FractionallySizedBox(
-                              widthFactor: 0.9,
-                              child: CupertinoButton(
-                                color: isFormValid ? currentTheme.colorScheme.background : currentTheme.colorScheme.background.withOpacity(0.5),
-                                onPressed: () async {
-                                  if (isFormValid) {
-                                    await checkTimestamp();
-                                    changePassword(_oldPasswordController.text, _newPasswordController.text
-                                    );
-                                  } else {
-                                    null;
-                                  }
-                                },
-                                child: Text('Change password',
-                                  style: TextStyle(
-                                    color: isFormValid ? currentTheme.primaryColor : currentTheme.primaryColor.withOpacity(0.5),
-                                    fontWeight: FontWeight.bold,
-                                  ),),
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
-                          : const SizedBox.shrink(),
-                    ),
-                    const SizedBox(height: 30.0),
-                  ],
-                ),
-                SizedBox(
-                  height: 50,
-                  child: FractionallySizedBox(
-                    widthFactor: 0.9,
-                    child: CupertinoButton(
-                      color: currentTheme.colorScheme.background,
-                      onPressed: () {
-                        logOut();
-                      },
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              CupertinoIcons.square_arrow_left,
-                              color: currentTheme.primaryColor,
-                              size: 20,
-                            ),
-                            SizedBox(width: 10,),
-                            Text('Log out',
-                              style: TextStyle(
-                                color: currentTheme.primaryColor,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
                         ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 30.0),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.05,),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      height: 50,
-                      child: CupertinoButton(
-                        color: currentTheme.errorColor,
-                        onPressed: deleteAccount,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              CupertinoIcons.delete,
-                              color: currentTheme.backgroundColor,
-                              size: 20,
-                            ),
-                            SizedBox(width: 10,),
-                            Text('Delete account',
-                              style: TextStyle(
+                  const SizedBox(height: 30.0),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(width: MediaQuery.of(context).size.width * 0.05,),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        height: 50,
+                        child: CupertinoButton(
+                          color: currentTheme.errorColor,
+                          onPressed: deleteAccount,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                CupertinoIcons.delete,
                                 color: currentTheme.backgroundColor,
-                                fontWeight: FontWeight.bold,
+                                size: 20,
                               ),
-                            ),
-                          ],
+                              SizedBox(width: 10,),
+                              Text('Delete account',
+                                style: TextStyle(
+                                  color: currentTheme.backgroundColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.05,),
-                  ],
-                ),
-              ],
+                      SizedBox(width: MediaQuery.of(context).size.width * 0.05,),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
-      )
+          ],
+        ),
+      ),
     );
   }
   void changePassword(String oldPassword, String newPassword) async {

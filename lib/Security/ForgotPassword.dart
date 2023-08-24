@@ -48,129 +48,133 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         ),
         backgroundColor: currentTheme.scaffoldBackgroundColor,
       ),
-      child: Container(
-        child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 10,
-              ),
-
-              Row(
-                children: [
-                  const SizedBox(
-                    width: 30,
-                  ),
-                  DefaultTextStyle(
-                    style: TextStyle(
-                      color: currentTheme.primaryColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                    child: const Text('Email'),
-                  ),
-                  Spacer(),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.9,
-                child:  SizedBox(
-                  height: 50,
-                  child: CupertinoTextField(
-                    maxLength: 256,
-                    onChanged: (value) {
-                      validateEmail();
-                    },
-                    cursorColor: currentTheme.primaryColor,
-                    controller: _emailController,
-                    placeholder: 'Enter your email',
-                    keyboardType: TextInputType.emailAddress,
-                    style: TextStyle(
-                      color: currentTheme.primaryColor,
-                      fontSize: 16,
-                    ),
-                    decoration: BoxDecoration(
-                      color: currentTheme.colorScheme.background,
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        child: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 10,
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                children: [
-                  const SizedBox(
-                    width: 25,
-                  ),
-                  if (!isEmailValid)
-                    Text(
-                      'Please enter a valid email',
+                Row(
+                  children: [
+                    const SizedBox(
+                      width: 30,
+                    ),
+                    DefaultTextStyle(
                       style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 12,
-                        decoration: TextDecoration.none,
+                        color: currentTheme.primaryColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                      child: const Text('Email'),
+                    ),
+                    Spacer(),
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  child:  SizedBox(
+                    height: 50,
+                    child: CupertinoTextField(
+                      maxLength: 256,
+                      onChanged: (value) {
+                        validateEmail();
+                      },
+                      cursorColor: currentTheme.primaryColor,
+                      controller: _emailController,
+                      placeholder: 'Enter your email',
+                      keyboardType: TextInputType.emailAddress,
+                      style: TextStyle(
+                        color: currentTheme.primaryColor,
+                        fontSize: 16,
+                      ),
+                      decoration: BoxDecoration(
+                        color: currentTheme.colorScheme.background,
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
-                  Spacer(),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.9,
-                child: CupertinoButton(
-                  color: isEmailValid ? currentTheme.primaryColor : currentTheme.backgroundColor,
-                  child: Text(
-                    'Send',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: isEmailValid ? currentTheme.backgroundColor : currentTheme.primaryColor,
-                      fontSize: 16,
-                    ),
                   ),
-                  onPressed: () async {
-                    var url = Uri.parse(ApiEndpoints.FORGOT_PASSWORD);
-                    final headers = {'Content-Type': 'application/json'};
-                    final jsonBody = jsonEncode({
-                      "email": _emailController.text,
-                    });
-                    print(url);
-                    print(headers);
-                    print(jsonBody);
-                    final response = await http.post(url, headers: headers, body: jsonBody);
-                    if (response.statusCode == 200) {
-                      Navigator.pop(context);
-                    } else {
-                      var body = customJsonDecode(response.body);
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return CupertinoAlertDialog(
-                            title: Text("Error"),
-                            content: Text(body["message"]),
-                            actions: [
-                              CupertinoDialogAction(
-                                child: Text("OK"),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    }
-                  },
                 ),
-              ),
-            ],
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    const SizedBox(
+                      width: 25,
+                    ),
+                    if (!isEmailValid)
+                      Text(
+                        'Please enter a valid email',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 12,
+                          decoration: TextDecoration.none,
+                        ),
+                      ),
+                    Spacer(),
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  child: CupertinoButton(
+                    color: isEmailValid ? currentTheme.primaryColor : currentTheme.backgroundColor,
+                    child: Text(
+                      'Send',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: isEmailValid ? currentTheme.backgroundColor : currentTheme.primaryColor,
+                        fontSize: 16,
+                      ),
+                    ),
+                    onPressed: () async {
+                      var url = Uri.parse(ApiEndpoints.FORGOT_PASSWORD);
+                      final headers = {'Content-Type': 'application/json'};
+                      final jsonBody = jsonEncode({
+                        "email": _emailController.text,
+                      });
+                      print(url);
+                      print(headers);
+                      print(jsonBody);
+                      final response = await http.post(url, headers: headers, body: jsonBody);
+                      if (response.statusCode == 200) {
+                        Navigator.pop(context);
+                      } else {
+                        var body = customJsonDecode(response.body);
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return CupertinoAlertDialog(
+                              title: Text("Error"),
+                              content: Text(body["message"]),
+                              actions: [
+                                CupertinoDialogAction(
+                                  child: Text("OK"),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

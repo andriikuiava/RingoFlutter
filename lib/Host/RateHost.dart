@@ -112,100 +112,105 @@ class _RateHostState extends State<RateHost> {
           ),
         ),
       ),
-      child: Center(
-        child: Column(
-          children: [
-            const SizedBox(height: 10,),
-            ClipRRect(
-              borderRadius: defaultWidgetCornerRadius,
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.95,
-                color: currentTheme.backgroundColor,
-                child: Column(
-                  children: [
-                    const SizedBox(height: 12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const SizedBox(width: 10),
-                        RatingBar.builder(
-                          itemSize: 24,
-                          initialRating: widget.review?.rate.toDouble() ?? 3.0,
-                          minRating: 1,
-                          direction: Axis.horizontal,
-                          allowHalfRating: false,
-                          itemCount: 5,
-                          itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                          itemBuilder: (context, _) => Icon(
-                            CupertinoIcons.star_fill,
-                            color: currentTheme.primaryColor,
-                          ),
-                          onRatingUpdate: (rating) {
-                            newRating = rating.toInt();
-                          },
-                        ),
-                        Spacer(),
-                        if (widget.createdReview)
-                          GestureDetector(
-                            onTap: deleteReview,
-                            child: Icon(
-                              CupertinoIcons.delete,
-                              size: 24,
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        child: Center(
+          child: Column(
+            children: [
+              const SizedBox(height: 10,),
+              ClipRRect(
+                borderRadius: defaultWidgetCornerRadius,
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.95,
+                  color: currentTheme.backgroundColor,
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const SizedBox(width: 10),
+                          RatingBar.builder(
+                            itemSize: 24,
+                            initialRating: widget.review?.rate.toDouble() ?? 3.0,
+                            minRating: 1,
+                            direction: Axis.horizontal,
+                            allowHalfRating: false,
+                            itemCount: 5,
+                            itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                            itemBuilder: (context, _) => Icon(
+                              CupertinoIcons.star_fill,
                               color: currentTheme.primaryColor,
                             ),
+                            onRatingUpdate: (rating) {
+                              newRating = rating.toInt();
+                            },
                           ),
-                        const SizedBox(width: 10,)
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    Container(
-                      height: 200,
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      child: CupertinoTextField(
-                        maxLength: 2048,
-                        cursorColor: currentTheme.primaryColor,
-                        placeholder: 'Create a review',
-                        controller: _reviewController,
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        style: TextStyle(
-                          color: currentTheme.primaryColor,
-                          fontSize: 16,
-                        ),
-                        decoration: BoxDecoration(
-                          color: currentTheme.backgroundColor,
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        onChanged: (value) {
-                          // validateForm();
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    ClipRRect(
-                      borderRadius: defaultWidgetCornerRadius,
-                      child: Container(
-                          width: MediaQuery.of(context).size.width * 0.9,
-                          color: currentTheme.backgroundColor,
-                          child: CupertinoButton(
-                            color: currentTheme.primaryColor,
-                            child: Text(
-                              'Submit',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: currentTheme.backgroundColor,
+                          Spacer(),
+                          if (widget.createdReview)
+                            GestureDetector(
+                              onTap: deleteReview,
+                              child: Icon(
+                                CupertinoIcons.delete,
+                                size: 24,
+                                color: currentTheme.primaryColor,
                               ),
                             ),
-                            onPressed: createReview,
-                          )
+                          const SizedBox(width: 10,)
+                        ],
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                  ],
+                      const SizedBox(height: 6),
+                      Container(
+                        height: 200,
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        child: CupertinoTextField(
+                          maxLength: 2048,
+                          cursorColor: currentTheme.primaryColor,
+                          placeholder: 'Create a review',
+                          controller: _reviewController,
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
+                          style: TextStyle(
+                            color: currentTheme.primaryColor,
+                            fontSize: 16,
+                          ),
+                          decoration: BoxDecoration(
+                            color: currentTheme.backgroundColor,
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          onChanged: (value) {
+                            // validateForm();
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      ClipRRect(
+                        borderRadius: defaultWidgetCornerRadius,
+                        child: Container(
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            color: currentTheme.backgroundColor,
+                            child: CupertinoButton(
+                              color: currentTheme.primaryColor,
+                              child: Text(
+                                'Submit',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: currentTheme.backgroundColor,
+                                ),
+                              ),
+                              onPressed: createReview,
+                            )
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
