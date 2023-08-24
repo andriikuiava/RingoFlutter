@@ -1,4 +1,3 @@
-
 class Currency {
   int id;
   String name;

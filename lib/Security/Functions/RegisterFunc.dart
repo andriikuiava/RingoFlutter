@@ -1,9 +1,9 @@
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+import 'package:ringoflutter/Classes/LoginCredentialsClass.dart';
 import 'package:ringoflutter/Classes/RegistrationCredentialsClass.dart';
 import 'package:ringoflutter/Security/Functions/LoginFunc.dart';
-import 'package:ringoflutter/Classes/LoginCredentialsClass.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 
 Future<void> registerUser(RegistrationCredentials registrationCredentials) async {

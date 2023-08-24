@@ -1,12 +1,11 @@
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:ringoflutter/Security/Functions/LogOutFunc.dart';
-import 'package:flutter/animation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 
 class ChangePasswordView extends StatefulWidget {
@@ -398,13 +397,13 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                           children: [
                             Icon(
                               CupertinoIcons.delete,
-                              color: currentTheme.primaryColor,
+                              color: currentTheme.backgroundColor,
                               size: 20,
                             ),
                             SizedBox(width: 10,),
                             Text('Delete account',
                               style: TextStyle(
-                                color: currentTheme.primaryColor,
+                                color: currentTheme.backgroundColor,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

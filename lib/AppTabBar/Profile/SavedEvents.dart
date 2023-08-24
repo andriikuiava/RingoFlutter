@@ -1,15 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:ringoflutter/Classes/EventClass.dart';
-import 'package:ringoflutter/UI/Themes.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:ringoflutter/UI/Functions/Formats.dart';
+import 'package:ringoflutter/Classes/EventClass.dart';
 import 'package:ringoflutter/Event/EventPage.dart';
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
-import 'package:visibility_detector/visibility_detector.dart';
+import 'package:ringoflutter/UI/Functions/Formats.dart';
+import 'package:ringoflutter/UI/Themes.dart';
 import 'package:ringoflutter/api_endpoints.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 class SavedEventsScreen extends StatefulWidget {
   const SavedEventsScreen({super.key});
@@ -29,7 +28,7 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
-      var jsonResponse = json.decode(response.body);
+      var jsonResponse = customJsonDecode(response.body);
       List<EventInFeed> events = [];
       for (var eventJson in jsonResponse) {
         EventInFeed event = EventInFeed.fromJson(eventJson);

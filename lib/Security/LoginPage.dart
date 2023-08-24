@@ -1,24 +1,23 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:ringoflutter/Classes/LoginCredentialsClass.dart';
-import 'package:ringoflutter/Classes/TokensClass.dart';
-import 'package:ringoflutter/Security/Functions/LoginFunc.dart';
-import 'package:ringoflutter/Security/checkIsLoggedIn.dart';
-import 'Registration.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'dart:developer';
 import 'package:ringoflutter/AppTabBar/Home.dart';
+import 'package:ringoflutter/Classes/LoginCredentialsClass.dart';
+import 'package:ringoflutter/Classes/TokensClass.dart';
+import 'package:ringoflutter/Security/ForgotPassword.dart';
+import 'package:ringoflutter/Security/Functions/ActivateAccount.dart';
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
+import 'package:ringoflutter/Security/Functions/LoginFunc.dart';
+import 'package:ringoflutter/Security/checkIsLoggedIn.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'dart:io';
-import 'EmailVerificationPage.dart';
-import 'package:ringoflutter/Classes/TokensClass.dart';
-import 'package:ringoflutter/Security/Functions/ActivateAccount.dart';
-import 'package:ringoflutter/Security/ForgotPassword.dart';
+
+import 'Registration.dart';
 
 Future<void> signInWithGoogle() async {
   const storage = FlutterSecureStorage();

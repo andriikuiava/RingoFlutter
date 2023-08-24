@@ -1,10 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:ringoflutter/Classes/UserClass.dart';
+import 'dart:convert';
 import 'dart:io';
-import 'package:ringoflutter/AppTabBar/Profile/Functions/SendPhoto.dart';
-import 'package:ringoflutter/AppTabBar/Profile/Functions/UpdateUser.dart';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:ringoflutter/AppTabBar/Profile/Functions/SendPhoto.dart';
+import 'package:ringoflutter/Classes/UserClass.dart';
+import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 
 class EditProfile extends StatefulWidget {
@@ -51,7 +55,6 @@ class _EditProfileState extends State<EditProfile> {
     });
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -69,6 +72,42 @@ class _EditProfileState extends State<EditProfile> {
       selectedGender = 2;
     }
     _dateController = ValueNotifier<DateTime>(DateTime.parse(widget.beforeEdit.dateOfBirth!));
+  }
+
+  void updateUser(File? image, int genderId, String dateOfBirth) async {
+    await checkTimestamp();
+    var selectedGender = "";
+    if (genderId == 0) {
+      selectedGender = "MALE";
+    }
+    if (genderId == 1) {
+      selectedGender = "FEMALE";
+    }
+    if (genderId == 2) {
+      selectedGender = "OTHER";
+    }
+    Uri url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
+    var storage = const FlutterSecureStorage();
+    var token = await storage.read(key: "access_token");
+    var headers = {
+      'Content-Type': "application/json; charset=UTF-8",
+      'Authorization': "Bearer $token",
+    };
+    var body = jsonEncode({
+      'name': _fullNameController.text,
+      'username': _usernameController.text,
+      'gender': selectedGender,
+      'dateOfBirth': dateOfBirth,
+    });
+    var response = await http.put(url, headers: headers, body: body);
+    if (response.statusCode == 200) {
+      print("Uploaded!");
+      if (image != null) {
+        sendPhoto(image);
+      }
+    } else {
+      print("Error during connection to the server.");
+    }
   }
 
   @override
@@ -129,7 +168,7 @@ class _EditProfileState extends State<EditProfile> {
                       child: Column(
                         children: [
                           CupertinoButton(
-                            color: currentTheme.colorScheme.background,
+                            color: currentTheme.backgroundColor,
                             minSize: 40,
                             padding: EdgeInsets.zero,
                             child: Row(
@@ -381,10 +420,12 @@ class _EditProfileState extends State<EditProfile> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(
-                      flex: 4,
+                    Spacer(),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      height: 50,
                       child: CupertinoButton(
-                        color: currentTheme.colorScheme.background,
+                        color: currentTheme.backgroundColor,
                         onPressed: () {
                           Navigator.pop(context);
                         },
@@ -395,14 +436,16 @@ class _EditProfileState extends State<EditProfile> {
                             style: TextStyle(
                               color: currentTheme.primaryColor,
                               fontWeight: FontWeight.normal,
+                              fontSize: 16,
                             ),
                           ),
                         ),
                       ),
                     ),
                     const SizedBox(width: 15.0),
-                    Expanded(
-                      flex: 4,
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      height: 50,
                       child: CupertinoButton(
                         color: isFormValid
                             ? currentTheme.backgroundColor
@@ -412,7 +455,7 @@ class _EditProfileState extends State<EditProfile> {
                           if (isFormValid) {
                             DateFormat dateFormat = DateFormat('yyyy-MM-dd');
                             String formattedTimestamp = dateFormat.format(_dateController.value);
-                            updateUser(_fullNameController.text, _usernameController.text, image, selectedGender, formattedTimestamp);
+                            updateUser(image, selectedGender, formattedTimestamp);
                             Navigator.pop(context);
                           } else {
                             null;
@@ -427,11 +470,13 @@ class _EditProfileState extends State<EditProfile> {
                                   ? currentTheme.primaryColor
                                   : currentTheme.primaryColor.withOpacity(0.5),
                               fontWeight: FontWeight.bold,
+                              fontSize: 16,
                             ),
                           ),
                         ),
                       ),
                     ),
+                    Spacer(),
                   ],
                 ),
               ],

@@ -1,10 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ringoflutter/Security/Functions/RegisterFunc.dart';
 import 'package:intl/intl.dart';
-import 'package:ringoflutter/Classes/RegistrationCredentialsClass.dart';
-import 'dart:io';
 import 'package:ringoflutter/AppTabBar/Profile/Functions/SendPhoto.dart';
+import 'package:ringoflutter/Classes/RegistrationCredentialsClass.dart';
+import 'package:ringoflutter/Security/Functions/RegisterFunc.dart';
 
 
 class RegistrationPage extends StatefulWidget {

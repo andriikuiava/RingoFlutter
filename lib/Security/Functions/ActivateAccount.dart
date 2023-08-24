@@ -1,18 +1,17 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:ringoflutter/Classes/LoginCredentialsClass.dart';
+import 'package:intl/intl.dart';
+import 'package:ringoflutter/AppTabBar/Home.dart';
+import 'package:ringoflutter/AppTabBar/Profile/Functions/SendPhoto.dart';
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:ringoflutter/UI/Themes.dart';
-import 'package:http/http.dart' as http;
-import 'dart:io';
-import 'package:ringoflutter/AppTabBar/Profile/Functions/SendPhoto.dart';
-import 'package:intl/intl.dart';
 import 'package:ringoflutter/api_endpoints.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:ringoflutter/UI/Functions/Formats.dart';
-import 'dart:convert';
-import 'package:ringoflutter/AppTabBar/Home.dart';
+
 import '../checkIsLoggedIn.dart';
 
 
@@ -32,6 +31,11 @@ late TextEditingController _usernameController;
 late TextEditingController _nameController;
 late TextEditingController _emailController;
 late DateTime dateController;
+
+bool isNameValid = true;
+bool isUsernameValid = true;
+bool isFormValid = false;
+
 int selectedGender = 2;
 File? image;
 
@@ -88,6 +92,40 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
       print('User activation failed with status code: ${response.statusCode}');
       print('Response body: ${response.body}');
     }
+  }
+
+  void validateName() {
+    setState(() {
+      if (RegExp(r"^.{3,49}$").hasMatch(_nameController.text)) {
+        isNameValid = true;
+      } else {
+        isNameValid = false;
+      }
+    });
+  }
+
+  void validateUsername() {
+    setState(() {
+      if (RegExp(r"^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{2,29}$")
+          .hasMatch(_usernameController.text)) {
+        isUsernameValid = true;
+      } else {
+        isUsernameValid = false;
+      }
+    });
+  }
+
+  bool validateForm() {
+    setState(() {
+      validateName();
+      validateUsername();
+      if (isNameValid && isUsernameValid) {
+        isFormValid = true;
+      } else {
+        isFormValid = false;
+      }
+    });
+    return isFormValid;
   }
 
   Widget build(BuildContext context) {
@@ -209,8 +247,14 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                     child: CupertinoTextField(
                       cursorColor: currentTheme.primaryColor,
                       controller: _nameController,
+                      maxLength: 50,
                       placeholder: 'Enter your full name',
                       keyboardType: TextInputType.text,
+                      onChanged: (value) {
+                        if (!isNameValid) {
+                          validateName();
+                        }
+                      },
                       style: TextStyle(
                         color: currentTheme.primaryColor,
                         fontSize: 16,
@@ -221,6 +265,20 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                       ),
                     ),
                   ),
+                  if (!isNameValid)
+                    Column(
+                      children: [
+                        const SizedBox(height: 10),
+                        const Text(
+                          'Please enter your full name',
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 14,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                      ],
+                    ),
                   SizedBox(height: 20),
                   Text('Username',
                     style: TextStyle(
@@ -236,8 +294,12 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                     child: CupertinoTextField(
                       cursorColor: currentTheme.primaryColor,
                       controller: _usernameController,
+                      onChanged: (value) {
+                        validateUsername();
+                      },
+                      maxLength: 30,
                       placeholder: 'Enter your username',
-                      keyboardType: TextInputType.emailAddress,
+                      keyboardType: TextInputType.text,
                       style: TextStyle(
                         color: currentTheme.primaryColor,
                         fontSize: 16,
@@ -248,6 +310,20 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                       ),
                     ),
                   ),
+                  if (!isUsernameValid)
+                    Column(
+                      children: [
+                        const SizedBox(height: 10),
+                        const Text(
+                          'Please enter a valid username',
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 14,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                      ],
+                    ),
                   SizedBox(height: 20),
                   Text('Email',
                     style: TextStyle(
@@ -264,9 +340,8 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                       enabled: false,
                       controller: _emailController,
                       placeholder: 'Enter your email',
-                      keyboardType: TextInputType.emailAddress,
                       style: TextStyle(
-                        color: currentTheme.primaryColor,
+                        color: Colors.grey,
                         fontSize: 16,
                       ),
                       decoration: BoxDecoration(
@@ -356,7 +431,11 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                           height: 50,
                           color: currentTheme.backgroundColor,
                           child: CupertinoButton(
-                            onPressed: activateAccount,
+                            onPressed: () async {
+                              if (validateForm()) {
+                                activateAccount();
+                              }
+                            },
                             child: Text('Finish Registration',
                               style: TextStyle(
                                 color: currentTheme.primaryColor,

@@ -1,9 +1,9 @@
-import 'package:ringoflutter/Classes/PhotoClasses.dart';
-import 'package:ringoflutter/Classes/CoordinatesClass.dart';
 import 'package:ringoflutter/Classes/CategoryClass.dart';
+import 'package:ringoflutter/Classes/CoordinatesClass.dart';
 import 'package:ringoflutter/Classes/CurrencyClass.dart';
-import 'package:ringoflutter/Classes/RegistrationFormClass.dart';
 import 'package:ringoflutter/Classes/OrganisationClass.dart';
+import 'package:ringoflutter/Classes/PhotoClasses.dart';
+import 'package:ringoflutter/Classes/RegistrationFormClass.dart';
 
 class EventInFeed {
   int? id;

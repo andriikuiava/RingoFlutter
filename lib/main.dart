@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'Security/LoginPage.dart';
-import 'UI/Themes.dart';
 import 'package:ringoflutter/Security/checkIsLoggedIn.dart';
+
+import 'UI/Themes.dart';
 
 void main() {
   runApp(
