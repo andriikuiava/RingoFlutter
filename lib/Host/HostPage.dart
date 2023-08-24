@@ -1,24 +1,22 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
+import 'package:ringoflutter/Classes/ContactCardClass.dart';
 import 'package:ringoflutter/Classes/EventClass.dart';
 import 'package:ringoflutter/Classes/OrganisationClass.dart';
-import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:ringoflutter/UI/Themes.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:ringoflutter/Classes/ReviewClass.dart';
 import 'package:ringoflutter/Event/EventPage.dart';
-import 'package:ringoflutter/UI/Functions/Formats.dart';
-import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter/services.dart';
-import 'package:ringoflutter/Classes/ContactCardClass.dart';
-import 'package:ringoflutter/api_endpoints.dart';
 import 'package:ringoflutter/Host/RateHost.dart';
+import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
+import 'package:ringoflutter/UI/Functions/Formats.dart';
+import 'package:ringoflutter/UI/Themes.dart';
+import 'package:ringoflutter/api_endpoints.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 
 class HostPage extends StatefulWidget {
@@ -102,6 +100,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                const SizedBox(height: 8),
                 Center(
                   child: ClipRRect(
                     borderRadius: defaultWidgetCornerRadius,
@@ -298,13 +297,16 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                       ),
                     ),
                   ),
-                const SizedBox(height: 8),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.95,
                   height: 60,
                   child: Card(
+                    elevation: 0,
                     color: currentTheme.backgroundColor,
                     child: TabBar(
+                      indicatorColor: currentTheme.primaryColor,
+                      overlayColor: MaterialStateProperty.all(currentTheme.primaryColor.withOpacity(0.1)),
+                      splashBorderRadius: BorderRadius.circular(12),
                       controller: _tabController,
                       tabs: [
                         Tab(
@@ -449,6 +451,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
         const SizedBox(height: 6),
         Expanded(
         child: Card(
+          elevation: 0,
         color: currentTheme.backgroundColor,
           child: FutureBuilder<List<Review>>(
             future: getReviewsByOrganisationId(data?.id ?? 0),
@@ -464,7 +467,9 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                   ),
                 );
               } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
+                return Center(
+                  child: Text('No reviews found.'),
+                );
               } else if (!snapshot.hasData) {
                 return const Text('No reviews found.');
               } else {
@@ -568,6 +573,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
     final currentTheme = Theme.of(context);
     return Expanded(
       child: Card(
+        elevation: 0,
         color: currentTheme.backgroundColor,
         child: FutureBuilder<List<EventInFeed>>(
           future: getUpcomingEvents(data?.id ?? 0),
@@ -720,6 +726,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
     final currentTheme = Theme.of(context);
     return Expanded(
       child: Card(
+        elevation: 0,
         color: currentTheme.backgroundColor,
         child: FutureBuilder<List<EventInFeed>>(
           future: getPastEvents(data?.id ?? 0),

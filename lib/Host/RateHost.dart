@@ -1,14 +1,14 @@
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
+import 'package:ringoflutter/Classes/ReviewClass.dart';
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:ringoflutter/UI/Themes.dart';
-import 'package:ringoflutter/Classes/ReviewClass.dart';
-import 'package:ringoflutter/Security/checkIsLoggedIn.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ringoflutter/api_endpoints.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class RateHost extends StatefulWidget {
   final Review? review;
@@ -41,7 +41,7 @@ class _RateHostState extends State<RateHost> {
     var token = await storage.read(key: "access_token");
     var url = Uri.parse("${ApiEndpoints.GET_ORGANISATION}/${widget.organisationId}/${ApiEndpoints.REVIEWS}");
     var headers = {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token'
     };
     var response = await http.delete(url, headers: headers);
@@ -58,7 +58,7 @@ class _RateHostState extends State<RateHost> {
     var token = await storage.read(key: "access_token");
     var url = Uri.parse("${ApiEndpoints.GET_ORGANISATION}/${widget.organisationId}/${ApiEndpoints.REVIEWS}");
     var headers = {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token'
     };
     var body = jsonEncode({

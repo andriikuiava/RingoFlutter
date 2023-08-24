@@ -1,16 +1,15 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:ringoflutter/AppTabBar/Map/GetLocation.dart';
-import 'package:ringoflutter/Classes/EventClass.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:ringoflutter/UI/Themes.dart';
-import 'package:ringoflutter/UI/Functions/Formats.dart';
-import 'package:ringoflutter/Event/EventPage.dart';
-import 'package:ringoflutter/Classes/CategoryClass.dart';
 import 'package:ringoflutter/AppTabBar/Feed/Builder.dart';
+import 'package:ringoflutter/AppTabBar/Map/GetLocation.dart';
+import 'package:ringoflutter/Classes/CategoryClass.dart';
+import 'package:ringoflutter/Classes/EventClass.dart';
+import 'package:ringoflutter/Event/EventPage.dart';
+import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
+import 'package:ringoflutter/UI/Functions/Formats.dart';
+import 'package:ringoflutter/UI/Themes.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 
 class FeedPage extends StatelessWidget {
@@ -211,6 +210,7 @@ class FeedPage extends StatelessWidget {
                   .size
                   .width + 120,
               child: Card(
+                elevation: 0,
                 color: Colors.transparent,
                 child: TabBarView(
                   children: snapshot.data!.map((event) {
@@ -447,6 +447,7 @@ class FeedPage extends StatelessWidget {
                   .size
                   .width + 120,
               child: Card(
+                elevation: 0,
                 color: Colors.transparent,
                 child: TabBarView(
                   children: snapshot.data!.map((event) {
@@ -639,6 +640,7 @@ class FeedPage extends StatelessWidget {
                                         .size
                                         .width * 0.62,
                                     child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           event.name,

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:ringoflutter/AppTabBar/Home.dart';
-import 'package:ringoflutter/main.dart';
-import 'package:ringoflutter/Security/LoginPage.dart';
-import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:ringoflutter/AppTabBar/Home.dart';
 import 'package:ringoflutter/Security/EmailVerificationPage.dart';
-import 'package:ringoflutter/api_endpoints.dart';
 import 'package:ringoflutter/Security/Functions/ActivateAccount.dart';
+import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
+import 'package:ringoflutter/Security/LoginPage.dart';
+import 'package:ringoflutter/api_endpoints.dart';
+import 'package:ringoflutter/main.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = App.materialKey;
 

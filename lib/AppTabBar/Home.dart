@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'Profile/Profile.dart';
-import 'Tickets/Tickets.dart';
-import 'Map/MapPage.dart';
+
 import 'Feed/FeedPage.dart';
+import 'Map/MapPage.dart';
+import 'Profile/Profile.dart';
 import 'Search/SearchPage.dart';
+import 'Tickets/Tickets.dart';
 
 
 class Home extends StatefulWidget {

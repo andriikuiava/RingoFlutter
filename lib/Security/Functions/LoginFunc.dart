@@ -1,13 +1,13 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:ringoflutter/AppTabBar/Home.dart';
 import 'package:ringoflutter/Classes/LoginCredentialsClass.dart';
 import 'package:ringoflutter/Classes/TokensClass.dart';
-import 'package:ringoflutter/AppTabBar/Home.dart';
-import 'package:ringoflutter/Security/checkIsLoggedIn.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ringoflutter/Security/EmailVerificationPage.dart';
-import 'package:ringoflutter/main.dart';
+import 'package:ringoflutter/Security/checkIsLoggedIn.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 
 

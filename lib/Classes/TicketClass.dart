@@ -1,5 +1,5 @@
-import 'package:ringoflutter/Classes/UserClass.dart';
 import 'package:ringoflutter/Classes/EventClass.dart';
+import 'package:ringoflutter/Classes/UserClass.dart';
 
 class Ticket {
   User participant;
