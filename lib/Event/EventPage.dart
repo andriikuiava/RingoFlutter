@@ -587,7 +587,7 @@ class _EventPageState extends State<EventPage>
                                   color: currentTheme.primaryColor,
                                 ),
                               ),
-                              const SizedBox(height: 6,),
+                              const SizedBox(height: 6),
                               Row(
                                 children: [
                                   Icon(
