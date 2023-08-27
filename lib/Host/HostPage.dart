@@ -315,7 +315,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                             children: [
                               if (snapshot.data!.rating != null)
                                 Text(
-                                  '${snapshot.data?.rating}',
+                                  '${snapshot.data!.rating!.toStringAsFixed(1)}',
                                   style: const TextStyle(
                                     fontSize: 20,
                                   ),

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -11,7 +10,7 @@ import 'package:ringoflutter/Security/checkIsLoggedIn.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 
 
-Future<Tokens> loginFunc(LoginCredentials loginCredentials) async {
+Future<Tokens> loginFunc(LoginCredentials loginCredentials, context) async {
   final Uri url = Uri.parse('${ApiEndpoints.LOGIN_RINGO}');
   final jsonBody = jsonEncode(loginCredentials.toJson());
   final headers = {'Content-Type': 'application/json'};
@@ -55,7 +54,7 @@ Future<Tokens> loginFunc(LoginCredentials loginCredentials) async {
         );
       }
     } else {
-      throw Exception('Failed to load participants');
+      throw Exception('Failed to load participant id');
     }
 
     return Tokens(
@@ -63,6 +62,7 @@ Future<Tokens> loginFunc(LoginCredentials loginCredentials) async {
       refreshToken: jsonResponse['refreshToken'],
     );
   } else {
+    showErrorAlert("Error", "Please check your credentials", context);
     throw Exception('Failed to login');
   }
 }

@@ -125,7 +125,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       Padding(
                                         padding: defaultWidgetPadding,
                                         child: CircleAvatar(
-                                          radius: 50,
+                                          radius: 40,
                                           backgroundImage: NetworkImage(
                                             '${ApiEndpoints.GET_PHOTO}/${data.profilePictureId}',
                                           ),
@@ -134,11 +134,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     Row(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        const SizedBox(width: 10,),
                                         Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
-                                            const SizedBox(height: 8,),
                                             Container(
                                               width: data.profilePictureId == null ? MediaQuery.of(context).size.width * 0.9 : MediaQuery.of(context).size.width * 0.6,
                                               child: Text(
@@ -165,7 +163,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 ),
                                               ),
                                             ),
-                                            const SizedBox(height: 10,),
                                           ],
                                         ),
                                       ],

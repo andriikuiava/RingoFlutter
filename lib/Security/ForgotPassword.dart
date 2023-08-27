@@ -112,7 +112,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       width: 25,
                     ),
                     if (!isEmailValid)
-                      Text(
+                      const Text(
                         'Please enter a valid email',
                         style: TextStyle(
                           color: Colors.red,
@@ -149,26 +149,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       print(jsonBody);
                       final response = await http.post(url, headers: headers, body: jsonBody);
                       if (response.statusCode == 200) {
+                        showSuccessAlert("Success", "A password reset link has been sent to your email", context);
                         Navigator.pop(context);
                       } else {
-                        var body = customJsonDecode(response.body);
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return CupertinoAlertDialog(
-                              title: Text("Error"),
-                              content: Text(body["message"]),
-                              actions: [
-                                CupertinoDialogAction(
-                                  child: Text("OK"),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
+                        showErrorAlert("Error", "An error occurred while sending a request", context);
                       }
                     },
                   ),

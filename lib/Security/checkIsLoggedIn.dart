@@ -8,6 +8,7 @@ import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:ringoflutter/Security/LoginPage.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 import 'package:ringoflutter/main.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = App.materialKey;
 
@@ -30,13 +31,13 @@ class _CheckerPageState extends State<CheckerPage> {
     String currentTime = DateTime.now().toString();
     String? storedTime = await storage.read(key: 'timestamp');
     print(storedTime);
-
-    if (storedTime != null) {
+    var isConnect = await InternetConnectionChecker().hasConnection;
+    if (storedTime != null && isConnect) {
       await checkTimestamp();
       var storage = FlutterSecureStorage();
       var token = await storage.read(key: "access_token");
       DateTime current = DateTime.parse(currentTime);
-      DateTime stored = DateTime.parse(storedTime);
+      DateTime stored = DateTime.parse(storedTime!);
       Uri url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
       var responseId = await http.get(url, headers: {
         'Content-Type': 'application/json',
@@ -66,9 +67,15 @@ class _CheckerPageState extends State<CheckerPage> {
         throw Exception('Failed to load participants');
       }
     } else {
-      navigatorKey.currentState?.pushReplacement(
-        MaterialPageRoute(builder: (_) => const LoginPage()),
-      );
+      if (isConnect) {
+        navigatorKey.currentState?.pushReplacement(
+          MaterialPageRoute(builder: (_) => const LoginPage()),
+        );
+      } else {
+        navigatorKey.currentState?.pushReplacement(
+          MaterialPageRoute(builder: (_) => const Home()),
+        );
+      }
       throw Exception('No timestamp found');
     }
   }

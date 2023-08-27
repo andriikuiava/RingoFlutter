@@ -141,7 +141,14 @@ class _FeedBuilderState extends State<FeedBuilder> {
                             .width * 0.93,
                         child: Image.network(
                             "${ApiEndpoints.GET_PHOTO}/${event
-                                .mainPhotoId}"),
+                                .mainPhotoId}",
+                          height: MediaQuery
+                              .of(context)
+                              .size
+                              .width * 0.93,
+                          width: MediaQuery.of(context).size.width * 0.93,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 5),
