@@ -6,11 +6,13 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:ringoflutter/Security/Functions/LogoutFunc.dart';
+import 'package:ringoflutter/Security/LoginPage.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 
 class EmailVerificationPage extends StatefulWidget {
   final String usersEmail;
-  const EmailVerificationPage({Key? key, required this.usersEmail}) : super(key: key);
+  final String usersUsername;
+  const EmailVerificationPage({Key? key, required this.usersEmail, required this.usersUsername}) : super(key: key);
 
   @override
   State<EmailVerificationPage> createState() => _EmailVerificationPageState();
@@ -27,24 +29,6 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
     super.dispose();
   }
 
-  Future<void> deleteAccount() async {
-    await checkTimestamp();
-    var storage = const FlutterSecureStorage();
-    var token = await storage.read(key: 'access_token');
-    Uri url = Uri.parse("${ApiEndpoints.CURRENT_PARTICIPANT}");
-    var headers = {
-      'Authorization': 'Bearer ${token}',
-    };
-    var response = await http.delete(url, headers: headers);
-    if (response.statusCode == 200) {
-      print('Account deleted');
-      logOut();
-    } else {
-      print('Account not deleted');
-    }
-  }
-
-
   Future<void> resendEmail() async {
     setState(() {
       _isResendActive = false;
@@ -60,14 +44,8 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
         }
       });
     });
-    await checkTimestamp();
-    var storage = FlutterSecureStorage();
-    var token = await storage.read(key: "access_token");
-    Uri url = Uri.parse('${ApiEndpoints.RESEND_CONFIRMATION_LINK}');
-    var headers = {
-      'Authorization': 'Bearer ${token}'
-    };
-    var response = await http.get(url, headers: headers);
+    Uri url = Uri.parse('${ApiEndpoints.RESEND_CONFIRMATION_LINK}?username=${widget.usersUsername}');
+    var response = await http.get(url);
     if (response.statusCode == 200) {
       print('Email sent');
     } else {
@@ -115,13 +93,18 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
               ),
             ),
             const SizedBox(height: 10),
-            Text(
-              'Please verify your e-mail address to continue',
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.normal,
-                  color: currentTheme.primaryColor,
-                  decoration: TextDecoration.none
+            Container(
+              width: MediaQuery.of(context).size.width * 0.9,
+              child: Text(
+                'Please verify your e-mail address to continue',
+                maxLines: 3,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.normal,
+                    color: currentTheme.primaryColor,
+                    decoration: TextDecoration.none
+                ),
               ),
             ),
             const SizedBox(height: 20),
@@ -134,8 +117,13 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                     onPrimary: currentTheme.backgroundColor,
                     backgroundColor: currentTheme.primaryColor,
                   ),
-                  onPressed: () async {
-                    deleteAccount();
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginPage(),
+                      ),
+                    );
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

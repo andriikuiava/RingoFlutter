@@ -76,6 +76,11 @@ class _EventPageState extends State<EventPage>
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.post(url, headers: headers);
     if (response.statusCode == 200) {
+      if (isSaved) {
+        showUnsavedAlert(context);
+      } else {
+        showSavedAlert(context);
+      }
       _refreshEvent();
       var jsonResponse = customJsonDecode(response.body);
       EventFull event = EventFull.fromJson(jsonResponse);
@@ -372,7 +377,7 @@ class _EventPageState extends State<EventPage>
                                           },
                                         ),
                                       ),
-                                      SizedBox(width: MediaQuery.of(context).size.width * 0.03,),
+                                      SizedBox(width: MediaQuery.of(context).size.width * 0.07,),
                                       Container(
                                         width: MediaQuery.of(context).size.width * 0.41,
                                         child: ElevatedButton(

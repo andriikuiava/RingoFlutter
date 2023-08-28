@@ -30,6 +30,8 @@ class _MyTicketPageState extends State<MyTicketPage> {
     if (response.statusCode == 200) {
       Navigator.pop(context);
     } else {
+      print(response.statusCode);
+      print(response.body);
       throw Exception('Failed to delete ticket');
     }
   }

@@ -50,7 +50,7 @@ Future<Tokens> loginFunc(LoginCredentials loginCredentials, context) async {
         );
       } else {
         navigatorKey.currentState?.pushReplacement(
-          MaterialPageRoute(builder: (_) => EmailVerificationPage(usersEmail: jsonResponse['email'],)),
+          MaterialPageRoute(builder: (_) => EmailVerificationPage(usersEmail: jsonResponse['email'], usersUsername: jsonResponse['username'],)),
         );
       }
     } else {

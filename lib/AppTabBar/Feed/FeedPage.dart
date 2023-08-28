@@ -175,18 +175,21 @@ class FeedPage extends StatelessWidget {
 
 
   Future<List<EventInFeed>> getCloseEvents() async {
+    var location = await getUserLocation();
     await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
-    Uri url = Uri.parse(
+    Uri url = await Uri.parse(
         '${ApiEndpoints.SEARCH}?startTimeMin=${DateTime.now()
-            .toIso8601String()}&limit=20');
+            .toIso8601String()}&latitude=${location.latitude}&longitude=${location.longitude}&sort=distance');
+    print(url);
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
       var eventList = customJsonDecode(response.body) as List<dynamic>;
       return eventList.map((item) => EventInFeed.fromJson(item)).toList();
     } else {
+      print(response.body);
       throw Exception('Failed to load events');
     }
   }
@@ -220,7 +223,7 @@ class FeedPage extends StatelessWidget {
               height: MediaQuery
                   .of(context)
                   .size
-                  .width + 120,
+                  .width + 150,
               child: Card(
                 elevation: 0,
                 color: Colors.transparent,
@@ -308,17 +311,54 @@ class FeedPage extends StatelessWidget {
                                           ),
                                         ],
                                       ),
-                                      Row(
+                                      (event.distance != null)
+                                      ? Row(
                                         children: [
                                           Icon(
-                                            CupertinoIcons.calendar,
+                                            CupertinoIcons.location,
                                             color: currentTheme.primaryColor,
                                             size: 16,
                                           ),
                                           const SizedBox(width: 5),
                                           Text(
-                                            convertHourTimestamp(
-                                                event.startTime!),
+                                            "${convertToKilometersOrMeters(event.distance!)}",
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: currentTheme.primaryColor,
+                                              decoration: TextDecoration.none,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                      : Row(
+                                        children: [
+                                          Icon(
+                                            CupertinoIcons.location,
+                                            color: currentTheme.primaryColor,
+                                            size: 16,
+                                          ),
+                                          const SizedBox(width: 5),
+                                          Text(
+                                            "Location not available",
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: currentTheme.primaryColor,
+                                              decoration: TextDecoration.none,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            CupertinoIcons.calendar_today,
+                                            color: currentTheme.primaryColor,
+                                            size: 16,
+                                          ),
+                                          const SizedBox(width: 5),
+                                          Text(
+                                            "${convertHourTimestamp(
+                                                event.startTime!)}",
                                             style: TextStyle(
                                               fontSize: 16,
                                               color: currentTheme.primaryColor,
@@ -457,9 +497,9 @@ class FeedPage extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else if (!snapshot.hasData || snapshot.data?.isEmpty == true) {
-          return Row(
+          return const Row(
             children: [
-              const SizedBox(width: 10),
+              SizedBox(width: 10),
               Text('No events available',
                 style: TextStyle(
                   color: Colors.grey,
@@ -473,11 +513,11 @@ class FeedPage extends StatelessWidget {
         } else {
           return DefaultTabController(
             length: snapshot.data!.length,
-            child: Container(
+            child: SizedBox(
               height: MediaQuery
                   .of(context)
                   .size
-                  .width + 120,
+                  .width + 150,
               child: Card(
                 elevation: 0,
                 color: Colors.transparent,
@@ -536,7 +576,6 @@ class FeedPage extends StatelessWidget {
                                           decoration: TextDecoration.none,
                                         ),
                                       ),
-                                      const SizedBox(height: 5),
                                       Row(
                                         children: [
                                           Icon(
@@ -705,6 +744,7 @@ class FeedPage extends StatelessWidget {
                                             ),
                                           ),
                                         ),
+                                        const SizedBox(height: 5),
                                         Row(
                                           children: [
                                             Icon(
@@ -757,7 +797,7 @@ class FeedPage extends StatelessWidget {
                                           "${event.currency!.symbol} ${event
                                               .price}",
                                           style: TextStyle(
-                                            fontWeight: FontWeight.bold,
+                                            fontWeight: FontWeight.normal,
                                             fontSize: 16,
                                             color: currentTheme.primaryColor,
                                             decoration: TextDecoration.none,

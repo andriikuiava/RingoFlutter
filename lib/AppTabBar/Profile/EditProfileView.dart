@@ -101,6 +101,7 @@ class _EditProfileState extends State<EditProfile> {
     });
     var response = await http.put(url, headers: headers, body: body);
     if (response.statusCode == 200) {
+      showSuccessAlert("Success", "Profile modified", context);
       print("Uploaded!");
       if (image != null) {
         sendPhoto(image);
@@ -161,7 +162,7 @@ class _EditProfileState extends State<EditProfile> {
                           size: 120,
                         )
                             : CircleAvatar(
-                          radius: 60,
+                          radius: 45,
                           backgroundImage: NetworkImage("${ApiEndpoints.GET_PHOTO}/${widget.beforeEdit.profilePictureId}"),)
                             : CircleAvatar(
                           radius: 60,
@@ -183,10 +184,14 @@ class _EditProfileState extends State<EditProfile> {
                                       color: currentTheme.primaryColor,
                                     ),
                                     const SizedBox(width: 10),
-                                    Text(
-                                      "Choose from photos",
-                                      style: TextStyle(
-                                        color: currentTheme.primaryColor,
+                                    Container(
+                                      width: MediaQuery.of(context).size.width * 0.35,
+                                      child: Text(
+                                        "Choose a photo",
+                                        style: TextStyle(
+                                          color: currentTheme.primaryColor,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                   ],
@@ -202,7 +207,7 @@ class _EditProfileState extends State<EditProfile> {
                               ),
                               const SizedBox(height: 10),
                               CupertinoButton(
-                                color: currentTheme.colorScheme.background,
+                                color: currentTheme.backgroundColor,
                                 minSize: 40,
                                 padding: EdgeInsets.zero,
                                 child: Row(
@@ -267,7 +272,7 @@ class _EditProfileState extends State<EditProfile> {
                           fontSize: 16,
                         ),
                         decoration: BoxDecoration(
-                          color: currentTheme.colorScheme.background,
+                          color: currentTheme.backgroundColor,
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
@@ -317,7 +322,7 @@ class _EditProfileState extends State<EditProfile> {
                           fontSize: 16,
                         ),
                         decoration: BoxDecoration(
-                          color: currentTheme.colorScheme.background,
+                          color: currentTheme.backgroundColor,
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
@@ -422,38 +427,14 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                   const SizedBox(height: 20.0),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Spacer(),
+                      SizedBox(width: MediaQuery.of(context).size.width * 0.05),
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        height: 50,
+                        width: MediaQuery.of(context).size.width * 0.9,
                         child: CupertinoButton(
-                          color: currentTheme.backgroundColor,
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              'Cancel',
-                              style: TextStyle(
-                                color: currentTheme.primaryColor,
-                                fontWeight: FontWeight.normal,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 15.0),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        height: 50,
-                        child: CupertinoButton(
-                          color: isFormValid
-                              ? currentTheme.backgroundColor
-                              : currentTheme.backgroundColor.withOpacity(0.5),
+                          color: (isFormValid)
+                              ? currentTheme.primaryColor
+                              : currentTheme.backgroundColor,
                           onPressed: () async {
                             validateFields();
                             if (isFormValid) {
@@ -465,24 +446,22 @@ class _EditProfileState extends State<EditProfile> {
                               null;
                             }
                           },
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              'Save',
-                              style: TextStyle(
-                                color: isFormValid
-                                    ? currentTheme.primaryColor
-                                    : currentTheme.primaryColor.withOpacity(0.5),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
+                          child: Text(
+                            'Save',
+                            style: TextStyle(
+                              color: (isFormValid)
+                                  ? currentTheme.backgroundColor
+                                  : currentTheme.primaryColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
                             ),
                           ),
                         ),
                       ),
-                      Spacer(),
+                      SizedBox(width: MediaQuery.of(context).size.width * 0.05),
                     ],
                   ),
+                  const SizedBox(height: 60.0),
                 ],
               ),
             ),

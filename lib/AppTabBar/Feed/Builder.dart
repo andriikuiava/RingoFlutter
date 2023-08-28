@@ -175,15 +175,15 @@ class _FeedBuilderState extends State<FeedBuilder> {
                             ),
                             Row(
                               children: [
-                                const Icon(
+                                Icon(
                                   CupertinoIcons.map_pin,
-                                  color: Colors.grey,
+                                  color: currentTheme.primaryColor,
                                   size: 18,
                                 ),
                                 const SizedBox(width: 4),
                                 Text(event.address!,
-                                  style: const TextStyle(
-                                    color: Colors.grey,
+                                  style: TextStyle(
+                                    color: currentTheme.primaryColor,
                                     decoration: TextDecoration.none,
                                     fontSize: 18,
                                     fontWeight: FontWeight.normal,
@@ -196,16 +196,16 @@ class _FeedBuilderState extends State<FeedBuilder> {
                               children: [
                                 Row(
                                   children: [
-                                    const Icon(
+                                    Icon(
                                       CupertinoIcons.calendar_today,
-                                      color: Colors.grey,
+                                      color: currentTheme.primaryColor,
                                       size: 18,
                                     ),
                                     const SizedBox(width: 4),
                                     Text(
                                       convertHourTimestamp(event.startTime!),
-                                      style: const TextStyle(
-                                        color: Colors.grey,
+                                      style: TextStyle(
+                                        color: currentTheme.primaryColor,
                                         decoration: TextDecoration.none,
                                         fontSize: 18,
                                         fontWeight: FontWeight.normal,
@@ -215,8 +215,8 @@ class _FeedBuilderState extends State<FeedBuilder> {
                                 ),
                                 Text(
                                   "${event.currency!.symbol} ${event.price}",
-                                  style: const TextStyle(
-                                    color: Colors.grey,
+                                  style: TextStyle(
+                                    color: currentTheme.primaryColor,
                                     decoration: TextDecoration.none,
                                     fontSize: 18,
                                     fontWeight: FontWeight.normal,
@@ -230,16 +230,16 @@ class _FeedBuilderState extends State<FeedBuilder> {
                                 children: [
                                   Row(
                                     children: [
-                                      const Icon(
+                                      Icon(
                                         CupertinoIcons.location_fill,
-                                        color: Colors.grey,
+                                        color: currentTheme.primaryColor,
                                         size: 18,
                                       ),
                                       const SizedBox(width: 4),
                                       Text(
                                         "${event.distance!}",
-                                        style: const TextStyle(
-                                          color: Colors.grey,
+                                        style: TextStyle(
+                                          color: currentTheme.primaryColor,
                                           decoration: TextDecoration.none,
                                           fontSize: 18,
                                           fontWeight: FontWeight.normal,
@@ -249,16 +249,16 @@ class _FeedBuilderState extends State<FeedBuilder> {
                                   ),
                                   Row(
                                     children: [
-                                      const Icon(
+                                      Icon(
                                         CupertinoIcons.person_2_fill,
-                                        color: Colors.grey,
+                                        color: currentTheme.primaryColor,
                                         size: 18,
                                       ),
                                       const SizedBox(width: 4),
                                       Text(
                                         "${event.peopleCount} / ${event.capacity}",
-                                        style: const TextStyle(
-                                          color: Colors.grey,
+                                        style: TextStyle(
+                                          color: currentTheme.primaryColor,
                                           decoration: TextDecoration.none,
                                           fontSize: 18,
                                           fontWeight: FontWeight.normal,
@@ -271,16 +271,16 @@ class _FeedBuilderState extends State<FeedBuilder> {
                             if (event.distance == null)
                               Row(
                                 children: [
-                                  const Icon(
+                                  Icon(
                                     CupertinoIcons.person_2_fill,
-                                    color: Colors.grey,
+                                    color: currentTheme.primaryColor,
                                     size: 18,
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
                                     "${event.peopleCount} / ${event.capacity}",
-                                    style: const TextStyle(
-                                      color: Colors.grey,
+                                    style: TextStyle(
+                                      color: currentTheme.primaryColor,
                                       decoration: TextDecoration.none,
                                       fontSize: 18,
                                       fontWeight: FontWeight.normal,

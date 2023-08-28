@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:ringoflutter/Classes/LoginCredentialsClass.dart';
 import 'package:ringoflutter/Classes/RegistrationCredentialsClass.dart';
+import 'package:ringoflutter/Security/EmailVerificationPage.dart';
 import 'package:ringoflutter/Security/Functions/LoginFunc.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 
@@ -16,11 +18,12 @@ Future<void> registerUser(RegistrationCredentials registrationCredentials, conte
 
     if (response.statusCode == 200) {
       print('User registered successfully');
-      LoginCredentials loginCredentials = LoginCredentials(
-        email: registrationCredentials.email,
-        password: registrationCredentials.password,
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EmailVerificationPage(usersEmail: registrationCredentials.email, usersUsername: registrationCredentials.username,),
+        ),
       );
-      loginFunc(loginCredentials, null);
     } else if (response.statusCode == 400) {
       showErrorAlert("Error", response.body, context);
     } else {

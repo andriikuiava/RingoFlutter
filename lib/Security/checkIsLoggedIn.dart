@@ -50,7 +50,7 @@ class _CheckerPageState extends State<CheckerPage> {
             value: jsonResponse['id'].toString());
         if (!jsonResponse['emailVerified']) {
           navigatorKey.currentState?.pushReplacement(
-            MaterialPageRoute(builder: (_) => EmailVerificationPage(usersEmail: jsonResponse['email'],)),
+            MaterialPageRoute(builder: (_) => EmailVerificationPage(usersEmail: jsonResponse['email'], usersUsername: jsonResponse['username'],)),
           );
         } else {
           if (jsonResponse['dateOfBirth'] == null) {

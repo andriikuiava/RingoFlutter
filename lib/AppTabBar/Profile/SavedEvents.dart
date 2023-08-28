@@ -152,8 +152,9 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: TextStyle(
+                        fontWeight: FontWeight.bold,
                         color: currentTheme.primaryColor,
-                        fontSize: 20,
+                        fontSize: 18,
                         decoration: TextDecoration.none,
                       ),
                     ),
@@ -163,7 +164,7 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
                         Icon(
                           CupertinoIcons.location_fill,
                           color: currentTheme.primaryColor,
-                          size: 16,
+                          size: 14,
                         ),
                         const SizedBox(width: 5),
                         Expanded(
@@ -173,7 +174,7 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
                             maxLines: 1,
                             style: TextStyle(
                               color: currentTheme.primaryColor,
-                              fontSize: 16,
+                              fontSize: 14,
                               decoration: TextDecoration.none,
                               fontWeight: FontWeight.normal,
                             ),
@@ -184,7 +185,7 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
                           "${event.currency!.symbol} ${event.price}",
                           style: TextStyle(
                             color: currentTheme.primaryColor,
-                            fontSize: 16,
+                            fontSize: 14,
                             decoration: TextDecoration.none,
                             fontWeight: FontWeight.bold,
                           ),
@@ -197,7 +198,7 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
                         Icon(
                           CupertinoIcons.calendar,
                           color: currentTheme.primaryColor,
-                          size: 16,
+                          size: 14,
                         ),
                         const SizedBox(width: 5),
                         Text(
@@ -206,7 +207,7 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
                           maxLines: 1,
                           style: TextStyle(
                             color: currentTheme.primaryColor,
-                            fontSize: 16,
+                            fontSize: 14,
                             decoration: TextDecoration.none,
                             fontWeight: FontWeight.normal,
                           ),
