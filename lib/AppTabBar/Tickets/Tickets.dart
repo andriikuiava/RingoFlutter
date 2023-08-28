@@ -1,11 +1,8 @@
-import 'dart:convert';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:http/http.dart' as http;
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:ringoflutter/AppTabBar/Tickets/OneTicketPage.dart';
 import 'package:ringoflutter/Classes/TicketClass.dart';
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
@@ -13,7 +10,6 @@ import 'package:ringoflutter/UI/Functions/Formats.dart';
 import 'package:ringoflutter/UI/Themes.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 
 class TicketsScreen extends StatefulWidget {
   TicketsScreen({Key? key}) : super(key: key);
@@ -70,6 +66,16 @@ class _TicketsScreenState extends State<TicketsScreen> {
     }
   }
 
+  void _refreshTickets() async {
+    // Clear the existing tickets list
+    setState(() {
+      tickets.clear();
+    });
+
+    // Load new tickets
+    loadTickets();
+  }
+
   @override
   Widget build(BuildContext context) {
     var currentTheme = Theme.of(context);
@@ -77,26 +83,17 @@ class _TicketsScreenState extends State<TicketsScreen> {
       backgroundColor: currentTheme.scaffoldBackgroundColor,
       navigationBar: CupertinoNavigationBar(
         backgroundColor: currentTheme.scaffoldBackgroundColor,
-        middle: VisibilityDetector(
-          key: Key('tickets_navbar_title'),
-          onVisibilityChanged: (visibilityInfo) {
-            if (visibilityInfo.visibleFraction == 1) {
-              setState(() {
-                tickets = [];
-              });
-              loadTickets();
-            }
-          },
-          child: Text(
-            'Tickets',
-            style: TextStyle(
-              color: currentTheme.primaryColor,
-            ),
+        middle: Text(
+          'Tickets',
+          style: TextStyle(
+            color: currentTheme.primaryColor,
           ),
         ),
       ),
-      child: (tickets.isNotEmpty)
-        ? ListView.builder(
+      child: RefreshIndicator(
+        color: currentTheme.primaryColor,
+        child: (tickets.isNotEmpty)
+          ? ListView.builder(
         itemCount: tickets.length,
         itemBuilder: (context, index) {
           var ticket = tickets[index];
@@ -107,136 +104,147 @@ class _TicketsScreenState extends State<TicketsScreen> {
                 MaterialPageRoute(builder: (context) => MyTicketPage(ticket: ticket)),
               );
             },
-            child: Card(
-                color: currentTheme.backgroundColor,
-                elevation: 0,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: defaultWidgetCornerRadius,
-                        child: Image.network(
-                            "${ApiEndpoints.GET_PHOTO}/${ticket.event.mainPhotoId}",
-                            width: 80,
-                            height: 80,
-                            fit: BoxFit.cover,
-                            errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                              return Image.asset(
-                                'assets/images/Ringo-Black.png',
-                                width: 80,
-                                height: 80,
-                              );
-                            }
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Card(
+                  color: currentTheme.backgroundColor,
+                  elevation: 0,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: defaultWidgetCornerRadius,
+                          child: Image.network(
+                              "${ApiEndpoints.GET_PHOTO}/${ticket.event.mainPhotoId}",
+                              width: 80,
+                              height: 80,
+                              fit: BoxFit.cover,
+                              errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                return Image.asset(
+                                  'assets/images/Ringo-Black.png',
+                                  width: 80,
+                                  height: 80,
+                                );
+                              }
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 10,),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              child: Text(
-                                ticket.event.name,
-                                style: TextStyle(
-                                  color: currentTheme.primaryColor,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
+                        SizedBox(width: 10,),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                child: Text(
+                                  ticket.event.name,
+                                  style: TextStyle(
+                                    color: currentTheme.primaryColor,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  CupertinoIcons.map,
-                                  color: Colors.grey,
-                                  size: 14,
-                                ),
-                                SizedBox(width: 5,),
-                                Text(
-                                  ticket.event.address ?? 'No address provided',
-                                  style: TextStyle(
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    CupertinoIcons.map,
                                     color: Colors.grey,
-                                    fontSize: 14,
+                                    size: 14,
                                   ),
-                                ),
-                                Spacer(),
-                                Icon(
-                                  CupertinoIcons.circle_fill,
-                                  color: ticket.isValidated ? Colors.red : Colors.green,
-                                  size: 14,
-                                ),
-                                SizedBox(width: 5,),
-                                Text(
-                                  ticket.isValidated ? 'Validated' : 'Valid',
-                                  style: TextStyle(
+                                  SizedBox(width: 5,),
+                                  Text(
+                                    ticket.event.address ?? 'No address provided',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Icon(
+                                    CupertinoIcons.circle_fill,
+                                    color: ticket.isValidated ? Colors.red : Colors.green,
+                                    size: 14,
+                                  ),
+                                  SizedBox(width: 5,),
+                                  Text(
+                                    ticket.isValidated ? 'Validated' : 'Valid',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    CupertinoIcons.calendar,
                                     color: Colors.grey,
-                                    fontSize: 14,
+                                    size: 14,
                                   ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  CupertinoIcons.calendar,
-                                  color: Colors.grey,
-                                  size: 14,
-                                ),
-                                SizedBox(width: 5,),
-                                Text(
-                                  '${convertHourTimestamp(ticket.event.startTime!)}',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 14,
+                                  SizedBox(width: 5,),
+                                  Text(
+                                    '${convertHourTimestamp(ticket.event.startTime!)}',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 14,
+                                    ),
                                   ),
-                                ),
-                                Spacer(),
-                                Text(
-                                  '${ticket.event.currency!.symbol} ${ticket.event.price}',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 14,
+                                  Spacer(),
+                                  Text(
+                                    '${ticket.event.currency!.symbol} ${ticket.event.price}',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 14,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                )
+                      ],
+                    ),
+                  )
+              ),
             ),
           );
         },
       )
-        : Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          : ListView(
           children: [
-            Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                CupertinoIcons.tickets_fill,
-                color: Colors.grey,
-                size: 100,
-              ),
-              const SizedBox(height: 20,),
-              Text(
-                'You have no tickets yet',
-                style: TextStyle(
-                  wordSpacing: 1.5,
-                  color: Colors.grey,
-                  fontSize: 20,
-                  decoration: TextDecoration.none,
+           Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      CupertinoIcons.tickets_fill,
+                      color: Colors.grey,
+                      size: 100,
+                    ),
+                    SizedBox(height: 20,),
+                    Text(
+                      'You have no tickets yet',
+                      style: TextStyle(
+                        wordSpacing: 1.5,
+                        color: Colors.grey,
+                        fontSize: 20,
+                        decoration: TextDecoration.none,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
+        onRefresh: () async {
+          _refreshTickets();
+        },
       ),
     );
   }

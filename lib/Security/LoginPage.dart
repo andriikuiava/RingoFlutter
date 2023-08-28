@@ -19,117 +19,6 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import 'Registration.dart';
 
-Future<void> signInWithGoogle() async {
-  const storage = FlutterSecureStorage();
-  try {
-    GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email'], clientId: "445780816677-on7ff5l41ig1ervle491sc7vuvg4n5ro.apps.googleusercontent.com");
-    GoogleSignInAccount? account = await googleSignIn.signIn();
-
-    if (account != null) {
-      GoogleSignInAuthentication authentication = await account.authentication;
-      String idToken = authentication.idToken ?? '';
-      var response = await http.post(Uri.parse(ApiEndpoints.LOGIN_GOOGLE), body: jsonEncode({"idToken": idToken}), headers: {"Content-Type": "application/json"});
-      if (response.statusCode == 200) {
-        print("Logged in with Google");
-        final jsonResponse = customJsonDecode(response.body);
-        DateTime currentTime = DateTime.now();
-        DateTime futureTime =
-        currentTime.add(const Duration(seconds: 30));
-        storage.write(
-            key: "timestamp",
-            value: futureTime.toString());
-        storage.write(
-            key: "access_token",
-            value: jsonResponse['accessToken']);
-        storage.write(
-            key: "refresh_token",
-            value: jsonResponse['refreshToken']);
-        await checkTimestamp();
-        var url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
-        var responseCheckIfActivated = await http.get(url, headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${jsonResponse['accessToken']}'
-        });
-        if (responseCheckIfActivated.statusCode == 200) {
-          final jsonResponse = customJsonDecode(responseCheckIfActivated.body);
-          print(jsonResponse);
-          storage.write(
-              key: "id",
-              value: jsonResponse['id'].toString());
-          if (jsonResponse['dateOfBirth'] == null) {
-            navigatorKey.currentState?.pushReplacement(
-              MaterialPageRoute(builder: (_) => ActivateAccountPage(usersEmail: jsonResponse['email'], usersUsername: jsonResponse['username'], usersName: jsonResponse['name'],),),
-            );
-          } else {
-            navigatorKey.currentState?.pushReplacement(
-              MaterialPageRoute(builder: (_) => const Home()),
-            );
-          }
-        } else {
-          print("Failed to check if account is activated");
-          throw Exception('Failed to load participants');
-        }
-      } else if (response.statusCode == 401) {
-        print("User not registered with Google");
-        var responseSignUp = await http.post(Uri.parse(ApiEndpoints.SIGNUP_GOOGLE), body: jsonEncode({"idToken": idToken}), headers: {"Content-Type": "application/json"});
-        if (responseSignUp.statusCode == 200) {
-          var responseAfterSigningUp = await http.post(Uri.parse(ApiEndpoints.LOGIN_GOOGLE), body: jsonEncode({"idToken": idToken}), headers: {"Content-Type": "application/json"});
-          if (responseAfterSigningUp.statusCode == 200) {
-            print("Logged in with Google");
-            print(responseAfterSigningUp.body);
-            final jsonResponse = customJsonDecode(responseAfterSigningUp.body);
-            DateTime currentTime = DateTime.now();
-            DateTime futureTime =
-            currentTime.add(const Duration(seconds: 30));
-            storage.write(
-                key: "timestamp",
-                value: futureTime.toString());
-            storage.write(
-                key: "access_token",
-                value: jsonResponse['accessToken']);
-            storage.write(
-                key: "refresh_token",
-                value: jsonResponse['refreshToken']);
-            await checkTimestamp();
-            var url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
-            var responseCheckIfActivated = await http.get(url, headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer ${jsonResponse['accessToken']}'
-            });
-            if (responseCheckIfActivated.statusCode == 200) {
-              final jsonResponse = customJsonDecode(responseCheckIfActivated.body);
-              print(jsonResponse);
-              storage.write(
-                  key: "id",
-                  value: jsonResponse['id'].toString());
-              if (jsonResponse['dateOfBirth'] == null) {
-                navigatorKey.currentState?.pushReplacement(
-                  MaterialPageRoute(builder: (_) => ActivateAccountPage(usersEmail: jsonResponse['email'], usersUsername: jsonResponse['username'], usersName: jsonResponse['name'],),),
-                );
-              } else {
-                navigatorKey.currentState?.pushReplacement(
-                  MaterialPageRoute(builder: (_) => const Home()),
-                );
-              }
-            } else {
-              print("Failed to check if account is activated");
-              throw Exception('Failed to load participants');
-            }
-          } else {
-            print("Failed to register with Google");
-            throw Exception('Failed to load participants');
-          }
-        } else {
-          print("Failed to register with Google");
-          throw Exception('Failed to load participants');
-        }
-      }
-    }
-  } catch (error) {
-    print('Error occurred during Google Sign-In: $error');
-  }
-}
-
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -146,6 +35,117 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
+  }
+
+  Future<void> signInWithGoogle() async {
+    const storage = FlutterSecureStorage();
+    try {
+      GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email'], clientId: "445780816677-on7ff5l41ig1ervle491sc7vuvg4n5ro.apps.googleusercontent.com");
+      GoogleSignInAccount? account = await googleSignIn.signIn();
+
+      if (account != null) {
+        GoogleSignInAuthentication authentication = await account.authentication;
+        String idToken = authentication.idToken ?? '';
+        var response = await http.post(Uri.parse(ApiEndpoints.LOGIN_GOOGLE), body: jsonEncode({"idToken": idToken}), headers: {"Content-Type": "application/json"});
+        if (response.statusCode == 200) {
+          print("Logged in with Google");
+          final jsonResponse = customJsonDecode(response.body);
+          DateTime currentTime = DateTime.now();
+          DateTime futureTime =
+          currentTime.add(const Duration(seconds: 30));
+          storage.write(
+              key: "timestamp",
+              value: futureTime.toString());
+          storage.write(
+              key: "access_token",
+              value: jsonResponse['accessToken']);
+          storage.write(
+              key: "refresh_token",
+              value: jsonResponse['refreshToken']);
+          await checkTimestamp();
+          var url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
+          var responseCheckIfActivated = await http.get(url, headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ${jsonResponse['accessToken']}'
+          });
+          if (responseCheckIfActivated.statusCode == 200) {
+            final jsonResponse = customJsonDecode(responseCheckIfActivated.body);
+            print(jsonResponse);
+            storage.write(
+                key: "id",
+                value: jsonResponse['id'].toString());
+            if (jsonResponse['dateOfBirth'] == null) {
+              navigatorKey.currentState?.pushReplacement(
+                MaterialPageRoute(builder: (_) => ActivateAccountPage(usersEmail: jsonResponse['email'], usersUsername: jsonResponse['username'], usersName: jsonResponse['name'],),),
+              );
+            } else {
+              navigatorKey.currentState?.pushReplacement(
+                MaterialPageRoute(builder: (_) => const Home()),
+              );
+            }
+          } else {
+            print("Failed to check if account is activated");
+            throw Exception('Failed to load participants');
+          }
+        } else if (response.statusCode == 401) {
+          print("User not registered with Google");
+          var responseSignUp = await http.post(Uri.parse(ApiEndpoints.SIGNUP_GOOGLE), body: jsonEncode({"idToken": idToken}), headers: {"Content-Type": "application/json"});
+          if (responseSignUp.statusCode == 200) {
+            var responseAfterSigningUp = await http.post(Uri.parse(ApiEndpoints.LOGIN_GOOGLE), body: jsonEncode({"idToken": idToken}), headers: {"Content-Type": "application/json"});
+            if (responseAfterSigningUp.statusCode == 200) {
+              print("Logged in with Google");
+              print(responseAfterSigningUp.body);
+              final jsonResponse = customJsonDecode(responseAfterSigningUp.body);
+              DateTime currentTime = DateTime.now();
+              DateTime futureTime =
+              currentTime.add(const Duration(seconds: 30));
+              storage.write(
+                  key: "timestamp",
+                  value: futureTime.toString());
+              storage.write(
+                  key: "access_token",
+                  value: jsonResponse['accessToken']);
+              storage.write(
+                  key: "refresh_token",
+                  value: jsonResponse['refreshToken']);
+              await checkTimestamp();
+              var url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
+              var responseCheckIfActivated = await http.get(url, headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ${jsonResponse['accessToken']}'
+              });
+              if (responseCheckIfActivated.statusCode == 200) {
+                final jsonResponse = customJsonDecode(responseCheckIfActivated.body);
+                print(jsonResponse);
+                storage.write(
+                    key: "id",
+                    value: jsonResponse['id'].toString());
+                if (jsonResponse['dateOfBirth'] == null) {
+                  navigatorKey.currentState?.pushReplacement(
+                    MaterialPageRoute(builder: (_) => ActivateAccountPage(usersEmail: jsonResponse['email'], usersUsername: jsonResponse['username'], usersName: jsonResponse['name'],),),
+                  );
+                } else {
+                  navigatorKey.currentState?.pushReplacement(
+                    MaterialPageRoute(builder: (_) => const Home()),
+                  );
+                }
+              } else {
+                print("Failed to check if account is activated");
+                throw Exception('Failed to load participants');
+              }
+            } else {
+              print("Failed to register with Google");
+              throw Exception('Failed to load participants');
+            }
+          } else {
+            showErrorAlert("Error", "Failed register with Google", context);
+            throw Exception('Failed to load participants');
+          }
+        }
+      }
+    } catch (error) {
+      print('Error occurred during Google Sign-In: $error');
+    }
   }
 
 
@@ -464,6 +464,9 @@ class _LoginPageState extends State<LoginPage> {
                                               }
                                             }
                                           }
+                                        } else {
+                                          showErrorAlert("Error", "Failed to register with Apple ", context);
+                                          throw Exception('Failed to register with Apple');
                                         }
                                       }
                                     },

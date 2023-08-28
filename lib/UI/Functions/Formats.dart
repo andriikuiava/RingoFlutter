@@ -76,3 +76,13 @@ String convertHourTimestamp(String timestamp) {
   String formattedTimestamp = '$formattedMonth $formattedDate ${parsedDateTime.year}, $formattedTime';
   return formattedTimestamp;
 }
+
+String convertToKilometersOrMeters(int meters) {
+  if (meters >= 1000) {
+    double kilometers = meters / 1000;
+    return '${kilometers.toStringAsFixed(1)}km';
+  } else {
+    return '${meters.toInt()}m';
+  }
+}
+

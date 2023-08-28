@@ -154,13 +154,16 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                         ),
                                       ),
                                       const SizedBox(height: 10),
-                                      Text(
-                                        snapshot.data!.description,
-                                        style: TextStyle(
-                                          decoration: TextDecoration.none,
-                                          color: currentTheme.primaryColor,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.normal,
+                                      Container(
+                                        width: MediaQuery.of(context).size.width * 0.85,
+                                        child: Text(
+                                          "${snapshot.data!.description}",
+                                          style: TextStyle(
+                                            decoration: TextDecoration.none,
+                                            color: currentTheme.primaryColor,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.normal,
+                                          ),
                                         ),
                                       ),
                                     ],
