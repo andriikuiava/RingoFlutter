@@ -200,7 +200,19 @@ class FeedPage extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else if (!snapshot.hasData || snapshot.data?.isEmpty == true) {
-          return Text('No events available.');
+          return Row(
+            children: [
+              const SizedBox(width: 10),
+              Text('No events available',
+                style: TextStyle(
+                  color: Colors.grey,
+                  decoration: TextDecoration.none,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24,
+                ),
+              ),
+            ],
+          );
         } else {
           return DefaultTabController(
             length: snapshot.data!.length,
@@ -240,6 +252,7 @@ class FeedPage extends StatelessWidget {
                                     .of(context)
                                     .size
                                     .width - 20,
+                                fit: BoxFit.cover,
                               ),
                             ),
                             const SizedBox(height: 10),
@@ -266,7 +279,6 @@ class FeedPage extends StatelessWidget {
                                           decoration: TextDecoration.none,
                                         ),
                                       ),
-                                      const SizedBox(height: 5),
                                       Row(
                                         children: [
                                           Icon(
@@ -358,7 +370,14 @@ class FeedPage extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else if (!snapshot.hasData || snapshot.data?.isEmpty == true) {
-          return Text('No categories available.');
+          return Text('No categories available.',
+            style: TextStyle(
+              decoration: TextDecoration.none,
+              color: currentTheme.primaryColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
+            ),
+          );
         } else {
           return Container(
             height: 70,
@@ -369,6 +388,7 @@ class FeedPage extends StatelessWidget {
                   children: [
                     Row(
                       children: [
+                        const SizedBox(width: 6),
                         GestureDetector(
                           onTap: () {
                             Navigator.push(
@@ -398,7 +418,7 @@ class FeedPage extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: 6),
                       ],
                     )
                   ],
@@ -437,7 +457,19 @@ class FeedPage extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else if (!snapshot.hasData || snapshot.data?.isEmpty == true) {
-          return Text('No events available.');
+          return Row(
+            children: [
+              const SizedBox(width: 10),
+              Text('No events available',
+                style: TextStyle(
+                  color: Colors.grey,
+                  decoration: TextDecoration.none,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24,
+                ),
+              ),
+            ],
+          );
         } else {
           return DefaultTabController(
             length: snapshot.data!.length,
@@ -477,6 +509,7 @@ class FeedPage extends StatelessWidget {
                                     .of(context)
                                     .size
                                     .width - 20,
+                                fit: BoxFit.cover,
                               ),
                             ),
                             const SizedBox(height: 10),
@@ -497,7 +530,7 @@ class FeedPage extends StatelessWidget {
                                       Text(
                                         event.name,
                                         style: TextStyle(
-                                          fontSize: 24,
+                                          fontSize: 20,
                                           fontWeight: FontWeight.bold,
                                           color: currentTheme.primaryColor,
                                           decoration: TextDecoration.none,
@@ -597,7 +630,19 @@ class FeedPage extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else if (!snapshot.hasData || snapshot.data?.isEmpty == true) {
-          return Text('No events available.');
+          return const Row(
+            children: [
+              const SizedBox(width: 10),
+              Text('No events available',
+                style: TextStyle(
+                  color: Colors.grey,
+                  decoration: TextDecoration.none,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24,
+                ),
+              ),
+            ],
+          );
         } else {
           return Column(
             children: snapshot.data?.map((event) {
@@ -631,6 +676,7 @@ class FeedPage extends StatelessWidget {
                                       "${ApiEndpoints.GET_PHOTO}/${event.mainPhotoId}",
                                       width: 100,
                                       height: 100,
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
                                   const SizedBox(width: 10),
@@ -638,38 +684,50 @@ class FeedPage extends StatelessWidget {
                                     width: MediaQuery
                                         .of(context)
                                         .size
-                                        .width * 0.62,
+                                        .width * 0.95 - 150,
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          event.name,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.bold,
-                                            color: currentTheme.primaryColor,
-                                            decoration: TextDecoration.none,
+                                        Container(
+                                          width: MediaQuery
+                                              .of(context)
+                                              .size
+                                              .width * 0.85 - 70,
+                                          child: Text(
+                                            event.name,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              color: currentTheme.primaryColor,
+                                              decoration: TextDecoration.none,
+                                            ),
                                           ),
                                         ),
-                                        const SizedBox(height: 5),
                                         Row(
                                           children: [
                                             Icon(
                                               CupertinoIcons.calendar_today,
                                               color: currentTheme.primaryColor,
-                                              size: 18,
+                                              size: 16,
                                             ),
                                             const SizedBox(width: 5),
-                                            Text(
-                                              convertHourTimestamp(
-                                                  event.startTime!),
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.normal,
-                                                fontSize: 18,
-                                                color: currentTheme.primaryColor,
-                                                decoration: TextDecoration.none,
+                                            Container(
+                                              width: MediaQuery
+                                                  .of(context)
+                                                  .size
+                                                  .width * 0.7 - 80,
+                                              child: Text(
+                                                convertHourTimestamp(
+                                                    event.startTime!),
+                                                maxLines: 1,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.normal,
+                                                  fontSize: 16,
+                                                  color: currentTheme.primaryColor,
+                                                  decoration: TextDecoration.none,
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -680,30 +738,30 @@ class FeedPage extends StatelessWidget {
                                             Icon(
                                               CupertinoIcons.person_2,
                                               color: currentTheme.primaryColor,
-                                              size: 18,
+                                              size: 16,
                                             ),
                                             const SizedBox(width: 5),
                                             Text(
-                                              "${event.peopleCount} people going",
+                                              "${event.peopleCount} / ${event.capacity}",
                                               style: TextStyle(
                                                 fontWeight: FontWeight.normal,
-                                                fontSize: 18,
-                                                color: currentTheme.primaryColor,
-                                                decoration: TextDecoration.none,
-                                              ),
-                                            ),
-                                            const Spacer(),
-                                            Text(
-                                              "${event.currency!.symbol} ${event
-                                                  .price}",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 18,
+                                                fontSize: 16,
                                                 color: currentTheme.primaryColor,
                                                 decoration: TextDecoration.none,
                                               ),
                                             ),
                                           ],
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          "${event.currency!.symbol} ${event
+                                              .price}",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                            color: currentTheme.primaryColor,
+                                            decoration: TextDecoration.none,
+                                          ),
                                         ),
                                       ],
                                     ),

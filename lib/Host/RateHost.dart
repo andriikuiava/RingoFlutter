@@ -46,8 +46,10 @@ class _RateHostState extends State<RateHost> {
     };
     var response = await http.delete(url, headers: headers);
     if (response.statusCode == 200) {
+      showSuccessAlert("Review deleted", null, context);
       Navigator.pop(context);
     } else {
+      showErrorAlert("Error", "An error occurred deleting review", context);
       print("Error occurred deleting a review");
     }
   }
@@ -70,16 +72,20 @@ class _RateHostState extends State<RateHost> {
       var response = await http.post(url, headers: headers, body: body);
       print(response.body);
       if (response.statusCode == 200) {
+        showSuccessAlert("Review created", null, context);
         Navigator.pop(context);
       } else {
+        showErrorAlert("Error", "An error occurred creating review", context);
         print("Error occurred creating a review");
       }
     } else {
       var response = await http.put(url, headers: headers, body: body);
       print(response.body);
       if (response.statusCode == 200) {
+        showSuccessAlert("Review edited", null, context);
         Navigator.pop(context);
       } else {
+        showErrorAlert("Error", "An error occurred editing review", context);
         print("Error occurred editing review");
       }
     }

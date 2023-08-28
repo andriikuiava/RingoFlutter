@@ -131,7 +131,7 @@ class EventFull {
       description: json['description'],
       isActive: json['isActive'],
       mainPhoto: MainPhoto.fromJson(json['mainPhoto']),
-      photos: [],
+      photos: List<Photo>.from(json['photos'].map((x) => Photo.fromJson(x))),
       address: json['address'],
       coordinates: json['coordinates'] != null
           ? Coordinates.fromJson(json['coordinates'])

@@ -33,40 +33,40 @@ String convertHourTimestamp(String timestamp) {
 
   switch (parsedDateTime.month) {
     case 1:
-      formattedMonth = 'January';
+      formattedMonth = 'Jan';
       break;
     case 2:
-      formattedMonth = 'February';
+      formattedMonth = 'Feb';
       break;
     case 3:
-      formattedMonth = 'March';
+      formattedMonth = 'Mar';
       break;
     case 4:
-      formattedMonth = 'April';
+      formattedMonth = 'Apr';
       break;
     case 5:
       formattedMonth = 'May';
       break;
     case 6:
-      formattedMonth = 'June';
+      formattedMonth = 'Jun';
       break;
     case 7:
-      formattedMonth = 'July';
+      formattedMonth = 'Jul';
       break;
     case 8:
-      formattedMonth = 'August';
+      formattedMonth = 'Aug';
       break;
     case 9:
-      formattedMonth = 'September';
+      formattedMonth = 'Sep';
       break;
     case 10:
-      formattedMonth = 'October';
+      formattedMonth = 'Oct';
       break;
     case 11:
-      formattedMonth = 'November';
+      formattedMonth = 'Nov';
       break;
     case 12:
-      formattedMonth = 'December';
+      formattedMonth = 'Dec';
       break;
     default:
       formattedMonth = '';

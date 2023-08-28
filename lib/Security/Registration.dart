@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:ringoflutter/AppTabBar/Profile/Functions/SendPhoto.dart';
 import 'package:ringoflutter/Classes/RegistrationCredentialsClass.dart';
 import 'package:ringoflutter/Security/Functions/RegisterFunc.dart';
+import 'package:ringoflutter/api_endpoints.dart';
 
 
 class RegistrationPage extends StatefulWidget {
@@ -20,6 +21,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   late TextEditingController _usernameController;
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
+  late TextEditingController _repeatPasswordController;
   late DateTime dateController;
   int selectedGender = 2;
   File? image;
@@ -32,6 +34,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     _usernameController = TextEditingController();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
+    _repeatPasswordController = TextEditingController();
     dateController = DateTime.now();
   }
 
@@ -503,6 +506,41 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           fontSize: 13,
                         ),
                       ),
+                    const SizedBox(height: 20.0),
+                    DefaultTextStyle(
+                      style: TextStyle(
+                        color: currentTheme.primaryColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                      child: const Text('Repeat password'),
+                    ),
+                    const SizedBox(height: 8.0),
+                    SizedBox(
+                      height: 50,
+                      child: CupertinoTextField(
+                        obscureText: true,
+                        cursorColor: currentTheme.primaryColor,
+                        controller: _repeatPasswordController,
+                        placeholder: 'Repeat your password',
+                        keyboardType: TextInputType.emailAddress,
+                        style: TextStyle(
+                          color: currentTheme.primaryColor,
+                          fontSize: 16,
+                        ),
+                        decoration: BoxDecoration(
+                          color: currentTheme.colorScheme.background,
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        onChanged: (value) {
+                          if (!isPasswordValid) {
+                            isPasswordValidFunc();
+                            validateForm();
+                          }
+                        },
+                        maxLength: 64,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -626,16 +664,22 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
                               DateFormat dateFormat = DateFormat('yyyy-MM-dd');
                               String formattedTimestamp = dateFormat.format(dateController);
-                              registerUser(
-                                  RegistrationCredentials(
-                                    name: _fullNameController.text,
-                                    username: _usernameController.text,
-                                    email: _emailController.text,
-                                    password: _passwordController.text,
-                                    dateOfBirth: formattedTimestamp,
-                                    gender: genderText,
-                                  )
-                              );
+
+                              if (_passwordController.text == _repeatPasswordController.text) {
+                                registerUser(
+                                    RegistrationCredentials(
+                                        name: _fullNameController.text,
+                                        username: _usernameController.text,
+                                        email: _emailController.text,
+                                        password: _passwordController.text,
+                                        dateOfBirth: formattedTimestamp,
+                                        gender: genderText
+                                    ),
+                                    context
+                                );
+                              } else {
+                                showErrorAlert("Error", "Passwords do not match", context);
+                              }
                             } else {
                               null;
                             }

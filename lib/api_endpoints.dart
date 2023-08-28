@@ -8,7 +8,8 @@ dynamic customJsonDecode(String responseBody) {
 }
 
 class ApiEndpoints {
-  static const String BASE_URL = "http://localhost:8080/api";
+  static const String BASE_URL = "http://18.194.208.48:8080/api";
+  // static const String BASE_URL = "http://localhost:8080/api";
 
   //LOGIN/REGISTER
   static const String REGISTER = "$BASE_URL/participants/sign-up";
@@ -52,13 +53,13 @@ class ApiEndpoints {
 }
 
 
-void showSuccessAlert(String title, String message, context) {
+void showSuccessAlert(String? title, String? message, context) {
   StatusAlert.show(
     context,
     duration: Duration(seconds: 2),
     title: 'Success',
     subtitle: message,
-    configuration: IconConfiguration(icon: CupertinoIcons.check_mark, size: MediaQuery.of(context).size.width * 0.4),
+    configuration: IconConfiguration(icon: CupertinoIcons.check_mark, size: MediaQuery.of(context).size.width * 0.3),
   );
 }
 
@@ -68,7 +69,7 @@ void showErrorAlert(String? title, String? message, context) {
     duration: Duration(seconds: 2),
     title: 'Error',
     subtitle: message,
-    configuration: IconConfiguration(icon: CupertinoIcons.exclamationmark_triangle, size: MediaQuery.of(context).size.width * 0.4),
+    configuration: IconConfiguration(icon: CupertinoIcons.exclamationmark_triangle, size: MediaQuery.of(context).size.width * 0.3),
   );
 }
 
@@ -77,7 +78,7 @@ void showSavedAlert(context) {
     context,
     duration: Duration(seconds: 2),
     title: 'Saved',
-    configuration: IconConfiguration(icon: CupertinoIcons.bookmark_fill, size: MediaQuery.of(context).size.width * 0.4),
+    configuration: IconConfiguration(icon: CupertinoIcons.bookmark_fill, size: MediaQuery.of(context).size.width * 0.3),
   );
 }
 
@@ -86,6 +87,6 @@ void showUnsavedAlert(context) {
     context,
     duration: Duration(seconds: 2),
     title: 'Unsaved',
-    configuration: IconConfiguration(icon: CupertinoIcons.bookmark, size: MediaQuery.of(context).size.width * 0.4),
+    configuration: IconConfiguration(icon: CupertinoIcons.bookmark, size: MediaQuery.of(context).size.width * 0.3),
   );
 }

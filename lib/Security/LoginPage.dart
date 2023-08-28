@@ -281,7 +281,7 @@ class _LoginPageState extends State<LoginPage> {
                                   password: _passwordController.text,
                                 );
                                 Tokens receivedTokens =
-                                await loginFunc(credentials);
+                                await loginFunc(credentials, context);
                                 storage.write(
                                     key: "access_token",
                                     value: receivedTokens.accessToken);
@@ -307,41 +307,43 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(height: 10.0),
                     Row(
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: currentTheme.shadowColor,
-                                spreadRadius: 2,
-                                blurRadius: 5,
-                                offset: const Offset(0, 3),
-                              ),
-                            ],
-                          ),
-                          width: MediaQuery.of(context).size.width * 0.9,
-                          height: 50,
-                          child: CupertinoButton(
-                            color: currentTheme.colorScheme.background,
-                            onPressed: () async {
-                              signInWithGoogle();
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  'assets/images/google-logo.png',
-                                  width: 24,
-                                  height: 24,
-                                ),
-                                const SizedBox(width: 8.0),
-                                Text(
-                                  'Continue with Google',
-                                  style: TextStyle(
-                                    color: currentTheme.primaryColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: currentTheme.shadowColor,
+                                  spreadRadius: 2,
+                                  blurRadius: 5,
+                                  offset: const Offset(0, 3),
                                 ),
                               ],
+                            ),
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            height: 50,
+                            child: CupertinoButton(
+                              color: currentTheme.colorScheme.background,
+                              onPressed: () async {
+                                signInWithGoogle();
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    'assets/images/google-logo.png',
+                                    width: 24,
+                                    height: 24,
+                                  ),
+                                  const SizedBox(width: 4.0),
+                                  Text(
+                                    'Continue with Google',
+                                    style: TextStyle(
+                                      color: currentTheme.primaryColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -351,121 +353,123 @@ class _LoginPageState extends State<LoginPage> {
                     if (Platform.isIOS)
                       Row(
                         children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: currentTheme.shadowColor,
-                                  spreadRadius: 2,
-                                  blurRadius: 5,
-                                ),
-                              ],
-                            ),
-                            width: MediaQuery.of(context).size.width * 0.9,
-                            child: Column(
-                              children: [
-                                SignInWithAppleButton(
-                                  style: currentTheme.brightness == Brightness.light
-                                      ? SignInWithAppleButtonStyle.black
-                                      : SignInWithAppleButtonStyle.white,
-                                  onPressed: () async {
-                                    final credential = await SignInWithApple.getAppleIDCredential(
-                                      scopes: [
-                                        AppleIDAuthorizationScopes.email,
-                                        AppleIDAuthorizationScopes.fullName,
-                                      ],
-                                    );
-                                    var idToken = credential.identityToken;
-                                    var response = await http.post(Uri.parse(ApiEndpoints.LOGIN_APPLE), body: jsonEncode({"idToken": idToken}), headers: {"Content-Type": "application/json"});
-                                    if (response.statusCode == 200) {
-                                      print("Logged in with Apple");
-                                      final jsonResponse = customJsonDecode(response.body);
-                                      DateTime currentTime = DateTime.now();
-                                      DateTime futureTime =
-                                      currentTime.add(const Duration(seconds: 30));
-                                      storage.write(
-                                          key: "timestamp",
-                                          value: futureTime.toString());
-                                      storage.write(
-                                          key: "access_token",
-                                          value: jsonResponse['accessToken']);
-                                      storage.write(
-                                          key: "refresh_token",
-                                          value: jsonResponse['refreshToken']);
-                                      await checkTimestamp();
-                                      var url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
-                                      var responseCheckIfActivated = await http.get(url, headers: {
-                                        'Content-Type': 'application/json',
-                                        'Authorization': 'Bearer ${jsonResponse['accessToken']}'
-                                      });
-                                      if (responseCheckIfActivated.statusCode == 200) {
-                                        final jsonResponse = customJsonDecode(responseCheckIfActivated.body);
-                                        print(jsonResponse);
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: currentTheme.shadowColor,
+                                    spreadRadius: 2,
+                                    blurRadius: 5,
+                                  ),
+                                ],
+                              ),
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: Column(
+                                children: [
+                                  SignInWithAppleButton(
+                                    style: currentTheme.brightness == Brightness.light
+                                        ? SignInWithAppleButtonStyle.black
+                                        : SignInWithAppleButtonStyle.white,
+                                    onPressed: () async {
+                                      final credential = await SignInWithApple.getAppleIDCredential(
+                                        scopes: [
+                                          AppleIDAuthorizationScopes.email,
+                                          AppleIDAuthorizationScopes.fullName,
+                                        ],
+                                      );
+                                      var idToken = credential.identityToken;
+                                      var response = await http.post(Uri.parse(ApiEndpoints.LOGIN_APPLE), body: jsonEncode({"idToken": idToken}), headers: {"Content-Type": "application/json"});
+                                      if (response.statusCode == 200) {
+                                        print("Logged in with Apple");
+                                        final jsonResponse = customJsonDecode(response.body);
+                                        DateTime currentTime = DateTime.now();
+                                        DateTime futureTime =
+                                        currentTime.add(const Duration(seconds: 30));
                                         storage.write(
-                                            key: "id",
-                                            value: jsonResponse['id'].toString());
-                                        if (jsonResponse['dateOfBirth'] == null) {
-                                          navigatorKey.currentState?.pushReplacement(
-                                            MaterialPageRoute(builder: (_) => ActivateAccountPage(usersEmail: jsonResponse['email'], usersUsername: jsonResponse['username'], usersName: jsonResponse['name'],),),
-                                          );
+                                            key: "timestamp",
+                                            value: futureTime.toString());
+                                        storage.write(
+                                            key: "access_token",
+                                            value: jsonResponse['accessToken']);
+                                        storage.write(
+                                            key: "refresh_token",
+                                            value: jsonResponse['refreshToken']);
+                                        await checkTimestamp();
+                                        var url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
+                                        var responseCheckIfActivated = await http.get(url, headers: {
+                                          'Content-Type': 'application/json',
+                                          'Authorization': 'Bearer ${jsonResponse['accessToken']}'
+                                        });
+                                        if (responseCheckIfActivated.statusCode == 200) {
+                                          final jsonResponse = customJsonDecode(responseCheckIfActivated.body);
+                                          print(jsonResponse);
+                                          storage.write(
+                                              key: "id",
+                                              value: jsonResponse['id'].toString());
+                                          if (jsonResponse['dateOfBirth'] == null) {
+                                            navigatorKey.currentState?.pushReplacement(
+                                              MaterialPageRoute(builder: (_) => ActivateAccountPage(usersEmail: jsonResponse['email'], usersUsername: jsonResponse['username'], usersName: jsonResponse['name'],),),
+                                            );
+                                          } else {
+                                            navigatorKey.currentState?.pushReplacement(
+                                              MaterialPageRoute(builder: (_) => const Home()),
+                                            );
+                                          }
                                         } else {
-                                          navigatorKey.currentState?.pushReplacement(
-                                            MaterialPageRoute(builder: (_) => const Home()),
-                                          );
+                                          print("Failed to check if account is activated");
+                                          throw Exception('Failed to load participants');
                                         }
-                                      } else {
-                                        print("Failed to check if account is activated");
-                                        throw Exception('Failed to load participants');
-                                      }
-                                    } else if (response.statusCode == 401) {
-                                      print("User not registered with Apple");
-                                      var responseSignUp = await http.post(Uri.parse(ApiEndpoints.SIGNUP_APPLE), body: jsonEncode({"idToken": idToken}), headers: {"Content-Type": "application/json"});
-                                      if (responseSignUp.statusCode == 200) {
-                                        var responseAfterSigningUp = await http.post(Uri.parse(ApiEndpoints.LOGIN_APPLE), body: jsonEncode({"idToken": idToken}), headers: {"Content-Type": "application/json"});
-                                        if (responseAfterSigningUp.statusCode == 200) {
-                                          print("Logged in with Apple");
-                                          print(responseAfterSigningUp.body);
-                                          final jsonResponse = customJsonDecode(responseAfterSigningUp.body);
-                                          DateTime currentTime = DateTime.now();
-                                          DateTime futureTime =
-                                          currentTime.add(const Duration(seconds: 30));
-                                          storage.write(
-                                              key: "timestamp",
-                                              value: futureTime.toString());
-                                          storage.write(
-                                              key: "access_token",
-                                              value: jsonResponse['accessToken']);
-                                          storage.write(
-                                              key: "refresh_token",
-                                              value: jsonResponse['refreshToken']);
-                                          await checkTimestamp();
-                                          var url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
-                                          var responseCheckIfActivated = await http.get(url, headers: {
-                                            'Content-Type': 'application/json',
-                                            'Authorization': 'Bearer ${jsonResponse['accessToken']}'
-                                          });
-                                          if (responseCheckIfActivated.statusCode == 200) {
-                                            final jsonResponse = customJsonDecode(responseCheckIfActivated.body);
-                                            print(jsonResponse);
+                                      } else if (response.statusCode == 401) {
+                                        print("User not registered with Apple");
+                                        var responseSignUp = await http.post(Uri.parse(ApiEndpoints.SIGNUP_APPLE), body: jsonEncode({"idToken": idToken}), headers: {"Content-Type": "application/json"});
+                                        if (responseSignUp.statusCode == 200) {
+                                          var responseAfterSigningUp = await http.post(Uri.parse(ApiEndpoints.LOGIN_APPLE), body: jsonEncode({"idToken": idToken}), headers: {"Content-Type": "application/json"});
+                                          if (responseAfterSigningUp.statusCode == 200) {
+                                            print("Logged in with Apple");
+                                            print(responseAfterSigningUp.body);
+                                            final jsonResponse = customJsonDecode(responseAfterSigningUp.body);
+                                            DateTime currentTime = DateTime.now();
+                                            DateTime futureTime =
+                                            currentTime.add(const Duration(seconds: 30));
                                             storage.write(
-                                                key: "id",
-                                                value: jsonResponse['id'].toString());
-                                            if (jsonResponse['dateOfBirth'] == null) {
-                                              navigatorKey.currentState?.pushReplacement(
-                                                MaterialPageRoute(builder: (_) => ActivateAccountPage(usersEmail: jsonResponse['email'], usersUsername: jsonResponse['username'], usersName: jsonResponse['name'],),),
-                                              );
-                                            } else {
-                                              navigatorKey.currentState?.pushReplacement(
-                                                MaterialPageRoute(builder: (_) => const Home()),
-                                              );
+                                                key: "timestamp",
+                                                value: futureTime.toString());
+                                            storage.write(
+                                                key: "access_token",
+                                                value: jsonResponse['accessToken']);
+                                            storage.write(
+                                                key: "refresh_token",
+                                                value: jsonResponse['refreshToken']);
+                                            await checkTimestamp();
+                                            var url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
+                                            var responseCheckIfActivated = await http.get(url, headers: {
+                                              'Content-Type': 'application/json',
+                                              'Authorization': 'Bearer ${jsonResponse['accessToken']}'
+                                            });
+                                            if (responseCheckIfActivated.statusCode == 200) {
+                                              final jsonResponse = customJsonDecode(responseCheckIfActivated.body);
+                                              print(jsonResponse);
+                                              storage.write(
+                                                  key: "id",
+                                                  value: jsonResponse['id'].toString());
+                                              if (jsonResponse['dateOfBirth'] == null) {
+                                                navigatorKey.currentState?.pushReplacement(
+                                                  MaterialPageRoute(builder: (_) => ActivateAccountPage(usersEmail: jsonResponse['email'], usersUsername: jsonResponse['username'], usersName: jsonResponse['name'],),),
+                                                );
+                                              } else {
+                                                navigatorKey.currentState?.pushReplacement(
+                                                  MaterialPageRoute(builder: (_) => const Home()),
+                                                );
+                                              }
                                             }
                                           }
                                         }
                                       }
-                                    }
-                                  },
-                                ),
-                              ],
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ],
