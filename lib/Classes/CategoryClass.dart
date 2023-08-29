@@ -1,15 +1,14 @@
-
-class Category {
+class CategoryClass {
   int id;
   String name;
 
-  Category({
+  CategoryClass({
     required this.id,
     required this.name,
   });
 
-  factory Category.fromJson(Map<String, dynamic> json) {
-    return Category(
+  factory CategoryClass.fromJson(Map<String, dynamic> json) {
+    return CategoryClass(
       id: json['id'],
       name: json['name'],
     );
@@ -17,6 +16,6 @@ class Category {
 
   @override
   String toString() {
-    return 'Category{id: $id, name: $name}';
+    return 'CategoryClass{id: $id, name: $name}';
   }
 }

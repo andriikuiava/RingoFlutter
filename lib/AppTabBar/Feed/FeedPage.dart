@@ -386,7 +386,7 @@ class FeedPage extends StatelessWidget {
     );
   }
 
-  Future<List<Category>> getCategories() async {
+  Future<List<CategoryClass>> getCategories() async {
     await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
@@ -395,14 +395,14 @@ class FeedPage extends StatelessWidget {
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
       var categoryList = customJsonDecode(response.body) as List<dynamic>;
-      return categoryList.map((item) => Category.fromJson(item)).toList();
+      return categoryList.map((item) => CategoryClass.fromJson(item)).toList();
     } else {
       throw Exception('Failed to load categories');
     }
   }
   Widget categoriesList(context) {
     final currentTheme = Theme.of(context);
-    return FutureBuilder<List<Category>>(
+    return FutureBuilder<List<CategoryClass>>(
       future: getCategories(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {

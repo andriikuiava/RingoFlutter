@@ -19,7 +19,7 @@ class EventInFeed {
   Currency? currency;
   String? startTime;
   String? endTime;
-  List<Category>? categories;
+  List<CategoryClass>? categories;
   int? hostId;
   int peopleCount;
   int capacity;
@@ -45,10 +45,10 @@ class EventInFeed {
   });
 
   factory EventInFeed.fromJson(Map<String, dynamic> json) {
-    List<Category>? categories;
+    List<CategoryClass>? categories;
     if (json['categories'] != null) {
-      categories = List<Category>.from(
-          json['categories'].map((x) => Category.fromJson(x)));
+      categories = List<CategoryClass>.from(
+          json['categories'].map((x) => CategoryClass.fromJson(x)));
     }
 
     return EventInFeed(
@@ -93,7 +93,7 @@ class EventFull {
   Currency? currency;
   String? startTime;
   String? endTime;
-  List<Category>? categories;
+  List<CategoryClass>? categories;
   Organisation host;
   int peopleCount;
   int capacity;
@@ -144,8 +144,8 @@ class EventFull {
       startTime: json['startTime'],
       endTime: json['endTime'],
       categories: json['categories'] != null
-          ? List<Category>.from(
-          json['categories'].map((x) => Category.fromJson(x)))
+          ? List<CategoryClass>.from(
+          json['categories'].map((x) => CategoryClass.fromJson(x)))
           : null,
       host: Organisation.fromJson(json['host']),
       peopleCount: json['peopleCount'],

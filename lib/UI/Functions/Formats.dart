@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'dart:math';
 
 String convertTimestampToBigDate(String timestamp) {
   // Parse the input timestamp
@@ -86,3 +87,12 @@ String convertToKilometersOrMeters(int meters) {
   }
 }
 
+String convertDateTimeToTimestamp(DateTime dateTime) {
+  String year = dateTime.year.toString().padLeft(4, '0');
+  String month = dateTime.month.toString().padLeft(2, '0');
+  String day = dateTime.day.toString().padLeft(2, '0');
+  String hour = dateTime.hour.toString().padLeft(2, '0');
+  String minute = dateTime.minute.toString().padLeft(2, '0');
+
+  return '$year-$month-${day}T$hour:$minute';
+}
