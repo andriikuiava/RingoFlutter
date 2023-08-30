@@ -199,7 +199,9 @@ class FeedPage extends StatelessWidget {
       future: getCloseEvents(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator(
+            color: currentTheme.primaryColor,
+          ),);
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else if (!snapshot.hasData || snapshot.data?.isEmpty == true) {
@@ -406,7 +408,9 @@ class FeedPage extends StatelessWidget {
       future: getCategories(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator(
+            color: currentTheme.primaryColor,
+          ),);
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else if (!snapshot.hasData || snapshot.data?.isEmpty == true) {
@@ -493,7 +497,9 @@ class FeedPage extends StatelessWidget {
       future: getFindGo(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator(
+            color: currentTheme.primaryColor,
+          ),);
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else if (!snapshot.hasData || snapshot.data?.isEmpty == true) {
@@ -665,7 +671,9 @@ class FeedPage extends StatelessWidget {
       future: getPopularEvents(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator(
+            color: currentTheme.primaryColor,
+          ),);
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else if (!snapshot.hasData || snapshot.data?.isEmpty == true) {

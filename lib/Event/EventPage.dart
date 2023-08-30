@@ -17,6 +17,7 @@ import 'package:ringoflutter/UI/Themes.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
+import 'dart:developer';
 
 
 class EventPage extends StatefulWidget {
@@ -31,6 +32,7 @@ class EventPage extends StatefulWidget {
 class _EventPageState extends State<EventPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  int index = 0;
 
   @override
   void initState() {
@@ -114,7 +116,6 @@ class _EventPageState extends State<EventPage>
     Uri url = Uri.parse('${ApiEndpoints.SEARCH}/${widget.eventId}/${ApiEndpoints.GET_TICKET}');
     var headers = {'Authorization': 'Bearer $token',
       'Content-Type': 'application/json'};
-
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
       var jsonResponse = customJsonDecode(response.body);
@@ -282,7 +283,7 @@ class _EventPageState extends State<EventPage>
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) => FormCompletion(
-                                              form: event.registrationForm!,
+                                              event: event,
                                             ),
                                           ),
                                         );
@@ -527,8 +528,13 @@ class _EventPageState extends State<EventPage>
                       ),
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.width * 1.1,
+                      height: MediaQuery.of(context).size.width,
                       child: PageView.builder(
+                        onPageChanged: (value) {
+                          setState(() {
+                            index = value;
+                          });
+                        },
                         itemCount: imgList.length,
                         itemBuilder: (context, index) {
                           return Column(
@@ -541,41 +547,60 @@ class _EventPageState extends State<EventPage>
                                   fit: BoxFit.cover,
                                 ),
                               ),
-                              const SizedBox(height: 12),
-                              PageViewDotIndicator(
-                                currentItem: index,
-                                count: imgList.length,
-                                unselectedColor: Colors.grey,
-                                selectedColor: currentTheme.primaryColor,
-                                size: const Size(8, 8),
-                                duration: const Duration(milliseconds: 200),
-                              ),
                             ],
                           );
                         },
                       ),
                     ),
                     const SizedBox(height: 12),
+                    if (event.photos.isNotEmpty)
+                      Column(
+                        children: [
+                          PageViewDotIndicator(
+                            currentItem: index,
+                            count: imgList.length,
+                            unselectedColor: Colors.grey,
+                            selectedColor: currentTheme.primaryColor,
+                            size: const Size(10, 8),
+                            duration: const Duration(milliseconds: 200),
+                          ),
+                          const SizedBox(height: 12),
+                        ],
+                      ),
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.95,
                       height: 150,
                       child: ClipRRect(
                         borderRadius: defaultWidgetCornerRadius,
-                        child: GoogleMap(
-                          myLocationButtonEnabled: false,
-                          buildingsEnabled: true,
-                          mapType: MapType.normal,
-                          initialCameraPosition: CameraPosition(
-                            target: LatLng(event.coordinates!.latitude, event.coordinates!.longitude),
-                            zoom: 16.0,
-                          ),
-                          markers: {
-                            Marker(
-                              markerId: MarkerId(event.name),
-                              position: LatLng(event.coordinates!.latitude, event.coordinates!.longitude),
-                              draggable: true,
-                            )
-                          },
+                        child: Stack(
+                          children: [
+                            GoogleMap(
+                              myLocationButtonEnabled: false,
+                              buildingsEnabled: true,
+                              mapType: MapType.normal,
+                              initialCameraPosition: CameraPosition(
+                                target: LatLng(event.coordinates!.latitude, event.coordinates!.longitude),
+                                zoom: 16.0,
+                              ),
+                              markers: {
+                                Marker(
+                                  markerId: MarkerId(event.name),
+                                  position: LatLng(event.coordinates!.latitude, event.coordinates!.longitude),
+                                  draggable: true,
+                                )
+                              },
+                            ),
+                            GestureDetector(
+                              child: Container(
+                                color: Colors.transparent,
+                                constraints: const BoxConstraints.expand(),
+
+                              ),
+                              onTap: () {
+                                launch("https://www.google.com/maps/search/?api=1&query=${event.coordinates!.latitude},${event.coordinates!.longitude}");
+                              },
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -668,8 +693,10 @@ class _EventPageState extends State<EventPage>
             child: Text('Failed to load event'),
           );
         }
-        return const Center(
-          child: CircularProgressIndicator(),
+        return Center(
+          child: CircularProgressIndicator(
+            color: currentTheme.primaryColor,
+          ),
         );
       },
     );

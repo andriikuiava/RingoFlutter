@@ -237,6 +237,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     SizedBox(
                       height: 50,
                       child: CupertinoTextField(
+                        clearButtonMode: OverlayVisibilityMode.editing,
                         maxLength: 49,
                         cursorColor: currentTheme.primaryColor,
                         controller: _fullNameController,
@@ -329,6 +330,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     SizedBox(
                       height: 50,
                       child: CupertinoTextField(
+                        clearButtonMode: OverlayVisibilityMode.editing,
                         cursorColor: currentTheme.primaryColor,
                         controller: _usernameController,
                         placeholder: 'Enter your username',
@@ -383,6 +385,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     SizedBox(
                       height: 50,
                       child: CupertinoTextField(
+                        clearButtonMode: OverlayVisibilityMode.editing,
                         maxLength: 256,
                         cursorColor: currentTheme.primaryColor,
                         controller: _emailController,
@@ -473,6 +476,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     SizedBox(
                       height: 50,
                       child: CupertinoTextField(
+                        clearButtonMode: OverlayVisibilityMode.editing,
                         obscureText: true,
                         cursorColor: currentTheme.primaryColor,
                         controller: _passwordController,
@@ -519,6 +523,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     SizedBox(
                       height: 50,
                       child: CupertinoTextField(
+                        clearButtonMode: OverlayVisibilityMode.editing,
                         obscureText: true,
                         cursorColor: currentTheme.primaryColor,
                         controller: _repeatPasswordController,
