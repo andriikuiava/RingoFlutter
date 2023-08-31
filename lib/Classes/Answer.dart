@@ -31,7 +31,7 @@ class Answer {
     return Answer(
       questionId: json['questionId'],
       content: json['content'],
-      optionIds: json['optionIds'],
+      optionIds: json['optionIds'] != null ? List<int>.from(json['optionIds']) : null,
     );
   }
 }

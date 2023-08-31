@@ -1,6 +1,7 @@
 import 'package:ringoflutter/Classes/EventClass.dart';
 import 'package:ringoflutter/Classes/UserClass.dart';
 import 'package:ringoflutter/Classes/Answer.dart';
+import 'package:ringoflutter/Classes/RegistrationFormClass.dart';
 
 class Ticket {
   User participant;
@@ -9,6 +10,7 @@ class Ticket {
   String expiryDate;
   bool isValidated;
   String ticketCode;
+  RegistrationForm? registrationForm;
   RegistrationSubmission? registrationSubmission;
 
 
@@ -19,6 +21,7 @@ class Ticket {
     required this.expiryDate,
     required this.isValidated,
     required this.ticketCode,
+    this.registrationForm,
     this.registrationSubmission
   });
 
@@ -30,6 +33,8 @@ class Ticket {
       expiryDate: json['expiryDate'],
       isValidated: json['isValidated'],
       ticketCode: json['ticketCode'],
+      registrationForm: json['registrationForm'] != null ? RegistrationForm.fromJson(json['registrationForm']) : null,
+      registrationSubmission: json['registrationSubmission'] != null ? RegistrationSubmission.fromJson(json['registrationSubmission']) : null,
     );
   }
 }

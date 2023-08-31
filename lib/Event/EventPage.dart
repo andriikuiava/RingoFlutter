@@ -327,18 +327,22 @@ class _EventPageState extends State<EventPage>
                                       ),
                                     ],
                                   )
-                                      : Expanded(
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        ("Open Ticket"),
-                                        style: TextStyle(
-                                          color: currentTheme.colorScheme.background,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
+                                      : Row(
+                                    children: [
+                                      Expanded(
+                                        child: Align(
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            ("Open Ticket"),
+                                            style: TextStyle(
+                                              color: currentTheme.colorScheme.background,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
+                                    ],
                                   ),
                                 ),
                               ),
