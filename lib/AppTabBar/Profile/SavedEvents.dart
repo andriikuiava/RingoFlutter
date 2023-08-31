@@ -105,7 +105,9 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
               } else if (snapshot.hasError) {
                 return const Text('Failed to load events');
               } else {
-                return const CircularProgressIndicator();
+                return CircularProgressIndicator(
+                  color: currentTheme.primaryColor,
+                );
               }
             },
           ),

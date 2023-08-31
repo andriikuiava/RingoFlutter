@@ -82,9 +82,12 @@ class _CheckerPageState extends State<CheckerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    final currentTheme = Theme.of(context);
+    return Scaffold(
       body: Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(
+          color: currentTheme.primaryColor,
+        ),
       ),
     );
   }

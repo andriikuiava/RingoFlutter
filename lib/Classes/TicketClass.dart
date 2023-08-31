@@ -1,5 +1,7 @@
 import 'package:ringoflutter/Classes/EventClass.dart';
 import 'package:ringoflutter/Classes/UserClass.dart';
+import 'package:ringoflutter/Classes/Answer.dart';
+import 'package:ringoflutter/Classes/RegistrationFormClass.dart';
 
 class Ticket {
   User participant;
@@ -8,6 +10,9 @@ class Ticket {
   String expiryDate;
   bool isValidated;
   String ticketCode;
+  RegistrationForm? registrationForm;
+  RegistrationSubmission? registrationSubmission;
+
 
   Ticket({
     required this.participant,
@@ -16,6 +21,8 @@ class Ticket {
     required this.expiryDate,
     required this.isValidated,
     required this.ticketCode,
+    this.registrationForm,
+    this.registrationSubmission
   });
 
   factory Ticket.fromJson(Map<String, dynamic> json) {
@@ -26,6 +33,29 @@ class Ticket {
       expiryDate: json['expiryDate'],
       isValidated: json['isValidated'],
       ticketCode: json['ticketCode'],
+      registrationForm: json['registrationForm'] != null ? RegistrationForm.fromJson(json['registrationForm']) : null,
+      registrationSubmission: json['registrationSubmission'] != null ? RegistrationSubmission.fromJson(json['registrationSubmission']) : null,
     );
+  }
+}
+
+class RegistrationSubmission {
+  List<Answer>? answers;
+
+  RegistrationSubmission({
+    this.answers,
+  });
+
+  factory RegistrationSubmission.fromJson(Map<String, dynamic> json) {
+    List<dynamic>? answersJson = json['answers'];
+
+    List<Answer>? answers;
+    if (answersJson != null) {
+      answers = answersJson.map((answerJson) {
+        return Answer.fromJson(answerJson);
+      }).toList();
+    }
+
+    return RegistrationSubmission(answers: answers);
   }
 }

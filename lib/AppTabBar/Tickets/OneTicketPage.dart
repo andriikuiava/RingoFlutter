@@ -9,6 +9,8 @@ import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:ringoflutter/UI/Functions/Formats.dart';
 import 'package:ringoflutter/UI/Themes.dart';
 import 'package:ringoflutter/api_endpoints.dart';
+import 'package:ringoflutter/Classes/RegistrationFormClass.dart';
+import 'package:ringoflutter/Classes/Answer.dart';
 
 class MyTicketPage extends StatefulWidget {
   final Ticket ticket;
@@ -20,6 +22,20 @@ class MyTicketPage extends StatefulWidget {
 }
 
 class _MyTicketPageState extends State<MyTicketPage> {
+
+  List<Answer> answers = [];
+  bool isAnswersExpanded = false;
+
+  void loadAnswers() async {
+    answers = widget.ticket.registrationSubmission!.answers!;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadAnswers();
+  }
+
   void deleteTicket(BuildContext context) async {
     await checkTimestamp();
     var storage = const FlutterSecureStorage();
@@ -72,6 +88,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                           child: ClipRRect(
                             borderRadius: defaultWidgetCornerRadius,
                             child: Container(
+                              padding: EdgeInsets.all(8),
                               color: currentTheme.primaryColor,
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -114,7 +131,8 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                       ),
                                     ),
                                     Spacer(),
-                                    CupertinoButton(
+                                    (widget.ticket.isValidated == true || widget.ticket.event.price == 0)
+                                    ? CupertinoButton(
                                       onPressed: () {
                                         deleteTicket(context);
                                       },
@@ -122,7 +140,8 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                         CupertinoIcons.delete,
                                         color: currentTheme.backgroundColor,
                                       ),
-                                    ),
+                                    )
+                                    : Container(),
                                   ],
                                 )
                               ),
@@ -227,11 +246,263 @@ class _MyTicketPageState extends State<MyTicketPage> {
                           ),
                         ),
                       ),
+                      const SizedBox(height: 10,),
+                      (widget.ticket.registrationForm != null)
+                      ? FractionallySizedBox(
+                        widthFactor: 0.9,
+                        child: ClipRRect(
+                          borderRadius: defaultWidgetCornerRadius,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            color: currentTheme.backgroundColor,
+                            child: CupertinoButton(
+                              onPressed: () {
+                                setState(() {
+                                  isAnswersExpanded = !isAnswersExpanded;
+                                });
+                              },
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "Registration Form",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: currentTheme
+                                          .primaryColor,
+                                      decoration: TextDecoration.none,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Icon(
+                                    isAnswersExpanded
+                                        ? CupertinoIcons.chevron_up
+                                        : CupertinoIcons.chevron_down,
+                                    color: currentTheme.primaryColor,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                      : Container(),
+                      const SizedBox(height: 10,),
+                      AnimatedSize(
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                        child: (isAnswersExpanded)
+                            ? FractionallySizedBox(
+                          widthFactor: 0.9,
+                          child: ClipRRect(
+                            borderRadius: defaultWidgetCornerRadius,
+                            child: Container(
+                              color: currentTheme.backgroundColor,
+                              child: ListView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: widget.ticket.registrationForm!.questions.length,
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  final question = widget.ticket.registrationForm!.questions[index];
+                                  switch (question.type) {
+                                    case "INPUT_FIELD":
+                                      return buildInputFieldQuestion(question);
+                                    case "MULTIPLE_CHOICE":
+                                      return buildMultipleChoiceQuestion(question);
+                                    case "CHECKBOX":
+                                      return buildCheckboxQuestion(question);
+                                    default:
+                                      return Container();
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                        )
+                            : Container(),
+                      ),
                     ],
                   ),
                 ),
               ],
             ),
+          ),
+        ],
+      ),
+    );
+  }
+  Widget buildInputFieldQuestion(Question question) {
+    final currentTheme = Theme.of(context);
+    return Card(
+      elevation: 0,
+      margin: EdgeInsets.all(16),
+      color: Colors.transparent,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            child: Row(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: Text(
+                    "${question.content}${question.required ? ' *' : ''}",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: currentTheme.primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8,),
+          CupertinoTextField(
+            enabled: false,
+            maxLength: question.maxCharacters,
+            decoration: BoxDecoration(
+              color: currentTheme.backgroundColor,
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            controller: TextEditingController(
+              text: answers.firstWhere((answer) => answer.questionId == question.id).content,
+            ),
+            padding: EdgeInsets.all(16),
+            style: TextStyle(
+              fontSize: 16,
+              color: currentTheme.primaryColor,
+            ),
+            cursorColor: currentTheme.primaryColor
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildMultipleChoiceQuestion(Question question) {
+    var currentTheme = Theme.of(context);
+    return Card(
+      elevation: 0,
+      margin: EdgeInsets.all(16),
+      color: Colors.transparent,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width * 0.7,
+                child: Text(
+                  "${question.content}${question.required ? ' *' : ''}",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: currentTheme.primaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: question.options!.length,
+            itemBuilder: (context, index) {
+              final option = question.options![index];
+              return Container(
+                margin: EdgeInsets.symmetric(vertical: 6),
+                decoration: BoxDecoration(
+                  color: currentTheme.backgroundColor,
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      answers.firstWhere((answer) => answer.questionId == question.id).optionIds!.contains(option.id)
+                          ? CupertinoIcons.smallcircle_fill_circle
+                          : CupertinoIcons.circle,
+                      color: answers.firstWhere((answer) => answer.questionId == question.id).optionIds!.contains(option.id)
+                          ? currentTheme.primaryColor
+                          : currentTheme.primaryColor.withOpacity(0.3),
+                    ),
+                    SizedBox(width: 16),
+                    Text(
+                      option.content,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: answers.firstWhere((answer) => answer.questionId == question.id).optionIds!.contains(option.id)
+                            ? currentTheme.primaryColor
+                            : currentTheme.primaryColor.withOpacity(0.3),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildCheckboxQuestion(Question question) {
+    var currentTheme = Theme.of(context);
+    return Card(
+      elevation: 0,
+      margin: EdgeInsets.all(16),
+      color: Colors.transparent,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            child: Text(
+              "${question.content}${question.required ? ' *' : ''}",
+              style: TextStyle(
+                fontSize: 16,
+                color: currentTheme.primaryColor,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: question.options!.length,
+            itemBuilder: (context, index) {
+              final option = question.options![index];
+              return Container(
+                margin: EdgeInsets.symmetric(vertical: 6),
+                decoration: BoxDecoration(
+                  color: currentTheme.backgroundColor,
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      answers.firstWhere((answer) => answer.questionId == question.id).optionIds!.contains(option.id)
+                          ? CupertinoIcons.checkmark_square_fill
+                          : CupertinoIcons.square,
+                      color: answers.firstWhere((answer) => answer.questionId == question.id).optionIds!.contains(option.id)
+                          ? currentTheme.primaryColor
+                          : currentTheme.primaryColor.withOpacity(0.3),
+                    ),
+                    SizedBox(width: 16),
+                    Text(
+                      option.content,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: answers.firstWhere((answer) => answer.questionId == question.id).optionIds!.contains(option.id)
+                            ? currentTheme.primaryColor
+                            : currentTheme.primaryColor.withOpacity(0.3),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ],
       ),

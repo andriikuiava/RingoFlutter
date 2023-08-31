@@ -1,4 +1,3 @@
-
 class RegistrationForm {
   String title;
   String? description;
@@ -28,6 +27,8 @@ class Question {
   bool? multipleOptionsAllowed;
   String type;
   int? maxCharacters;
+  List<Option>? options;
+
 
   Question({
     required this.id,
@@ -36,6 +37,7 @@ class Question {
     required this.multipleOptionsAllowed,
     required this.type,
     required this.maxCharacters,
+    this.options,
   });
 
   factory Question.fromJson(Map<String, dynamic> json) {
@@ -46,6 +48,28 @@ class Question {
       multipleOptionsAllowed: json['multipleOptionsAllowed'],
       type: json['type'],
       maxCharacters: json['maxCharacters'],
+      options: json['options'] != null
+          ? List<Option>.from(
+              json['options'].map((option) => Option.fromJson(option)),
+            )
+          : null,
+    );
+  }
+}
+
+class Option {
+  int id;
+  String content;
+
+  Option({
+    required this.id,
+    required this.content,
+  });
+
+  factory Option.fromJson(Map<String, dynamic> json) {
+    return Option(
+      id: json['id'],
+      content: json['content'],
     );
   }
 }

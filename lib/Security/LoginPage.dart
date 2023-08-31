@@ -205,6 +205,7 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(
                       height: 50,
                       child: CupertinoTextField(
+                        clearButtonMode: OverlayVisibilityMode.editing,
                         cursorColor: currentTheme.primaryColor,
                         controller: _emailController,
                         placeholder: 'Enter your email',
@@ -237,6 +238,7 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(
                       height: 50,
                       child: CupertinoTextField(
+                        clearButtonMode: OverlayVisibilityMode.editing,
                         cursorColor: currentTheme.primaryColor,
                         controller: _passwordController,
                         placeholder: 'Enter your password',

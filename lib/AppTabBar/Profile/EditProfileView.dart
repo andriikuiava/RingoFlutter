@@ -262,6 +262,7 @@ class _EditProfileState extends State<EditProfile> {
                         onChanged: (value) {
                           validateFields();
                         },
+                        clearButtonMode: OverlayVisibilityMode.editing,
                         maxLength: 49,
                         cursorColor: currentTheme.primaryColor,
                         controller: _fullNameController,
@@ -309,6 +310,7 @@ class _EditProfileState extends State<EditProfile> {
                     child: FractionallySizedBox(
                       widthFactor: 0.9,
                       child: CupertinoTextField(
+                        clearButtonMode: OverlayVisibilityMode.editing,
                         maxLength: 30,
                         onChanged: (value) {
                           validateFields();

@@ -185,6 +185,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                                 child: FractionallySizedBox(
                                   widthFactor: 0.9,
                                   child: CupertinoTextField(
+                                    clearButtonMode: OverlayVisibilityMode.editing,
                                     obscureText: true,
                                     cursorColor: currentTheme.primaryColor,
                                     controller: _oldPasswordController,
@@ -224,6 +225,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                                 child: FractionallySizedBox(
                                   widthFactor: 0.9,
                                   child: CupertinoTextField(
+                                    clearButtonMode: OverlayVisibilityMode.editing,
                                     obscureText: true,
                                     onChanged: (value) {
                                       validatePasswords();
@@ -285,6 +287,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                                 child: FractionallySizedBox(
                                   widthFactor: 0.9,
                                   child: CupertinoTextField(
+                                    clearButtonMode: OverlayVisibilityMode.editing,
                                     obscureText: true,
                                     onChanged: (value) {
                                       validatePasswords();

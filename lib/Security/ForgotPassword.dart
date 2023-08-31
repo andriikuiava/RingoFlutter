@@ -84,6 +84,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   child:  SizedBox(
                     height: 50,
                     child: CupertinoTextField(
+                      clearButtonMode: OverlayVisibilityMode.editing,
                       maxLength: 256,
                       onChanged: (value) {
                         validateEmail();

@@ -388,7 +388,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         }
-        return const CircularProgressIndicator();
+        return Text("");
       },
     );
   }
@@ -465,7 +465,9 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      CircularProgressIndicator(),
+                      CircularProgressIndicator(
+                        color: currentTheme.primaryColor,
+                      ),
                     ],
                   ),
                 );
@@ -582,7 +584,9 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
           future: getUpcomingEvents(data?.id ?? 0),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return CircularProgressIndicator(
+                color: currentTheme.primaryColor,
+              );
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else if (!snapshot.hasData) {
@@ -615,7 +619,10 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                               child: ClipRRect(
                                 borderRadius: defaultWidgetCornerRadius,
                                 child: Image.network(
-                                    '${ApiEndpoints.GET_PHOTO}/${event.mainPhotoId}'
+                                    '${ApiEndpoints.GET_PHOTO}/${event.mainPhotoId}',
+                                  width: 100,
+                                  height: 100,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                             ),
@@ -735,7 +742,9 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
           future: getPastEvents(data?.id ?? 0),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return CircularProgressIndicator(
+                color: currentTheme.primaryColor,
+              );
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else if (!snapshot.hasData) {
