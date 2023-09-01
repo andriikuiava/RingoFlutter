@@ -44,7 +44,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.post(url, headers: headers);
     if (response.statusCode == 200) {
-      Navigator.pop(context);
+      Navigator.pop(context, true);
     } else {
       print(response.statusCode);
       print(response.body);
@@ -131,7 +131,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                       ),
                                     ),
                                     Spacer(),
-                                    (widget.ticket.isValidated == true || widget.ticket.event.price == 0)
+                                    (checkIfExpired(widget.ticket.expiryDate) || widget.ticket.event.price == 0)
                                     ? CupertinoButton(
                                       onPressed: () {
                                         deleteTicket(context);

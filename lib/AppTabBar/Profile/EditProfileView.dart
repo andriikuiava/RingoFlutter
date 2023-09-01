@@ -259,6 +259,7 @@ class _EditProfileState extends State<EditProfile> {
                     child: FractionallySizedBox(
                       widthFactor: 0.9,
                       child: CupertinoTextField(
+                        autocorrect: false,
                         onChanged: (value) {
                           validateFields();
                         },
@@ -310,6 +311,7 @@ class _EditProfileState extends State<EditProfile> {
                     child: FractionallySizedBox(
                       widthFactor: 0.9,
                       child: CupertinoTextField(
+                        autocorrect: false,
                         clearButtonMode: OverlayVisibilityMode.editing,
                         maxLength: 30,
                         onChanged: (value) {
@@ -443,7 +445,7 @@ class _EditProfileState extends State<EditProfile> {
                               DateFormat dateFormat = DateFormat('yyyy-MM-dd');
                               String formattedTimestamp = dateFormat.format(_dateController.value);
                               updateUser(image, selectedGender, formattedTimestamp);
-                              Navigator.pop(context);
+                              Navigator.pop(context, true);
                             } else {
                               null;
                             }

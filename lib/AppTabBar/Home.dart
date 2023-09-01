@@ -39,16 +39,14 @@ class _HomeState extends State<Home> {
             label: 'Search',
           ),
           BottomNavigationBarItem(
-            icon: Container(
-              width: 24,
-              height: 24,
-              child: Image.asset(
-                _selectedIndex == 2
-                    ? (currentTheme.brightness == Brightness.dark
-                    ? 'assets/images/ringo-tab-white.png'
-                    : 'assets/images/ringo-tab-black.png')
-                    : 'assets/images/ringo-tab-grey.png',
-              ),
+            icon: Image.asset(
+              _selectedIndex == 2
+                  ? (currentTheme.brightness == Brightness.dark
+                  ? 'assets/images/ringo-tab-white.png'
+                  : 'assets/images/ringo-tab-black.png')
+                  : 'assets/images/ringo-tab-grey.png',
+              width: 26,
+              height: 26,
             ),
             label: 'Feed',
           ),

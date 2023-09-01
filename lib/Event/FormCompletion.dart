@@ -89,12 +89,12 @@ for (var question in widget.event.registrationForm!.questions) {
       headers: headers,
       body: jsonEncode(body),
     );
-    print(response.statusCode);
-    print(response.body);
     if (response.statusCode == 200) {
       showSuccessAlert("Success", "You have successfully joined the event", context);
-      Navigator.pop(context);
+      Navigator.pop(context, true);
     } else {
+      print(response.statusCode);
+      print(response.body);
       showErrorAlert("Error", "Something went wrong", context);
     }
   }

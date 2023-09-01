@@ -216,13 +216,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           style: ElevatedButton.styleFrom(
                                             foregroundColor: currentTheme.colorScheme.background, backgroundColor: currentTheme.primaryColor,
                                           ),
-                                          onPressed: () {
-                                            Navigator.push(
+                                          onPressed: () async {
+                                            final wasEdited = await Navigator.push(
                                               context,
                                               CupertinoPageRoute(
                                                 builder: (context) => EditProfile(beforeEdit: data),
                                               ),
                                             );
+                                            if (wasEdited) {
+                                              await Future.delayed(const Duration(seconds: 1));
+                                              setState(() {
+                                                userInfoFuture = getUserInfo();
+                                              });
+                                            }
                                           },
                                           child: const Row(
                                             crossAxisAlignment: CrossAxisAlignment.center,

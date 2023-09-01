@@ -67,12 +67,11 @@ class _TicketsScreenState extends State<TicketsScreen> {
   }
 
   void _refreshTickets() async {
-    // Clear the existing tickets list
+    await checkTimestamp();
     setState(() {
       tickets.clear();
     });
 
-    // Load new tickets
     loadTickets();
   }
 
@@ -98,11 +97,14 @@ class _TicketsScreenState extends State<TicketsScreen> {
         itemBuilder: (context, index) {
           var ticket = tickets[index];
           return GestureDetector(
-            onTap: () {
-              Navigator.push(
+            onTap: () async {
+              final wasDeleted = await Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => MyTicketPage(ticket: ticket)),
               );
+              if (wasDeleted == true) {
+                _refreshTickets();
+              }
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -221,6 +223,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.3),
                     Icon(
                       CupertinoIcons.tickets_fill,
                       color: Colors.grey,
@@ -236,6 +239,27 @@ class _TicketsScreenState extends State<TicketsScreen> {
                         decoration: TextDecoration.none,
                       ),
                     ),
+                    SizedBox(height: 20,),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          CupertinoIcons.arrow_down,
+                          color: Colors.grey,
+                          size: 16,
+                        ),
+                        SizedBox(width: 5,),
+                        Text(
+                          'Pull to refresh',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ],
@@ -243,6 +267,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
           ],
         ),
         onRefresh: () async {
+          await checkTimestamp();
           _refreshTickets();
         },
       ),

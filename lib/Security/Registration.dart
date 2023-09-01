@@ -237,6 +237,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     SizedBox(
                       height: 50,
                       child: CupertinoTextField(
+                        autocorrect: false,
                         clearButtonMode: OverlayVisibilityMode.editing,
                         maxLength: 49,
                         cursorColor: currentTheme.primaryColor,
@@ -330,6 +331,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     SizedBox(
                       height: 50,
                       child: CupertinoTextField(
+                        autocorrect: false,
                         clearButtonMode: OverlayVisibilityMode.editing,
                         cursorColor: currentTheme.primaryColor,
                         controller: _usernameController,
@@ -385,6 +387,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     SizedBox(
                       height: 50,
                       child: CupertinoTextField(
+                        autocorrect: false,
                         clearButtonMode: OverlayVisibilityMode.editing,
                         maxLength: 256,
                         cursorColor: currentTheme.primaryColor,
@@ -400,6 +403,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         onChanged: (value) {
+                          setState(() {
+                            for (var symbol in value.split('')) {
+                              if (symbol == ' ') {
+                                _emailController.text = value.replaceAll(' ', '');
+                              }
+                            }
+                          });
                           if (!isEmailValid) {
                             isEmailValidFunc();
                             validateForm();
@@ -476,6 +486,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     SizedBox(
                       height: 50,
                       child: CupertinoTextField(
+                        autocorrect: false,
                         clearButtonMode: OverlayVisibilityMode.editing,
                         obscureText: true,
                         cursorColor: currentTheme.primaryColor,
@@ -523,6 +534,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     SizedBox(
                       height: 50,
                       child: CupertinoTextField(
+                        autocorrect: false,
                         clearButtonMode: OverlayVisibilityMode.editing,
                         obscureText: true,
                         cursorColor: currentTheme.primaryColor,

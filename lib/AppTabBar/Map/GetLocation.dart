@@ -9,6 +9,7 @@ Future<Coordinates> getUserLocation() async {
   serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
     // Location services are disabled
+    Geolocator.openLocationSettings();
     return Coordinates(latitude: 59.436962, longitude: 24.753574);
   }
 
@@ -16,6 +17,7 @@ Future<Coordinates> getUserLocation() async {
   permission = await Geolocator.checkPermission();
   if (permission == LocationPermission.deniedForever) {
     // The user permanently denied location permission, take appropriate action
+    Geolocator.openAppSettings();
     return Coordinates(latitude: 59.436962, longitude: 24.753574);
   }
   if (permission == LocationPermission.denied) {
@@ -23,6 +25,7 @@ Future<Coordinates> getUserLocation() async {
     permission = await Geolocator.requestPermission();
     if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
       // The user denied location permission, take appropriate action
+      Geolocator.openAppSettings();
       return Coordinates(latitude: 59.436962, longitude: 24.753574);
     }
   }

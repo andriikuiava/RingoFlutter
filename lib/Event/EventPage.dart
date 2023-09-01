@@ -120,12 +120,17 @@ class _EventPageState extends State<EventPage>
     if (response.statusCode == 200) {
       var jsonResponse = customJsonDecode(response.body);
       Ticket ticket = Ticket.fromJson(jsonResponse);
-      Navigator.push(
+      final wasDeleted = await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => MyTicketPage(ticket: ticket),
+          builder: (context) => MyTicketPage(
+            ticket: ticket,
+          ),
         ),
       );
+      if (wasDeleted) {
+        _refreshEvent();
+      }
     } else {
       throw Exception('Failed to get ticket');
     }
@@ -274,12 +279,12 @@ class _EventPageState extends State<EventPage>
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.9,
                                 child: ElevatedButton(
-                                  onPressed: () {
+                                  onPressed: () async {
                                     if (!event.isRegistered) {
                                       if (event.registrationForm == null) {
                                         getTicketNoForm();
                                       } else {
-                                        Navigator.push(
+                                        final wasBought = await Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) => FormCompletion(
@@ -287,6 +292,9 @@ class _EventPageState extends State<EventPage>
                                             ),
                                           ),
                                         );
+                                        if (wasBought) {
+                                          _refreshEvent();
+                                        }
                                       }
                                     } else {
                                       getBoughtTicket();
@@ -448,7 +456,8 @@ class _EventPageState extends State<EventPage>
                                                               } else if (iconData == CupertinoIcons.mail) {
                                                                 launch("mailto:${contactCard.content}");
                                                               } else if (iconData == CupertinoIcons.phone) {
-                                                                launch("tel:${contactCard.content}");
+                                                                String phoneNumber = contactCard.content.replaceAll(RegExp(r'[^0-9]'), '');
+                                                                launch("tel:${phoneNumber}");
                                                               } else if (iconData == CupertinoIcons.doc_on_doc) {
                                                                 await Clipboard.setData(ClipboardData(text: contactCard.content));
                                                                 Fluttertoast.showToast(

@@ -205,6 +205,16 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(
                       height: 50,
                       child: CupertinoTextField(
+                        autocorrect: false,
+                        onChanged: (value) {
+                          setState(() {
+                            for (var symbol in value.split('')) {
+                              if (symbol == ' ') {
+                                _emailController.text = value.replaceAll(' ', '');
+                              }
+                            }
+                          });
+                        },
                         clearButtonMode: OverlayVisibilityMode.editing,
                         cursorColor: currentTheme.primaryColor,
                         controller: _emailController,
@@ -238,6 +248,7 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(
                       height: 50,
                       child: CupertinoTextField(
+                        autocorrect: false,
                         clearButtonMode: OverlayVisibilityMode.editing,
                         cursorColor: currentTheme.primaryColor,
                         controller: _passwordController,

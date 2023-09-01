@@ -36,7 +36,7 @@ class FeedPage extends StatelessWidget {
                 children: [
                   const SizedBox(width: 10),
                   Text(
-                    'Close Events',
+                    'Nearby Adventures',
                     style: TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
@@ -47,16 +47,7 @@ class FeedPage extends StatelessWidget {
                   const Spacer(),
                   CupertinoButton(
                     onPressed: () async {
-                      var location = await getUserLocation();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => FeedBuilder(request:
-                              "${ApiEndpoints.SEARCH}?latitude=${location.latitude}&longitude=${location.longitude}&limit=10&sort=distance",
-                            title: "Close Events",
-                          ),
-                        ),
-                      );
+                      seeAll(context, "Nearby Adventures", "sort=distance&dir=ASC");
                     },
                     child: Text(
                       "See all",
@@ -92,7 +83,7 @@ class FeedPage extends StatelessWidget {
                 children: [
                   const SizedBox(width: 10),
                   Text(
-                    'Popular Events',
+                    'Crowd Favorites',
                     style: TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
@@ -103,16 +94,7 @@ class FeedPage extends StatelessWidget {
                   const Spacer(),
                   CupertinoButton(
                     onPressed: () async {
-                      var location = await getUserLocation();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => FeedBuilder(request:
-                          "${ApiEndpoints.SEARCH}?latitude=${location.latitude}&longitude=${location.longitude}&limit=10&sort=peopleCount",
-                            title: "Popular Events",
-                          ),
-                        ),
-                      );
+                      seeAll(context, "Crowd Favorites", "&sort=peopleCount&maxDistance=20000");
                     },
                     child: Text(
                       "See all",
@@ -131,7 +113,7 @@ class FeedPage extends StatelessWidget {
                 children: [
                   const SizedBox(width: 10),
                   Text(
-                    'Find & Go',
+                    'Free Pass Events',
                     style: TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
@@ -142,16 +124,7 @@ class FeedPage extends StatelessWidget {
                   const Spacer(),
                   CupertinoButton(
                     onPressed: () async {
-                      var location = await getUserLocation();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => FeedBuilder(request:
-                          "${ApiEndpoints.SEARCH}?latitude=${location.latitude}&longitude=${location.longitude}&limit=10&sort=distance&price=0",
-                            title: "Find & Go",
-                          ),
-                        ),
-                      );
+                      seeAll(context, "Free Pass Events", "limit=20&isTicketNeeded=false&priceMax=0&currencyId=1");
                     },
                     child: Text(
                       "See all",
@@ -180,8 +153,8 @@ class FeedPage extends StatelessWidget {
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     Uri url = await Uri.parse(
-        '${ApiEndpoints.SEARCH}?startTimeMin=${DateTime.now()
-            .toIso8601String()}&latitude=${location.latitude}&longitude=${location.longitude}&sort=distance');
+        '${ApiEndpoints.SEARCH}?endTimeMin=${DateTime.now()
+            .toIso8601String()}&latitude=${location.latitude}&longitude=${location.longitude}&sort=distance&dir=ASC');
     print(url);
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
@@ -203,21 +176,9 @@ class FeedPage extends StatelessWidget {
             color: currentTheme.primaryColor,
           ),);
         } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          return noEvents(context);
         } else if (!snapshot.hasData || snapshot.data?.isEmpty == true) {
-          return Row(
-            children: [
-              const SizedBox(width: 10),
-              Text('No events available',
-                style: TextStyle(
-                  color: Colors.grey,
-                  decoration: TextDecoration.none,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
-                ),
-              ),
-            ],
-          );
+          return noEvents(context);
         } else {
           return DefaultTabController(
             length: snapshot.data!.length,
@@ -241,141 +202,7 @@ class FeedPage extends StatelessWidget {
                         );
                       },
                       child: Center(
-                        child: Column(
-                          children: [
-                            const SizedBox(height: 5),
-                            ClipRRect(
-                              borderRadius: defaultWidgetCornerRadius,
-                              child: Image.network(
-                                "${ApiEndpoints.GET_PHOTO}/${event
-                                    .mainPhotoId}",
-                                width: MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width - 20,
-                                height: MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width - 20,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            ClipRRect(
-                              borderRadius: defaultWidgetCornerRadius,
-                              child: Container(
-                                width: MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width - 20,
-                                color: currentTheme.backgroundColor,
-                                child: Padding(
-                                  padding: defaultWidgetPadding,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start,
-                                    children: [
-                                      Text(
-                                        event.name,
-                                        style: TextStyle(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.bold,
-                                          color: currentTheme.primaryColor,
-                                          decoration: TextDecoration.none,
-                                        ),
-                                      ),
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            CupertinoIcons.map_pin,
-                                            color: currentTheme.primaryColor,
-                                            size: 16,
-                                          ),
-                                          const SizedBox(width: 5),
-                                          Text(
-                                            event.address!,
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              color: currentTheme.primaryColor,
-                                              decoration: TextDecoration.none,
-                                            ),
-                                          ),
-                                          const Spacer(),
-                                          Text(
-                                            "${event.currency!.symbol} ${event
-                                                .price}",
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                              color: currentTheme.primaryColor,
-                                              decoration: TextDecoration.none,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      (event.distance != null)
-                                      ? Row(
-                                        children: [
-                                          Icon(
-                                            CupertinoIcons.location,
-                                            color: currentTheme.primaryColor,
-                                            size: 16,
-                                          ),
-                                          const SizedBox(width: 5),
-                                          Text(
-                                            "${convertToKilometersOrMeters(event.distance!)}",
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              color: currentTheme.primaryColor,
-                                              decoration: TextDecoration.none,
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                      : Row(
-                                        children: [
-                                          Icon(
-                                            CupertinoIcons.location,
-                                            color: currentTheme.primaryColor,
-                                            size: 16,
-                                          ),
-                                          const SizedBox(width: 5),
-                                          Text(
-                                            "Location not available",
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              color: currentTheme.primaryColor,
-                                              decoration: TextDecoration.none,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            CupertinoIcons.calendar_today,
-                                            color: currentTheme.primaryColor,
-                                            size: 16,
-                                          ),
-                                          const SizedBox(width: 5),
-                                          Text(
-                                            "${convertHourTimestamp(
-                                                event.startTime!)}",
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              color: currentTheme.primaryColor,
-                                              decoration: TextDecoration.none,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                        child: eventCard(context, event)
                       ),
                     );
                   }).toList(),
@@ -412,7 +239,7 @@ class FeedPage extends StatelessWidget {
             color: currentTheme.primaryColor,
           ),);
         } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          return noEvents(context);
         } else if (!snapshot.hasData || snapshot.data?.isEmpty == true) {
           return Text('No categories available.',
             style: TextStyle(
@@ -439,7 +266,7 @@ class FeedPage extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    FeedBuilder(request: '${ApiEndpoints.SEARCH}?category=${category.id}', title: category.name,)
+                                    FeedBuilder(request: '${ApiEndpoints.SEARCH}?categoryIds=${category.id}', title: category.name,)
                               ),
                             );
                           },
@@ -480,8 +307,8 @@ class FeedPage extends StatelessWidget {
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     Uri url = Uri.parse(
-        '${ApiEndpoints.SEARCH}?startTimeMin=${DateTime.now()
-            .toIso8601String()}&limit=20');
+        '${ApiEndpoints.SEARCH}?endTimeMin=${DateTime.now()
+            .toIso8601String()}&limit=20&isTicketNeeded=false&priceMax=0&currencyId=1');
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -501,20 +328,10 @@ class FeedPage extends StatelessWidget {
             color: currentTheme.primaryColor,
           ),);
         } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          return noEvents(context);
         } else if (!snapshot.hasData || snapshot.data?.isEmpty == true) {
-          return const Row(
-            children: [
-              SizedBox(width: 10),
-              Text('No events available',
-                style: TextStyle(
-                  color: Colors.grey,
-                  decoration: TextDecoration.none,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
-                ),
-              ),
-            ],
+          return Center(
+            child: noEvents(context),
           );
         } else {
           return DefaultTabController(
@@ -539,104 +356,7 @@ class FeedPage extends StatelessWidget {
                         );
                       },
                       child: Center(
-                        child: Column(
-                          children: [
-                            const SizedBox(height: 5),
-                            ClipRRect(
-                              borderRadius: defaultWidgetCornerRadius,
-                              child: Image.network(
-                                "${ApiEndpoints.GET_PHOTO}/${event
-                                    .mainPhotoId}",
-                                width: MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width - 20,
-                                height: MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width - 20,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            ClipRRect(
-                              borderRadius: defaultWidgetCornerRadius,
-                              child: Container(
-                                width: MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width - 20,
-                                color: currentTheme.backgroundColor,
-                                child: Padding(
-                                  padding: defaultWidgetPadding,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start,
-                                    children: [
-                                      Text(
-                                        event.name,
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                          color: currentTheme.primaryColor,
-                                          decoration: TextDecoration.none,
-                                        ),
-                                      ),
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            CupertinoIcons.map_pin,
-                                            color: currentTheme.primaryColor,
-                                            size: 16,
-                                          ),
-                                          const SizedBox(width: 5),
-                                          Text(
-                                            event.address!,
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              color: currentTheme.primaryColor,
-                                              decoration: TextDecoration.none,
-                                            ),
-                                          ),
-                                          const Spacer(),
-                                          Text(
-                                            "${event.currency!.symbol} ${event
-                                                .price}",
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                              color: currentTheme.primaryColor,
-                                              decoration: TextDecoration.none,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            CupertinoIcons.calendar,
-                                            color: currentTheme.primaryColor,
-                                            size: 16,
-                                          ),
-                                          const SizedBox(width: 5),
-                                          Text(
-                                            convertHourTimestamp(
-                                                event.startTime!),
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              color: currentTheme.primaryColor,
-                                              decoration: TextDecoration.none,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                        child: eventCard(context, event),
                       ),
                     );
                   }).toList(),
@@ -651,11 +371,12 @@ class FeedPage extends StatelessWidget {
 
   Future<List<EventInFeed>> getPopularEvents() async {
     await checkTimestamp();
+    var location = await getUserLocation();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     Uri url = Uri.parse(
-        '${ApiEndpoints.SEARCH}?startTimeMin=${DateTime.now()
-            .toIso8601String()}&limit=3');
+        '${ApiEndpoints.SEARCH}?endTimeMin=${DateTime.now()
+            .toIso8601String()}&sort=peopleCount&latitude=${location.latitude}&longitude=${location.longitude}&limit=3&maxDistance=20000');
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -675,21 +396,9 @@ class FeedPage extends StatelessWidget {
             color: currentTheme.primaryColor,
           ),);
         } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          return noEvents(context);
         } else if (!snapshot.hasData || snapshot.data?.isEmpty == true) {
-          return const Row(
-            children: [
-              const SizedBox(width: 10),
-              Text('No events available',
-                style: TextStyle(
-                  color: Colors.grey,
-                  decoration: TextDecoration.none,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
-                ),
-              ),
-            ],
-          );
+          return noEvents(context);
         } else {
           return Column(
             children: snapshot.data?.map((event) {
@@ -833,3 +542,194 @@ class FeedPage extends StatelessWidget {
   }
 }
 
+Widget eventCard(context, EventInFeed event) {
+  final currentTheme = Theme.of(context);
+  return Column(
+    children: [
+      const SizedBox(height: 5),
+      ClipRRect(
+        borderRadius: defaultWidgetCornerRadius,
+        child: Image.network(
+          "${ApiEndpoints.GET_PHOTO}/${event.mainPhotoId}",
+          width: MediaQuery
+              .of(context)
+              .size
+              .width - 20,
+          height: MediaQuery
+              .of(context)
+              .size
+              .width - 20,
+          fit: BoxFit.cover,
+        ),
+      ),
+      const SizedBox(height: 10),
+      ClipRRect(
+        borderRadius: defaultWidgetCornerRadius,
+        child: Container(
+          width: MediaQuery
+              .of(context)
+              .size
+              .width - 20,
+          color: currentTheme.backgroundColor,
+          child: Padding(
+            padding: defaultWidgetPadding,
+            child: Stack(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment
+                      .start,
+                  children: [
+                    Text(
+                      event.name,
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: currentTheme.primaryColor,
+                        decoration: TextDecoration.none,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          CupertinoIcons.map_pin,
+                          color: currentTheme.primaryColor,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          event.address!,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.normal,
+                            color: currentTheme.primaryColor,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                      ],
+                    ),
+                    (event.distance != null)
+                        ? Row(
+                      children: [
+                        Icon(
+                          CupertinoIcons.location,
+                          color: currentTheme.primaryColor,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          "${convertToKilometersOrMeters(event.distance!)}",
+                          style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 16,
+                            color: currentTheme.primaryColor,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                      ],
+                    )
+                        : Row(
+                      children: [
+                        Icon(
+                          CupertinoIcons.location,
+                          color: currentTheme.primaryColor,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          "Location not available",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.normal,
+                            color: currentTheme.primaryColor,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          CupertinoIcons.calendar_today,
+                          color: currentTheme.primaryColor,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(convertHourTimestamp(event.startTime!),
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.normal,
+                            color: currentTheme.primaryColor,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: Text(
+                    "${event.currency!.symbol}${event.price!.toStringAsFixed(2)}",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: currentTheme.primaryColor,
+                      decoration: TextDecoration.none,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
+Widget noEvents(context) {
+  final currentTheme = Theme.of(context);
+  return Padding(
+    padding: defaultWidgetPadding,
+    child: ClipRRect(
+        borderRadius: defaultWidgetCornerRadius,
+        child: Container(
+          color: currentTheme.backgroundColor,
+          child: Column(
+            children: [
+              SizedBox(height: 20),
+              Row(
+                children: [
+                  Spacer(),
+                  Text('No events available',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      decoration: TextDecoration.none,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24,
+                    ),
+                  ),
+                  Spacer(),
+                ],
+              ),
+              SizedBox(height: 20)
+            ],
+          ),
+        )
+    ),
+  );
+}
+
+void seeAll(context, String title, String params) async {
+  var location = await getUserLocation();
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => FeedBuilder(request:
+      "${ApiEndpoints.SEARCH}?latitude=${location.latitude}&longitude=${location.longitude}&$params",
+        title: title,
+      ),
+    ),
+  );
+}
