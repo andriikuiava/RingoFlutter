@@ -105,6 +105,7 @@ for (var question in widget.event.registrationForm!.questions) {
   void initState() {
     super.initState();
     prepareFieldsForAnswers();
+    checkIfFormIsCompleted();
   }
 
   @override
@@ -116,7 +117,7 @@ for (var question in widget.event.registrationForm!.questions) {
       navigationBar: CupertinoNavigationBar(
         backgroundColor: currentTheme.scaffoldBackgroundColor,
         middle: Text(
-        'FormCompletion',
+        'Form completion',
         style: TextStyle(color: currentTheme.primaryColor),
         ),
         leading: GestureDetector(
@@ -138,56 +139,105 @@ for (var question in widget.event.registrationForm!.questions) {
             Container(
               height: MediaQuery.of(context).size.height * 0.73,
               child: ListView.builder(
-                itemCount: widget.event.registrationForm!.questions.length,
+                itemCount: widget.event.registrationForm!.questions.length + 2,
                 itemBuilder: (context, index) {
-                  final question = widget.event.registrationForm!.questions[index];
-                  switch (question.type) {
-                    case 'INPUT_FIELD':
-                      return buildInputFieldQuestion(question);
-                    case 'MULTIPLE_CHOICE':
-                      return buildMultipleChoiceQuestion(question);
-                    case 'CHECKBOX':
-                      return buildCheckboxQuestion(question);
+                  if (index == 0) {
+                    return buildNameAndDescriptionOfTheForm(widget.event.registrationForm!);
+                  } else if (index != 0 && index != widget.event.registrationForm!.questions.length + 1) {
+                    final question = widget.event.registrationForm!.questions[index - 1];
+                    switch (question.type) {
+                      case 'INPUT_FIELD':
+                        return buildInputFieldQuestion(question);
+                      case 'MULTIPLE_CHOICE':
+                        return buildMultipleChoiceQuestion(question);
+                      case 'CHECKBOX':
+                        return buildCheckboxQuestion(question);
+                    }
+                  } else {
+                    return Container(
+                      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      height: 50,
+                      child: Material(
+                        elevation: (isFormCompleted) ? 6 : 0,
+                        borderRadius: BorderRadius.circular(12.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12.0),
+                          child: Container(
+                            color: isFormCompleted
+                                ? currentTheme.backgroundColor
+                                : currentTheme.primaryColor.withOpacity(0.2),
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            child: CupertinoButton(
+                              child: Text(
+                                "${isFormCompleted ? 'Submit' : 'Please complete the form'}",
+                                style: TextStyle(
+                                  color: isFormCompleted
+                                      ? currentTheme.primaryColor
+                                      : currentTheme.primaryColor.withOpacity(0.6),
+                                ),
+                              ),
+                              onPressed: () {
+                                checkIfFormIsCompleted();
+                                if (isFormCompleted) {
+                                  getTicket();
+                                } else {
+                                  showErrorAlert("Error", "Please fill the form", context);
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
                   }
                 },
               ),
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.010),
-            Container(
-              height: 50,
-              child: Material(
-                elevation: (isFormCompleted) ? 6 : 0,
-                borderRadius: BorderRadius.circular(12.0),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12.0),
-                  child: Container(
-                    color: isFormCompleted
-                        ? currentTheme.backgroundColor
-                        : currentTheme.primaryColor.withOpacity(0.2),
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    child: CupertinoButton(
-                      child: Text(
-                        "${isFormCompleted ? 'Submit' : 'Please complete the form'}",
-                        style: TextStyle(
-                          color: isFormCompleted
-                              ? currentTheme.primaryColor
-                              : currentTheme.primaryColor.withOpacity(0.6),
-                        ),
-                      ),
-                      onPressed: () {
-                        checkIfFormIsCompleted();
-                        if (isFormCompleted) {
-                          getTicket();
-                        } else {
-                          showErrorAlert("Error", "Please fill the form", context);
-                        }
-                      },
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildNameAndDescriptionOfTheForm(RegistrationForm registrationForm) {
+    var currentTheme = Theme.of(context);
+    return Padding(
+      padding: EdgeInsets.all(16),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12.0),
+        child: Container(
+          color: currentTheme.backgroundColor,
+          child: Padding(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  child: Text(
+                    "${registrationForm.title}",
+                    style: TextStyle(
+                      fontSize: 22,
+                      color: currentTheme.primaryColor,
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.none,
                     ),
                   ),
                 ),
-              ),
+                SizedBox(height: 8),
+                Container(
+                  child: Text(
+                    "${registrationForm.description}",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: currentTheme.primaryColor,
+                      fontWeight: FontWeight.normal,
+                      decoration: TextDecoration.none,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

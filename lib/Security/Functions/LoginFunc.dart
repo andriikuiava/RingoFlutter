@@ -46,7 +46,7 @@ Future<Tokens> loginFunc(LoginCredentials loginCredentials, context) async {
           value: jsonResponse['id'].toString());
       if (jsonResponse['emailVerified']) {
         navigatorKey.currentState?.pushReplacement(
-          MaterialPageRoute(builder: (_) => const Home()),
+          MaterialPageRoute(builder: (_) => Home()),
         );
       } else {
         navigatorKey.currentState?.pushReplacement(

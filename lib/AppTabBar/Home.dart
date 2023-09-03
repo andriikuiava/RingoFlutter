@@ -7,23 +7,43 @@ import 'Profile/Profile.dart';
 import 'Search/SearchPage.dart';
 import 'Tickets/Tickets.dart';
 
-
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
-
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
+  final List<Widget> _pages = [
+    MapPage(),
+    SearchPage(),
+    FeedPage(),
+    TicketsScreen(),
+    ProfileScreen(),
+  ];
+
+  final List<GlobalKey<NavigatorState>> _navigatorKeys =
+  List.generate(5, (_) => GlobalKey<NavigatorState>());
+
+  void _onTabTapped(int index) {
+    if (index == _selectedIndex) {
+      // If the same tab is tapped again, pop all routes on its Navigator stack.
+      _navigatorKeys[index].currentState?.popUntil((route) => route.isFirst);
+    } else {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Theme.of(context);
+    var currentTheme = CupertinoTheme.of(context);
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
-        activeColor: currentTheme.primaryColor,
+        activeColor: (currentTheme.brightness == Brightness.dark)
+            ? Colors.white
+            : Colors.black,
         iconSize: 26,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -34,16 +54,17 @@ class _HomeState extends State<Home> {
             ),
             label: 'Map',
           ),
-          const BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.search),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.search,
+                size: 26,),
             label: 'Search',
           ),
           BottomNavigationBarItem(
             icon: Image.asset(
               _selectedIndex == 2
-                  ? (currentTheme.brightness == Brightness.dark
-                  ? 'assets/images/ringo-tab-white.png'
-                  : 'assets/images/ringo-tab-black.png')
+                  ? (currentTheme.brightness == Brightness.dark)
+                    ? 'assets/images/ringo-tab-white.png'
+                    : 'assets/images/ringo-tab-black.png'
                   : 'assets/images/ringo-tab-grey.png',
               width: 26,
               height: 26,
@@ -68,32 +89,13 @@ class _HomeState extends State<Home> {
           ),
         ],
         currentIndex: _selectedIndex,
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
+        onTap: _onTabTapped,
       ),
-      tabBuilder: (context, index) {
-        Widget? tab;
-        switch (index) {
-          case 0:
-            tab = MapPage();
-            break;
-          case 1:
-            tab = SearchPage();
-            break;
-          case 2:
-            tab = FeedPage();
-            break;
-          case 3:
-            tab = TicketsScreen();
-            break;
-          case 4:
-            tab = ProfileScreen();
-            break;
-        }
-        return CupertinoTabView(builder: (context) => tab!);
+      tabBuilder: (BuildContext context, int index) {
+        return CupertinoTabView(
+          navigatorKey: _navigatorKeys[index],
+          builder: (BuildContext context) => _pages[index],
+        );
       },
     );
   }

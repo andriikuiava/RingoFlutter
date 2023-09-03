@@ -103,7 +103,35 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
                   ],
                 );
               } else if (snapshot.hasError) {
-                return const Text('Failed to load events');
+                return Padding(
+                  padding: defaultWidgetPadding,
+                  child: ClipRRect(
+                      borderRadius: defaultWidgetCornerRadius,
+                      child: Container(
+                        color: currentTheme.backgroundColor,
+                        child: Column(
+                          children: [
+                            SizedBox(height: 20),
+                            Row(
+                              children: [
+                                Spacer(),
+                                Text('No events available',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    decoration: TextDecoration.none,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 24,
+                                  ),
+                                ),
+                                Spacer(),
+                              ],
+                            ),
+                            SizedBox(height: 20)
+                          ],
+                        ),
+                      )
+                  ),
+                );
               } else {
                 return CircularProgressIndicator(
                   color: currentTheme.primaryColor,
@@ -146,75 +174,81 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Stack(
                   children: [
-                    Text(
-                      event.name,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: currentTheme.primaryColor,
-                        fontSize: 18,
-                        decoration: TextDecoration.none,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(
-                          CupertinoIcons.location_fill,
-                          color: currentTheme.primaryColor,
-                          size: 14,
-                        ),
-                        const SizedBox(width: 5),
-                        Expanded(
-                          child: Text(
-                            event.address!,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: TextStyle(
-                              color: currentTheme.primaryColor,
-                              fontSize: 14,
-                              decoration: TextDecoration.none,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 5),
                         Text(
-                          "${event.currency!.symbol} ${event.price}",
-                          style: TextStyle(
-                            color: currentTheme.primaryColor,
-                            fontSize: 14,
-                            decoration: TextDecoration.none,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Icon(
-                          CupertinoIcons.calendar,
-                          color: currentTheme.primaryColor,
-                          size: 14,
-                        ),
-                        const SizedBox(width: 5),
-                        Text(
-                          convertHourTimestamp(event.startTime!),
+                          event.name,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                           style: TextStyle(
+                            fontWeight: FontWeight.bold,
                             color: currentTheme.primaryColor,
-                            fontSize: 14,
+                            fontSize: 18,
                             decoration: TextDecoration.none,
-                            fontWeight: FontWeight.normal,
                           ),
                         ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Icon(
+                              CupertinoIcons.location_fill,
+                              color: currentTheme.primaryColor,
+                              size: 14,
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              event.address!,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: TextStyle(
+                                color: currentTheme.primaryColor,
+                                fontSize: 14,
+                                decoration: TextDecoration.none,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Icon(
+                              CupertinoIcons.calendar,
+                              color: currentTheme.primaryColor,
+                              size: 14,
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              convertHourTimestamp(event.startTime!),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: TextStyle(
+                                color: currentTheme.primaryColor,
+                                fontSize: 14,
+                                decoration: TextDecoration.none,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
+                    ),
+                    Positioned(
+                      right: 0,
+                      bottom: 0,
+                      child: Text(
+                        "${event.currency!.symbol}${event.price}",
+                        style: TextStyle(
+                          color: currentTheme.primaryColor,
+                          fontSize: 20,
+                          decoration: TextDecoration.none,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                   ],
                 ),

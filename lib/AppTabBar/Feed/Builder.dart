@@ -132,10 +132,42 @@ class _FeedBuilderState extends State<FeedBuilder> {
                 child: eventCard(context, event),
               );
             } else if (isLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return Center(child: CircularProgressIndicator(
+                color: currentTheme.primaryColor,
+              ));
             } else {
               // When no more data to load
-              return const SizedBox();
+              return Center(
+                child: Padding(
+                  padding: defaultWidgetPadding,
+                  child: ClipRRect(
+                      borderRadius: defaultWidgetCornerRadius,
+                      child: Container(
+                        color: currentTheme.backgroundColor,
+                        child: Column(
+                          children: [
+                            SizedBox(height: 20),
+                            Row(
+                              children: [
+                                Spacer(),
+                                Text('No more events available',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    decoration: TextDecoration.none,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 24,
+                                  ),
+                                ),
+                                Spacer(),
+                              ],
+                            ),
+                            SizedBox(height: 20)
+                          ],
+                        ),
+                      )
+                  ),
+                ),
+              );;
             }
           },
         ),

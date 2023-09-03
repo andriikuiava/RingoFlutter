@@ -162,9 +162,11 @@ class _EditProfileState extends State<EditProfile> {
                           size: 120,
                         )
                             : CircleAvatar(
+                          backgroundColor: currentTheme.primaryColor,
                           radius: 45,
                           backgroundImage: NetworkImage("${ApiEndpoints.GET_PHOTO}/${widget.beforeEdit.profilePictureId}"),)
                             : CircleAvatar(
+                          backgroundColor: currentTheme.primaryColor,
                           radius: 60,
                           backgroundImage: FileImage(image!),
                         ),

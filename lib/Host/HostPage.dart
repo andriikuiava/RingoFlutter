@@ -34,6 +34,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
   late Future<Organisation> _organisationFuture;
   late TabController _tabController;
   Review? firstReview;
+  bool isDescriptionExpanded = false;
 
   @override
   void initState() {
@@ -128,6 +129,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                           shape: BoxShape.circle,
                                         ),
                                         child: CircleAvatar(
+                                          backgroundColor: currentTheme.primaryColor,
                                           radius: 40.0,
                                           backgroundImage: NetworkImage(
                                             '${ApiEndpoints
@@ -168,13 +170,37 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                               .of(context)
                                               .size
                                               .width * 0.85,
-                                          child: Text(
-                                            "${snapshot.data!.description}",
-                                            style: TextStyle(
-                                              decoration: TextDecoration.none,
-                                              color: currentTheme.primaryColor,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.normal,
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                isDescriptionExpanded =
+                                                !isDescriptionExpanded;
+                                              });
+                                            },
+                                            child: AnimatedSize(
+                                              duration: const Duration(
+                                                  milliseconds: 500),
+                                              curve: Curves.easeInOut,
+                                              child: (isDescriptionExpanded)
+                                                ? Text(
+                                                "${snapshot.data!.description}",
+                                                style: TextStyle(
+                                                  decoration: TextDecoration.none,
+                                                  color: currentTheme.primaryColor,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.normal,
+                                                ),
+                                              )
+                                                  : Text(
+                                                "${snapshot.data!.description}",
+                                                style: TextStyle(
+                                                  decoration: TextDecoration.none,
+                                                  color: currentTheme.primaryColor,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.normal,
+                                                ),
+                                                maxLines: 3,
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -198,11 +224,13 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                           .width * 0.95,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
+                          elevation: 0,
                           backgroundColor: currentTheme.backgroundColor,
                         ),
                         onPressed: () {
                           showModalBottomSheet<void>(
                             context: context,
+                            elevation: 0,
                             builder: (context) =>
                                 Container(
                                   height: 370,
@@ -590,6 +618,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                         child: ListTile(
                           leading: review.participant.profilePictureId != null
                               ? CircleAvatar(
+                            backgroundColor: currentTheme.primaryColor,
                             radius: 20.0,
                             backgroundImage: NetworkImage(
                               '${ApiEndpoints.GET_PHOTO}/${review.participant.profilePictureId}',
@@ -603,21 +632,31 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                               color: currentTheme.backgroundColor,
                             ),
                           ),
-                          title:
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(review.participant.name),
-                              Text(
-                                "@${review.participant.username}",
-                                style: const TextStyle(color: Colors.grey),
-                              ),
-                            ],
-                          ),
+                          title: Text("${review.participant.name} ∘ @${review.participant.username}"),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const SizedBox(height: 4,),
+                              Column(
+                                children: [
+                                  const SizedBox(height: 2,),
+                                  Row(
+                                    children: [
+                                      SizedBox(height: 6,),
+                                      RatingBarIndicator(
+                                        itemBuilder: (context, _) =>
+                                            Icon(
+                                              CupertinoIcons.star_fill,
+                                              color: currentTheme.primaryColor,
+                                            ),
+                                        rating: review.rate.toDouble(),
+                                        itemCount: 5,
+                                        itemSize: 16.0,
+                                        direction: Axis.horizontal,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                               if (review.comment != "")
                                 Container(
                                   width: MediaQuery.of(context).size.width * 0.8,
@@ -628,26 +667,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                   ),
                                 )
                               else if (review.comment == "")
-                                Column(
-                                  children: [
-                                    const SizedBox(height: 2,),
-                                    Row(
-                                      children: [
-                                        RatingBarIndicator(
-                                          itemBuilder: (context, _) =>
-                                              Icon(
-                                                CupertinoIcons.star_fill,
-                                                color: currentTheme.primaryColor,
-                                              ),
-                                          rating: review.rate.toDouble(),
-                                          itemCount: 5,
-                                          itemSize: 16.0,
-                                          direction: Axis.horizontal,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                                SizedBox(height: 0,),
                             ],
                           ),
                         ),
@@ -899,7 +919,10 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                               child: ClipRRect(
                                 borderRadius: defaultWidgetCornerRadius,
                                 child: Image.network(
-                                    '${ApiEndpoints.GET_PHOTO}/${event.mainPhotoId}}'
+                                    '${ApiEndpoints.GET_PHOTO}/${event.mainPhotoId}',
+                                    width: 80,
+                                    height: 80,
+                                    fit: BoxFit.cover
                                 ),
                               ),
                             ),

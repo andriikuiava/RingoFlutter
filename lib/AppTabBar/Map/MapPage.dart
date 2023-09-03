@@ -143,26 +143,23 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
-    var currentTheme = Theme.of(context);
     return userLocation != null
-        ? Expanded(
-          child: GoogleMap(
-            onMapCreated: (controller) {
-              _mapController = controller;
-            },
-            initialCameraPosition: CameraPosition(
-              target: LatLng(userLocation!.latitude, userLocation!.longitude),
-              zoom: 16,
-            ),
-            myLocationEnabled: true,
-            mapType: MapType.normal,
-            compassEnabled: true,
-            markers: Set<Marker>.of(_markers),
-            onCameraMove: (position) {
-              _showObjectsOnMap();
-            },
-          ),
-        )
+        ? GoogleMap(
+      onMapCreated: (controller) {
+        _mapController = controller;
+      },
+      initialCameraPosition: CameraPosition(
+        target: LatLng(userLocation!.latitude, userLocation!.longitude),
+        zoom: 16,
+      ),
+      myLocationEnabled: true,
+      mapType: MapType.normal,
+      compassEnabled: true,
+      markers: Set<Marker>.of(_markers),
+      onCameraMove: (position) {
+        _showObjectsOnMap();
+      },
+    )
         : const Center(
       child: CircularProgressIndicator(),
     );

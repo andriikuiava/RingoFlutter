@@ -154,7 +154,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                         child: ClipRRect(
                           borderRadius: defaultWidgetCornerRadius,
                           child: Container(
-                            color: currentTheme.colorScheme.background,
+                            color: currentTheme.backgroundColor,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Column(
@@ -185,7 +185,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                         decoration: TextDecoration.none,
                                       )
                                   ),
-                                  Text("${widget.ticket.event.currency!.symbol} ${widget.ticket.event.price!}",
+                                  Text("${widget.ticket.event.currency!.symbol}${widget.ticket.event.price!.toStringAsFixed(2)}",
                                       style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
@@ -211,7 +211,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                       )
                                   ),
                                   const SizedBox(height: 7,),
-                                  const Text("WAS BOUGHT",
+                                  const Text("ISSUED AT",
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.normal,
@@ -220,6 +220,23 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                       )
                                   ),
                                   Text(convertHourTimestamp(widget.ticket.timeOfSubmission),
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: currentTheme.primaryColor,
+                                        decoration: TextDecoration.none,
+                                      )
+                                  ),
+                                  const SizedBox(height: 7,),
+                                  const Text("EXPIRES AT",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.grey,
+                                        decoration: TextDecoration.none,
+                                      )
+                                  ),
+                                  Text(convertHourTimestamp(widget.ticket.expiryDate),
                                       style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,

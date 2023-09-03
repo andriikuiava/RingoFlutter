@@ -109,7 +109,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 return Center(
                                   child: Text(
                                     'An ${snapshot.error} occurred',
-                                    style: const TextStyle(fontSize: 18),
+                                    style: TextStyle(fontSize: 18, color: currentTheme.primaryColor),
                                   ),
                                 );
                               } else if (snapshot.hasData) {
@@ -122,6 +122,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           Padding(
                                             padding: defaultWidgetPadding,
                                             child: CircleAvatar(
+                                              backgroundColor: currentTheme.primaryColor,
                                               radius: 40,
                                               backgroundImage: NetworkImage(
                                                 '${ApiEndpoints.GET_PHOTO}/${data.profilePictureId}',

@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:pull_down_button/pull_down_button.dart';
+import 'package:ringoflutter/AppTabBar/Feed/FeedPage.dart';
 import 'package:ringoflutter/AppTabBar/Map/GetLocation.dart';
 import 'package:ringoflutter/Classes/CurrencyClass.dart';
 import 'package:ringoflutter/Classes/CategoryClass.dart';
@@ -149,6 +150,10 @@ class _SearchPageState extends State<SearchPage> {
       });
     }
 
+    else if (startTime == null && endTime == null) {
+      result = "$result&startTimeMin=${convertDateTimeToTimestamp(DateTime.now())}&";
+    }
+
 
     //category
     if (selectedCategoryListIds.isNotEmpty) {
@@ -182,7 +187,7 @@ class _SearchPageState extends State<SearchPage> {
       });
       var getRequest = await buildRequest();
       var url = Uri.parse(
-          '${ApiEndpoints.SEARCH}?page=$currentPage&limit=10&$getRequest');
+          '${ApiEndpoints.SEARCH}?page=$currentPage&limit=10&isActive=true&$getRequest');
       print(url);
       var headers = {
         'Authorization': 'Bearer $token',
@@ -1148,165 +1153,7 @@ class _SearchPageState extends State<SearchPage> {
                                 ),
                               );
                             },
-                            child: Column(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: defaultWidgetCornerRadius,
-                                  child: SizedBox(
-                                    height: MediaQuery.of(context).size.width * 0.93,
-                                    child: Image.network(
-                                        "${ApiEndpoints.GET_PHOTO}/${event.mainPhotoId}",
-                                        width: MediaQuery.of(context).size.width * 0.93,
-                                        height: MediaQuery.of(context).size.width * 0.93,
-                                        fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 5),
-                                ClipRRect(
-                                  borderRadius: defaultWidgetCornerRadius,
-                                  child: Container(
-                                    width: MediaQuery.of(context).size.width * 0.93,
-                                    color: currentTheme.backgroundColor,
-                                    padding: const EdgeInsets.all(8),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          event.name,
-                                          style: TextStyle(
-                                            color: currentTheme.primaryColor,
-                                            decoration: TextDecoration.none,
-                                            fontSize: 26,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 2),
-                                        Row(
-                                          children: [
-                                            Icon(
-                                              CupertinoIcons.map_pin,
-                                              color: currentTheme.primaryColor,
-                                              size: 18,
-                                            ),
-                                            const SizedBox(width: 4),
-                                            Text(
-                                              event.address!,
-                                              style: TextStyle(
-                                                color: currentTheme.primaryColor,
-                                                decoration: TextDecoration.none,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Icon(
-                                                  CupertinoIcons.calendar_today,
-                                                  color: currentTheme.primaryColor,
-                                                  size: 18,
-                                                ),
-                                                const SizedBox(width: 4),
-                                                Text(
-                                                  convertHourTimestamp(event.startTime!),
-                                                  style: TextStyle(
-                                                    color: currentTheme.primaryColor,
-                                                    decoration: TextDecoration.none,
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.normal,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Text(
-                                              "${event.currency!.symbol} ${event.price}",
-                                              style: TextStyle(
-                                                color: currentTheme.primaryColor,
-                                                decoration: TextDecoration.none,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 4),
-                                        if (event.distance != null)
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Icon(
-                                                    CupertinoIcons.location_fill,
-                                                    color: currentTheme.primaryColor,
-                                                    size: 18,
-                                                  ),
-                                                  const SizedBox(width: 4),
-                                                  Text(
-                                                    "${convertToKilometersOrMeters(event.distance!)}",
-                                                    style: TextStyle(
-                                                      color: currentTheme.primaryColor,
-                                                      decoration: TextDecoration.none,
-                                                      fontSize: 18,
-                                                      fontWeight: FontWeight.normal,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Icon(
-                                                    CupertinoIcons.person_2_fill,
-                                                    color: currentTheme.primaryColor,
-                                                    size: 18,
-                                                  ),
-                                                  const SizedBox(width: 4),
-                                                  Text(
-                                                    "${event.peopleCount} / ${event.capacity}",
-                                                    style: TextStyle(
-                                                      color: currentTheme.primaryColor,
-                                                      decoration: TextDecoration.none,
-                                                      fontSize: 18,
-                                                      fontWeight: FontWeight.normal,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        if (event.distance == null)
-                                          Row(
-                                            children: [
-                                              Icon(
-                                                CupertinoIcons.person_2_fill,
-                                                color: currentTheme.primaryColor,
-                                                size: 18,
-                                              ),
-                                              const SizedBox(width: 4),
-                                              Text(
-                                                "${event.peopleCount} / ${event.capacity}",
-                                                style: TextStyle(
-                                                  color: currentTheme.primaryColor,
-                                                  decoration: TextDecoration.none,
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.normal,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 14),
-                              ],
-                            ),
+                            child: eventCard(context, event),
                           );
                         } else if (isLoading) {
                           return Center(child: CircularProgressIndicator(

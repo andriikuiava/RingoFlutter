@@ -86,7 +86,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
       }
       print('User activated successfully');
       navigatorKey.currentState?.pushReplacement(
-        MaterialPageRoute(builder: (_) => const Home()),
+        MaterialPageRoute(builder: (_) => Home()),
       );
     } else {
       print('User activation failed with status code: ${response.statusCode}');

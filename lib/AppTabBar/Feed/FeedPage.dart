@@ -38,7 +38,7 @@ class FeedPage extends StatelessWidget {
                   Text(
                     'Nearby Adventures',
                     style: TextStyle(
-                      fontSize: 32,
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: currentTheme.primaryColor,
                       decoration: TextDecoration.none,
@@ -68,7 +68,7 @@ class FeedPage extends StatelessWidget {
                   Text(
                     'Explore Categories',
                     style: TextStyle(
-                      fontSize: 32,
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: currentTheme.primaryColor,
                       decoration: TextDecoration.none,
@@ -85,7 +85,7 @@ class FeedPage extends StatelessWidget {
                   Text(
                     'Crowd Favorites',
                     style: TextStyle(
-                      fontSize: 32,
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: currentTheme.primaryColor,
                       decoration: TextDecoration.none,
@@ -115,7 +115,7 @@ class FeedPage extends StatelessWidget {
                   Text(
                     'Free Pass Events',
                     style: TextStyle(
-                      fontSize: 32,
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: currentTheme.primaryColor,
                       decoration: TextDecoration.none,
@@ -154,8 +154,7 @@ class FeedPage extends StatelessWidget {
     var token = await storage.read(key: 'access_token');
     Uri url = await Uri.parse(
         '${ApiEndpoints.SEARCH}?endTimeMin=${DateTime.now()
-            .toIso8601String()}&latitude=${location.latitude}&longitude=${location.longitude}&sort=distance&dir=ASC');
-    print(url);
+            .toIso8601String()}&latitude=${location.latitude}&longitude=${location.longitude}&sort=distance');
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -266,7 +265,7 @@ class FeedPage extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    FeedBuilder(request: '${ApiEndpoints.SEARCH}?categoryIds=${category.id}', title: category.name,)
+                                    FeedBuilder(request: '${ApiEndpoints.SEARCH}?categoryIds=${category.id}&endTimeMin=${DateTime.now().toIso8601String()}', title: category.name,)
                               ),
                             );
                           },
@@ -673,7 +672,7 @@ Widget eventCard(context, EventInFeed event) {
                     "${event.currency!.symbol}${event.price!.toStringAsFixed(2)}",
                     style: TextStyle(
                       fontSize: 24,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                       color: currentTheme.primaryColor,
                       decoration: TextDecoration.none,
                     ),
@@ -690,33 +689,35 @@ Widget eventCard(context, EventInFeed event) {
 
 Widget noEvents(context) {
   final currentTheme = Theme.of(context);
-  return Padding(
-    padding: defaultWidgetPadding,
-    child: ClipRRect(
-        borderRadius: defaultWidgetCornerRadius,
-        child: Container(
-          color: currentTheme.backgroundColor,
-          child: Column(
-            children: [
-              SizedBox(height: 20),
-              Row(
-                children: [
-                  Spacer(),
-                  Text('No events available',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      decoration: TextDecoration.none,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
+  return Center(
+    child: Padding(
+      padding: defaultWidgetPadding,
+      child: ClipRRect(
+          borderRadius: defaultWidgetCornerRadius,
+          child: Container(
+            color: currentTheme.backgroundColor,
+            child: Column(
+              children: [
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    Spacer(),
+                    Text('No events available',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        decoration: TextDecoration.none,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                      ),
                     ),
-                  ),
-                  Spacer(),
-                ],
-              ),
-              SizedBox(height: 20)
-            ],
-          ),
-        )
+                    Spacer(),
+                  ],
+                ),
+                SizedBox(height: 20)
+              ],
+            ),
+          )
+      ),
     ),
   );
 }
@@ -727,7 +728,7 @@ void seeAll(context, String title, String params) async {
     context,
     MaterialPageRoute(
       builder: (context) => FeedBuilder(request:
-      "${ApiEndpoints.SEARCH}?latitude=${location.latitude}&longitude=${location.longitude}&$params",
+      "${ApiEndpoints.SEARCH}?latitude=${location.latitude}&longitude=${location.longitude}&$params&endTimeMin=${DateTime.now().toIso8601String()}",
         title: title,
       ),
     ),

@@ -1,12 +1,12 @@
 class ContactCard {
   int id;
-  int ordinal;
+  int? ordinal;
   String title;
   String content;
 
   ContactCard({
     required this.id,
-    required this.ordinal,
+    this.ordinal,
     required this.title,
     required this.content,
   });

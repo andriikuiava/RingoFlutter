@@ -113,6 +113,7 @@ class _EventPageState extends State<EventPage>
     await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
+
     Uri url = Uri.parse('${ApiEndpoints.SEARCH}/${widget.eventId}/${ApiEndpoints.GET_TICKET}');
     var headers = {'Authorization': 'Bearer $token',
       'Content-Type': 'application/json'};
@@ -228,33 +229,50 @@ class _EventPageState extends State<EventPage>
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
-                                      if (event.host.profilePictureId != null)
-                                        Container(
-                                          decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: CircleAvatar(
-                                            radius: 32.0,
-                                            backgroundImage: NetworkImage(
-                                              '${ApiEndpoints.GET_PHOTO}/${event.host.profilePictureId}',
+                                        Column(
+                                          children: [
+                                            Container(
+                                              decoration: const BoxDecoration(
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: (event.host.profilePictureId != null)
+                                              ? CircleAvatar(
+                                                backgroundColor: currentTheme.primaryColor,
+                                                radius: 32.0,
+                                                backgroundImage: NetworkImage(
+                                                  '${ApiEndpoints.GET_PHOTO}/${event.host.profilePictureId}',
+                                                ),
+                                              ) : CircleAvatar(
+                                                backgroundColor: currentTheme.backgroundColor,
+                                                backgroundImage: Image.asset(
+                                                    (currentTheme.brightness == Brightness.light)
+                                                        ? "assets/images/Ringo-Black.png"
+                                                        : "assets/images/Ringo-White.png"
+                                                ).image,
+                                                radius: 32.0,
+                                              ),
                                             ),
-                                          ),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                          ],
                                         ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
+                                      SizedBox(width: 10,),
                                       Column(
                                         crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            event.host.name,
-                                            style: TextStyle(
-                                              color: currentTheme.primaryColor,
-                                              decoration:
-                                              TextDecoration.none,
-                                              fontSize: 16.0,
-                                              fontWeight: FontWeight.bold,
+                                          Container(
+                                            width: MediaQuery.of(context).size.width * 0.7,
+                                            child: Text(
+                                              event.host.name,
+                                              style: TextStyle(
+                                                color: currentTheme.primaryColor,
+                                                decoration:
+                                                TextDecoration.none,
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                           ),
                                           Text(
@@ -324,7 +342,7 @@ class _EventPageState extends State<EventPage>
                                         child: Align(
                                           alignment: Alignment.centerRight,
                                           child: Text(
-                                            (event.price == 0.0 ? "Free" : "${event.currency!.symbol} ${event.price}"),
+                                            (event.price == 0.0 ? "Free" : "${event.currency!.symbol}${event.price!.toStringAsFixed(2)}"),
                                             style: TextStyle(
                                               color: currentTheme.colorScheme.background,
                                               fontWeight: FontWeight.bold,
@@ -417,6 +435,7 @@ class _EventPageState extends State<EventPage>
                                             } else {
                                               showModalBottomSheet<void>(
                                                 context: context,
+                                                elevation: 0,
                                                 builder: (context) => Container(
                                                   height: 370,
                                                   width: MediaQuery.of(context).size.width,
@@ -574,7 +593,7 @@ class _EventPageState extends State<EventPage>
                             count: imgList.length,
                             unselectedColor: Colors.grey,
                             selectedColor: currentTheme.primaryColor,
-                            size: const Size(10, 8),
+                            size: const Size(8, 6),
                             duration: const Duration(milliseconds: 200),
                           ),
                           const SizedBox(height: 12),

@@ -132,95 +132,95 @@ class _RegistrationPageState extends State<RegistrationPage> {
           padding: const EdgeInsets.all(8.0),
           child: CustomScrollView(
             slivers: [
-              SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        (image == null)
-                            ? Icon(
-                          CupertinoIcons.person_circle,
-                          color: currentTheme.primaryColor,
-                          size: 120,
-                        )
-                            : CircleAvatar(
-                          radius: 60,
-                          backgroundImage: FileImage(image!),
-                        ),
-                        const SizedBox(width: 20),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              CupertinoButton(
-                                color: currentTheme.colorScheme.background,
-                                minSize: 40,
-                                padding: EdgeInsets.zero,
-                                child: Row(
-                                  children: [
-                                    const SizedBox(width: 15),
-                                    Icon(
-                                      CupertinoIcons.photo_fill,
-                                      color: currentTheme.primaryColor,
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Text(
-                                      "Choose from photos",
-                                      style: TextStyle(
-                                        color: currentTheme.primaryColor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                onPressed: () async {
-                                  final pickedImage = await pickImage();
-                                  if (pickedImage != null) {
-                                    setState(() {
-                                      image = File(pickedImage.path);
-                                    });
-                                  }
-                                },
-                              ),
-                              const SizedBox(height: 10),
-                              CupertinoButton(
-                                color: currentTheme.colorScheme.background,
-                                minSize: 40,
-                                padding: EdgeInsets.zero,
-                                child: Row(
-                                  children: [
-                                    const SizedBox(width: 15),
-                                    Icon(
-                                      CupertinoIcons.camera_fill,
-                                      color: currentTheme.primaryColor,
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Text(
-                                      "Take a photo",
-                                      style: TextStyle(
-                                        color: currentTheme.primaryColor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                onPressed: () async {
-                                  final pickedImage = await takeImage();
-                                  if (pickedImage != null) {
-                                    setState(() {
-                                      image = File(pickedImage.path);
-                                    });
-                                  }
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const SliverToBoxAdapter(
-                child: SizedBox(height: 20),
-              ),
+              // SliverToBoxAdapter(
+              //   child: Column(
+              //     children: [
+              //       Row(
+              //         children: [
+              //           (image == null)
+              //               ? Icon(
+              //             CupertinoIcons.person_circle,
+              //             color: currentTheme.primaryColor,
+              //             size: 120,
+              //           )
+              //               : CircleAvatar(
+              //             radius: 60,
+              //             backgroundImage: FileImage(image!),
+              //           ),
+              //           const SizedBox(width: 20),
+              //           Expanded(
+              //             child: Column(
+              //               children: [
+              //                 CupertinoButton(
+              //                   color: currentTheme.colorScheme.background,
+              //                   minSize: 40,
+              //                   padding: EdgeInsets.zero,
+              //                   child: Row(
+              //                     children: [
+              //                       const SizedBox(width: 15),
+              //                       Icon(
+              //                         CupertinoIcons.photo_fill,
+              //                         color: currentTheme.primaryColor,
+              //                       ),
+              //                       const SizedBox(width: 10),
+              //                       Text(
+              //                         "Choose from photos",
+              //                         style: TextStyle(
+              //                           color: currentTheme.primaryColor,
+              //                         ),
+              //                       ),
+              //                     ],
+              //                   ),
+              //                   onPressed: () async {
+              //                     final pickedImage = await pickImage();
+              //                     if (pickedImage != null) {
+              //                       setState(() {
+              //                         image = File(pickedImage.path);
+              //                       });
+              //                     }
+              //                   },
+              //                 ),
+              //                 const SizedBox(height: 10),
+              //                 CupertinoButton(
+              //                   color: currentTheme.colorScheme.background,
+              //                   minSize: 40,
+              //                   padding: EdgeInsets.zero,
+              //                   child: Row(
+              //                     children: [
+              //                       const SizedBox(width: 15),
+              //                       Icon(
+              //                         CupertinoIcons.camera_fill,
+              //                         color: currentTheme.primaryColor,
+              //                       ),
+              //                       const SizedBox(width: 10),
+              //                       Text(
+              //                         "Take a photo",
+              //                         style: TextStyle(
+              //                           color: currentTheme.primaryColor,
+              //                         ),
+              //                       ),
+              //                     ],
+              //                   ),
+              //                   onPressed: () async {
+              //                     final pickedImage = await takeImage();
+              //                     if (pickedImage != null) {
+              //                       setState(() {
+              //                         image = File(pickedImage.path);
+              //                       });
+              //                     }
+              //                   },
+              //                 ),
+              //               ],
+              //             ),
+              //           ),
+              //         ],
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              // const SliverToBoxAdapter(
+              //   child: SizedBox(height: 20),
+              // ),
               SliverToBoxAdapter(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

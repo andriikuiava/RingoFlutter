@@ -59,7 +59,7 @@ class _CheckerPageState extends State<CheckerPage> {
             );
           } else {
             navigatorKey.currentState?.pushReplacement(
-              MaterialPageRoute(builder: (_) => const Home()),
+              MaterialPageRoute(builder: (_) => Home()),
             );
           }
         }
@@ -73,7 +73,7 @@ class _CheckerPageState extends State<CheckerPage> {
         );
       } else {
         navigatorKey.currentState?.pushReplacement(
-          MaterialPageRoute(builder: (_) => const Home()),
+          MaterialPageRoute(builder: (_) => Home()),
         );
       }
       throw Exception('No timestamp found');
