@@ -17,7 +17,9 @@ import 'package:ringoflutter/UI/Themes.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
-import 'dart:developer';
+import 'package:share_plus/share_plus.dart';
+import 'dart:io';
+import 'package:flutter/services.dart' show rootBundle;
 
 
 class EventPage extends StatefulWidget {
@@ -33,9 +35,32 @@ class _EventPageState extends State<EventPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int index = 0;
+  GoogleMapController? _controller;
+  String? _mapStyle;
+  String? _mapStyleIos;
+  String? _mapStyleDark;
+  String? _mapStyleIosDark;
+
+  bool isDescriptionExpanded = false;
 
   @override
   void initState() {
+    rootBundle.loadString('assets/map/light.txt').then((string) {
+      _mapStyle = string;
+    });
+
+    rootBundle.loadString('assets/map/dark.txt').then((string) {
+      _mapStyleDark = string;
+    });
+
+    rootBundle.loadString('assets/map/light.json').then((string) {
+      _mapStyleIos = string;
+    });
+
+    rootBundle.loadString('assets/map/dark.json').then((string) {
+      _mapStyleIosDark = string;
+    });
+
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
   }
@@ -173,6 +198,19 @@ class _EventPageState extends State<EventPage>
                     color: currentTheme.primaryColor,
                   ),
                 ),
+                trailing: GestureDetector(
+                  onTap: () {
+                    Share.share(
+                      subject: '${event.name}',
+                      'Find more info here: https://ringo-events.com/events/${event.id}',
+                    );
+                  },
+                  child: Icon(
+                    CupertinoIcons.share,
+                    color: currentTheme.primaryColor,
+                    size: 24,
+                  ),
+                ),
                 leading: GestureDetector(
                   onTap: () {
                     Navigator.pop(context);
@@ -180,6 +218,7 @@ class _EventPageState extends State<EventPage>
                   child: Icon(
                     CupertinoIcons.back,
                     color: currentTheme.primaryColor,
+                    size: 24,
                   ),
                 ),
               ),
@@ -607,12 +646,22 @@ class _EventPageState extends State<EventPage>
                         child: Stack(
                           children: [
                             GoogleMap(
+                              onMapCreated: (GoogleMapController controller) {
+                                _controller = controller;
+                                (Platform.isAndroid)
+                                ? (currentTheme.brightness == Brightness.light)
+                                  ? _controller?.setMapStyle(_mapStyle!)
+                                  : _controller?.setMapStyle(_mapStyleDark!)
+                                : (currentTheme.brightness == Brightness.light)
+                                  ? _controller?.setMapStyle(_mapStyleIos!)
+                                  : _controller?.setMapStyle(_mapStyleIosDark!);
+                              },
                               myLocationButtonEnabled: false,
                               buildingsEnabled: true,
                               mapType: MapType.normal,
                               initialCameraPosition: CameraPosition(
                                 target: LatLng(event.coordinates!.latitude, event.coordinates!.longitude),
-                                zoom: 16.0,
+                                zoom: 11.0,
                               ),
                               markers: {
                                 Marker(
@@ -650,10 +699,30 @@ class _EventPageState extends State<EventPage>
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text((event.description!),
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  color: currentTheme.primaryColor,
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    isDescriptionExpanded = !isDescriptionExpanded;
+                                  });
+                                },
+                                child: AnimatedSize(
+                                  duration: const Duration(milliseconds: 200),
+                                  curve: Curves.easeInOut,
+                                  child: (isDescriptionExpanded)
+                                      ? Text((event.description!),
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                      color: currentTheme.primaryColor,
+                                    ),
+                                  )
+                                      : Text((event.description!),
+                                    maxLines: 4,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                      color: currentTheme.primaryColor,
+                                    ),
+                                  ),
                                 ),
                               ),
                               const SizedBox(height: 6),
@@ -677,7 +746,7 @@ class _EventPageState extends State<EventPage>
                               Row(
                                 children: [
                                   Icon(
-                                    CupertinoIcons.location_fill,
+                                    CupertinoIcons.map_pin,
                                     size: 17,
                                     color: currentTheme.primaryColor,
                                   ),

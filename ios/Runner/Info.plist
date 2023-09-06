@@ -44,14 +44,18 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCalendarsUsageDescription</key>
+	<string>We need access to your calendar to add events</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Describe why your app needs access to the camera.</string>
+	<string>We need access to your camera to use your photo as profile picture.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>We need access to your contacts list to add events</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>We need access to your location to find the best events near you</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We need access to your location to find the best events near you</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Describe why your app needs permission for the photo library.</string>
+	<string>We need access to your photo library to use your photo as profile picture.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

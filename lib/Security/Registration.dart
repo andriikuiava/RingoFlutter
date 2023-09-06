@@ -42,7 +42,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
   bool isUsernameValid = true;
   bool isEmailValid = true;
   bool isPasswordValid = true;
+
+  bool isCapitalLetter = false;
+  bool isSmallLetter = false;
+  bool isNumber = false;
+  bool isSpecialSymbol = false;
+  bool is8Characters = false;
+
+
   bool isFormValid = false;
+
+  bool isLoading = false;
 
   void validateForm() {
     setState(() {
@@ -91,6 +101,35 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   void isPasswordValidFunc() {
+    if (RegExp(r"(?=.*[A-Z])").hasMatch(_passwordController.text)) {
+      isCapitalLetter = true;
+    } else {
+      isCapitalLetter = false;
+    }
+    if (RegExp(r"(?=.*[a-z])").hasMatch(_passwordController.text)) {
+      isSmallLetter = true;
+    } else {
+      isSmallLetter = false;
+    }
+
+    if (RegExp(r"(?=.*[0-9])").hasMatch(_passwordController.text)) {
+      isNumber = true;
+    } else {
+      isNumber = false;
+    }
+
+    if (RegExp(r'(?=.*[!@#$%^&*(),.?\":{}|<>])').hasMatch(_passwordController.text)) {
+      isSpecialSymbol = true;
+    } else {
+      isSpecialSymbol = false;
+    }
+
+    if (RegExp(r"^.{8,64}$").hasMatch(_passwordController.text)) {
+      is8Characters = true;
+    } else {
+      is8Characters = false;
+    }
+
     setState(() {
       if (RegExp(r"((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,64})")
           .hasMatch(_passwordController.text)) {
@@ -99,6 +138,68 @@ class _RegistrationPageState extends State<RegistrationPage> {
         isPasswordValid = false;
       }
     });
+  }
+
+  void showPasswordRequirements() {
+    showModalBottomSheet<void>(
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoActionSheet(
+          title: Column(
+            children: [
+              if (!isCapitalLetter)
+                const Text(
+                  '- Password must contain a capital letter',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+              if (!isSmallLetter)
+                const Text(
+                  '- Password must contain a small letter',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+              if (!isNumber)
+                const Text(
+                  '- Password must contain number',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+              if (!isSpecialSymbol)
+                const Text(
+                  '- Password must contain a special symbol',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+              if (!is8Characters)
+                const Text(
+                  '- Password must be from 8 to 64 characters long',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+            ],
+          ),
+          actions: <CupertinoActionSheetAction>[
+            CupertinoActionSheetAction(
+              child: Text('Close',
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                ),),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -132,95 +233,95 @@ class _RegistrationPageState extends State<RegistrationPage> {
           padding: const EdgeInsets.all(8.0),
           child: CustomScrollView(
             slivers: [
-              // SliverToBoxAdapter(
-              //   child: Column(
-              //     children: [
-              //       Row(
-              //         children: [
-              //           (image == null)
-              //               ? Icon(
-              //             CupertinoIcons.person_circle,
-              //             color: currentTheme.primaryColor,
-              //             size: 120,
-              //           )
-              //               : CircleAvatar(
-              //             radius: 60,
-              //             backgroundImage: FileImage(image!),
-              //           ),
-              //           const SizedBox(width: 20),
-              //           Expanded(
-              //             child: Column(
-              //               children: [
-              //                 CupertinoButton(
-              //                   color: currentTheme.colorScheme.background,
-              //                   minSize: 40,
-              //                   padding: EdgeInsets.zero,
-              //                   child: Row(
-              //                     children: [
-              //                       const SizedBox(width: 15),
-              //                       Icon(
-              //                         CupertinoIcons.photo_fill,
-              //                         color: currentTheme.primaryColor,
-              //                       ),
-              //                       const SizedBox(width: 10),
-              //                       Text(
-              //                         "Choose from photos",
-              //                         style: TextStyle(
-              //                           color: currentTheme.primaryColor,
-              //                         ),
-              //                       ),
-              //                     ],
-              //                   ),
-              //                   onPressed: () async {
-              //                     final pickedImage = await pickImage();
-              //                     if (pickedImage != null) {
-              //                       setState(() {
-              //                         image = File(pickedImage.path);
-              //                       });
-              //                     }
-              //                   },
-              //                 ),
-              //                 const SizedBox(height: 10),
-              //                 CupertinoButton(
-              //                   color: currentTheme.colorScheme.background,
-              //                   minSize: 40,
-              //                   padding: EdgeInsets.zero,
-              //                   child: Row(
-              //                     children: [
-              //                       const SizedBox(width: 15),
-              //                       Icon(
-              //                         CupertinoIcons.camera_fill,
-              //                         color: currentTheme.primaryColor,
-              //                       ),
-              //                       const SizedBox(width: 10),
-              //                       Text(
-              //                         "Take a photo",
-              //                         style: TextStyle(
-              //                           color: currentTheme.primaryColor,
-              //                         ),
-              //                       ),
-              //                     ],
-              //                   ),
-              //                   onPressed: () async {
-              //                     final pickedImage = await takeImage();
-              //                     if (pickedImage != null) {
-              //                       setState(() {
-              //                         image = File(pickedImage.path);
-              //                       });
-              //                     }
-              //                   },
-              //                 ),
-              //               ],
-              //             ),
-              //           ),
-              //         ],
-              //       ),
-              //     ],
-              //   ),
-              // ),
-              // const SliverToBoxAdapter(
-              //   child: SizedBox(height: 20),
-              // ),
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        (image == null)
+                            ? Icon(
+                          CupertinoIcons.person_circle,
+                          color: currentTheme.primaryColor,
+                          size: 120,
+                        )
+                            : CircleAvatar(
+                          radius: 60,
+                          backgroundImage: FileImage(image!),
+                        ),
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              CupertinoButton(
+                                color: currentTheme.colorScheme.background,
+                                minSize: 40,
+                                padding: EdgeInsets.zero,
+                                child: Row(
+                                  children: [
+                                    const SizedBox(width: 15),
+                                    Icon(
+                                      CupertinoIcons.photo_fill,
+                                      color: currentTheme.primaryColor,
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      "Choose from photos",
+                                      style: TextStyle(
+                                        color: currentTheme.primaryColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                onPressed: () async {
+                                  final pickedImage = await pickImage();
+                                  if (pickedImage != null) {
+                                    setState(() {
+                                      image = File(pickedImage.path);
+                                    });
+                                  }
+                                },
+                              ),
+                              const SizedBox(height: 10),
+                              CupertinoButton(
+                                color: currentTheme.colorScheme.background,
+                                minSize: 40,
+                                padding: EdgeInsets.zero,
+                                child: Row(
+                                  children: [
+                                    const SizedBox(width: 15),
+                                    Icon(
+                                      CupertinoIcons.camera_fill,
+                                      color: currentTheme.primaryColor,
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      "Take a photo",
+                                      style: TextStyle(
+                                        color: currentTheme.primaryColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                onPressed: () async {
+                                  final pickedImage = await takeImage();
+                                  if (pickedImage != null) {
+                                    setState(() {
+                                      image = File(pickedImage.path);
+                                    });
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SliverToBoxAdapter(
+                child: SizedBox(height: 20),
+              ),
               SliverToBoxAdapter(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -281,9 +382,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     const SizedBox(width: 8.0),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         DefaultTextStyle(
                           style: TextStyle(
@@ -297,6 +398,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         GestureDetector(
                           onTap: () {
                             showModalBottomSheet<void>(
+                              elevation: 0,
+                              backgroundColor: Colors.transparent,
                               context: context,
                               builder: (BuildContext context) {
                                 return CupertinoActionSheet(
@@ -448,38 +551,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           ),
                           child: const Text('Password'),
                         ),
-                        const SizedBox(width: 8.0),
-                        GestureDetector(
-                          onTap: () {
-                            showModalBottomSheet<void>(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return CupertinoActionSheet(
-                                  title: const Text('Password should be at least 8 characters long, and contain at least one uppercase letter, one lowercase letter, one number and one special character',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                    ),),
-                                  actions: <CupertinoActionSheetAction>[
-                                    CupertinoActionSheetAction(
-                                      child: Text('Close',
-                                        style: TextStyle(
-                                          color: currentTheme.primaryColor,
-                                        ),),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                    )
-                                  ],
-                                );
-                              },
-                            );
-                          },
-                          child: Icon(
-                            CupertinoIcons.info,
-                            size: 16.0,
-                            color: currentTheme.primaryColor,
-                          ),
-                        ),
                       ],
                     ),
                     const SizedBox(height: 8.0),
@@ -512,14 +583,29 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                     const SizedBox(height: 8.0),
                     if (!isPasswordValid)
-                      const Text(
-                        "Password is required",
-                        style: TextStyle(
-                          color: Colors.red,
-                          decoration: TextDecoration.none,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13,
-                        ),
+                      Row(
+                        children: [
+                          const Text(
+                            "Password is required",
+                            style: TextStyle(
+                              color: Colors.red,
+                              decoration: TextDecoration.none,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                            ),
+                          ),
+                          SizedBox(width: 5),
+                          GestureDetector(
+                            onTap: () {
+                              showPasswordRequirements();
+                            },
+                            child: Icon(
+                              CupertinoIcons.info,
+                              size: 16.0,
+                              color: Colors.red,
+                            ),
+                          ),
+                        ],
                       ),
                     const SizedBox(height: 20.0),
                     DefaultTextStyle(
@@ -683,6 +769,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               String formattedTimestamp = dateFormat.format(dateController);
 
                               if (_passwordController.text == _repeatPasswordController.text) {
+                                setState(() {
+                                  isLoading = true;
+                                });
                                 registerUser(
                                     RegistrationCredentials(
                                         name: _fullNameController.text,
@@ -694,7 +783,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                     ),
                                     context
                                 );
+                                setState(() {
+                                  isLoading = false;
+                                });
                               } else {
+                                setState(() {
+                                  isLoading = false;
+                                });
                                 showErrorAlert("Error", "Passwords do not match", context);
                               }
                             } else {
@@ -703,7 +798,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           },
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
-                            child: Text(
+                            child: (!isLoading)
+                              ? Text(
                               'Register',
                               style: TextStyle(
                                 color: isFormValid
@@ -711,6 +807,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                     : currentTheme.primaryColor,
                                 fontWeight: FontWeight.bold,
                               ),
+                            )
+                              : CupertinoActivityIndicator(
+                              color: currentTheme.backgroundColor,
+                              radius: 13,
                             ),
                           ),
                         ),

@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:ringoflutter/Security/EmailVerificationPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -12,11 +12,9 @@ import 'package:ringoflutter/Classes/TokensClass.dart';
 import 'package:ringoflutter/Security/ForgotPassword.dart';
 import 'package:ringoflutter/Security/Functions/ActivateAccount.dart';
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
-import 'package:ringoflutter/Security/Functions/LoginFunc.dart';
 import 'package:ringoflutter/Security/checkIsLoggedIn.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-
 import 'Registration.dart';
 
 class LoginPage extends StatefulWidget {
@@ -37,6 +35,7 @@ class _LoginPageState extends State<LoginPage> {
     _passwordController = TextEditingController();
   }
 
+  bool isRingoLoading = false;
   bool isGoogleLoading = false;
   bool isAppleLoading = false;
 
@@ -158,6 +157,66 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       isGoogleLoading = false;
     });
+  }
+
+  Future<Tokens> loginFunc(LoginCredentials loginCredentials, context) async {
+    final Uri url = Uri.parse('${ApiEndpoints.LOGIN_RINGO}');
+    final jsonBody = jsonEncode(loginCredentials.toJson());
+    final headers = {'Content-Type': 'application/json'};
+
+    final response = await http.post(url, headers: headers, body: jsonBody);
+    const storage = FlutterSecureStorage();
+
+    if (response.statusCode == 200) {
+      final jsonResponse = customJsonDecode(response.body);
+      DateTime currentTime = DateTime.now();
+      DateTime futureTime =
+      currentTime.add(const Duration(seconds: 30));
+      storage.write(
+          key: "timestamp",
+          value: futureTime.toString());
+      storage.write(
+          key: "access_token",
+          value: jsonResponse['accessToken']);
+      storage.write(
+          key: "refresh_token",
+          value: jsonResponse['refreshToken']);
+
+      Uri url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
+      var responseId = await http.get(url, headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${jsonResponse['accessToken']}'
+      });
+      if (responseId.statusCode == 200) {
+        final jsonResponse = customJsonDecode(responseId.body);
+        print(jsonResponse);
+        storage.write(
+            key: "id",
+            value: jsonResponse['id'].toString());
+        if (jsonResponse['emailVerified']) {
+          navigatorKey.currentState?.pushReplacement(
+            MaterialPageRoute(builder: (_) => Home()),
+          );
+        } else {
+          navigatorKey.currentState?.pushReplacement(
+            MaterialPageRoute(builder: (_) => EmailVerificationPage(usersEmail: jsonResponse['email'], usersUsername: jsonResponse['username'],)),
+          );
+        }
+      } else {
+        throw Exception('Failed to load participant id');
+      }
+
+      return Tokens(
+        accessToken: jsonResponse['accessToken'],
+        refreshToken: jsonResponse['refreshToken'],
+      );
+    } else {
+      setState(() {
+        isRingoLoading = false;
+      });
+      showErrorAlert("Error", "Please check your credentials", context);
+      throw Exception('Failed to login');
+    }
   }
 
   @override
@@ -302,6 +361,9 @@ class _LoginPageState extends State<LoginPage> {
                                 child: CupertinoButton(
                                   color: currentTheme.backgroundColor,
                                   onPressed: () async {
+                                    setState(() {
+                                      isRingoLoading = true;
+                                    });
                                     LoginCredentials credentials = LoginCredentials(
                                       email: _emailController.text,
                                       password: _passwordController.text,
@@ -317,11 +379,21 @@ class _LoginPageState extends State<LoginPage> {
                                   },
                                   child: FittedBox(
                                     fit: BoxFit.scaleDown,
-                                    child: Text(
+                                    child: (!isRingoLoading)
+                                        ? Text(
                                       'Login',
                                       style: TextStyle(
                                         color: currentTheme.primaryColor,
                                         fontWeight: FontWeight.bold,
+                                      ),
+                                    )
+                                        : SizedBox(
+                                      width: 24,
+                                      height: 24,
+                                      child: CupertinoActivityIndicator(
+                                        radius: 13,
+                                        color: currentTheme.primaryColor,
+                                        animating: true,
                                       ),
                                     ),
                                   ),

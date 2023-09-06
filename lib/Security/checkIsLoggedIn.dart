@@ -5,6 +5,7 @@ import 'package:ringoflutter/AppTabBar/Home.dart';
 import 'package:ringoflutter/Security/EmailVerificationPage.dart';
 import 'package:ringoflutter/Security/Functions/ActivateAccount.dart';
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
+import 'package:ringoflutter/Security/Functions/LogOutFunc.dart';
 import 'package:ringoflutter/Security/LoginPage.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 import 'package:ringoflutter/main.dart';

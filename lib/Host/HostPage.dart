@@ -130,11 +130,30 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                         ),
                                         child: CircleAvatar(
                                           backgroundColor: currentTheme.primaryColor,
-                                          radius: 40.0,
+                                          radius: 30.0,
                                           backgroundImage: NetworkImage(
                                             '${ApiEndpoints
                                                 .GET_PHOTO}/${snapshot.data!
                                                 .profilePictureId}',
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  if (snapshot.data!.profilePictureId == null)
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 9),
+                                      child: Container(
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: CircleAvatar(
+                                          backgroundColor: currentTheme.backgroundColor,
+                                          radius: 30.0,
+                                          backgroundImage: AssetImage(
+                                            (currentTheme.brightness == Brightness.light)
+                                            ? 'assets/images/Ringo-Black.png'
+                                            : 'assets/images/Ringo-White.png',
                                           ),
                                         ),
                                       ),
@@ -146,22 +165,30 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                       crossAxisAlignment: CrossAxisAlignment
                                           .start,
                                       children: [
-                                        Text(
-                                          snapshot.data!.name,
-                                          style: TextStyle(
-                                            decoration: TextDecoration.none,
-                                            color: currentTheme.primaryColor,
-                                            fontSize: 32,
-                                            fontWeight: FontWeight.bold,
+                                        Container(
+                                          width: MediaQuery.of(context).size.width * 0.7,
+                                          child: Text(
+                                            snapshot.data!.name,
+                                            maxLines: 1,
+                                            style: TextStyle(
+                                              decoration: TextDecoration.none,
+                                              color: currentTheme.primaryColor,
+                                              fontSize: 28,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
-                                        Text(
-                                          "@${snapshot.data!.username}",
-                                          style: const TextStyle(
-                                            decoration: TextDecoration.none,
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.normal,
-                                            fontSize: 20,
+                                        Container(
+                                          width: MediaQuery.of(context).size.width * 0.7,
+                                          child: Text(
+                                            "@${snapshot.data!.username}",
+                                            maxLines: 1,
+                                            style: const TextStyle(
+                                              decoration: TextDecoration.none,
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.normal,
+                                              fontSize: 20,
+                                            ),
                                           ),
                                         ),
                                         const SizedBox(height: 10),
@@ -169,7 +196,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                           width: MediaQuery
                                               .of(context)
                                               .size
-                                              .width * 0.85,
+                                              .width * 0.7,
                                           child: GestureDetector(
                                             onTap: () {
                                               setState(() {
@@ -182,24 +209,37 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                                   milliseconds: 500),
                                               curve: Curves.easeInOut,
                                               child: (isDescriptionExpanded)
-                                                ? Text(
-                                                "${snapshot.data!.description}",
-                                                style: TextStyle(
-                                                  decoration: TextDecoration.none,
-                                                  color: currentTheme.primaryColor,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.normal,
+                                                ? Container(
+                                                width: MediaQuery
+                                                    .of(context)
+                                                    .size
+                                                    .width * 0.7,
+                                                child: Text(
+                                                  "${snapshot.data!.description}",
+                                                  style: TextStyle(
+                                                    decoration: TextDecoration.none,
+                                                    color: currentTheme.primaryColor,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.normal,
+                                                  ),
                                                 ),
                                               )
-                                                  : Text(
-                                                "${snapshot.data!.description}",
-                                                style: TextStyle(
-                                                  decoration: TextDecoration.none,
-                                                  color: currentTheme.primaryColor,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.normal,
+                                                  : Container(
+                                                width: MediaQuery
+                                                    .of(context)
+                                                    .size
+                                                    .width * 0.7,
+                                                child: Text(
+                                                  "${snapshot.data!.description}",
+                                                  maxLines: 3,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    decoration: TextDecoration.none,
+                                                    color: currentTheme.primaryColor,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.normal,
+                                                  ),
                                                 ),
-                                                maxLines: 3,
                                               ),
                                             ),
                                           ),

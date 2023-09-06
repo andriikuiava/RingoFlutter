@@ -10,6 +10,7 @@ import 'package:ringoflutter/UI/Functions/Formats.dart';
 import 'package:ringoflutter/UI/Themes.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:developer';
 
 class TicketsScreen extends StatefulWidget {
   TicketsScreen({Key? key}) : super(key: key);
@@ -34,7 +35,6 @@ class _TicketsScreenState extends State<TicketsScreen> {
       await checkTimestamp();
       var storage = FlutterSecureStorage();
       var url = Uri.parse('${ApiEndpoints.GET_TICKETS}');
-      print(url);
       var token = await storage.read(key: "access_token");
       var response = await http.get(url, headers: {
         'Content-Type': 'application/json',
@@ -107,7 +107,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
               }
             },
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
               child: Card(
                   color: currentTheme.backgroundColor,
                   elevation: 0,
@@ -196,7 +196,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                                   ),
                                   Spacer(),
                                   Text(
-                                    '${ticket.event.currency!.symbol} ${ticket.event.price}',
+                                    '${ticket.event.currency!.symbol}${ticket.event.price!.toStringAsFixed(2)}',
                                     style: TextStyle(
                                       color: Colors.grey,
                                       fontSize: 14,
