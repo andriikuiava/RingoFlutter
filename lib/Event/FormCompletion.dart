@@ -42,6 +42,7 @@ for (var question in widget.event.registrationForm!.questions) {
   }
 
   void checkIfFormIsCompleted() {
+    isFormCompleted = true;
     for (var question in widget.event.registrationForm!.questions) {
       final answer = answers.firstWhere((answer) => answer.questionId == question.id);
       if (question.required) {
@@ -65,8 +66,6 @@ for (var question in widget.event.registrationForm!.questions) {
             }
             break;
         }
-      } else {
-        isFormCompleted = true;
       }
     }
   }
@@ -75,7 +74,6 @@ for (var question in widget.event.registrationForm!.questions) {
     await checkTimestamp();
     var token = await storage.read(key: 'access_token');
     var url = Uri.parse('${ApiEndpoints.SEARCH}/${widget.event.id}/${ApiEndpoints.JOIN}');
-    print(url);
     var headers = {
       'Authorization': 'Bearer $token',
       'Content-Type': 'application/json'
@@ -127,6 +125,7 @@ for (var question in widget.event.registrationForm!.questions) {
           child: Icon(
             CupertinoIcons.back,
             color: currentTheme.primaryColor,
+            size: 24,
           ),
         ),
       ),
@@ -137,7 +136,7 @@ for (var question in widget.event.registrationForm!.questions) {
         child: Column(
           children: [
             Container(
-              height: MediaQuery.of(context).size.height * 0.73,
+              height: MediaQuery.of(context).size.height * 0.9,
               child: ListView.builder(
                 itemCount: widget.event.registrationForm!.questions.length + 2,
                 itemBuilder: (context, index) {
@@ -354,6 +353,7 @@ for (var question in widget.event.registrationForm!.questions) {
                     answer.optionIds!.clear();
                   }
                   answer.optionIds!.add(option.id);
+                  checkIfFormIsCompleted();
                   setState(() {});
                 },
                 child: Container(

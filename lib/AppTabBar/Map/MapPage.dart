@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:ui' as ui;
-
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -9,6 +9,7 @@ import 'package:ringoflutter/Classes/CoordinatesClass.dart';
 import 'package:ringoflutter/Event/EventPage.dart';
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:ringoflutter/api_endpoints.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 
 class MapPage extends StatefulWidget {
@@ -23,8 +24,31 @@ class _MapPageState extends State<MapPage> {
   GoogleMapController? _mapController;
   final List<Marker> _markers = [];
 
+
+  GoogleMapController? mapController;
+  String? _mapStyle;
+  String? _mapStyleDark;
+  String? _mapStyleIos;
+  String? _mapStyleIosDark;
+
+
   @override
   void initState() {
+    rootBundle.loadString('assets/map/light.txt').then((string) {
+      _mapStyle = string;
+    });
+
+    rootBundle.loadString('assets/map/dark.txt').then((string) {
+      _mapStyleDark = string;
+    });
+
+    rootBundle.loadString('assets/map/light.json').then((string) {
+      _mapStyleIos = string;
+    });
+
+    rootBundle.loadString('assets/map/dark.json').then((string) {
+      _mapStyleIosDark = string;
+    });
     super.initState();
     _getUserLocation();
   }
@@ -32,7 +56,7 @@ class _MapPageState extends State<MapPage> {
   Future<void> _getUserLocation() async {
     // Replace this with your code to get the user's location
     // userLocation = await getUserLocation();
-    userLocation = Coordinates(latitude: 59.47644736286131, longitude: 24.781226109442517);
+    userLocation = Coordinates(latitude: 59.430597, longitude: 24.752130);
     setState(() {});
   }
 
@@ -143,14 +167,22 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
+    final currentTheme = Theme.of(context);
     return userLocation != null
         ? GoogleMap(
       onMapCreated: (controller) {
         _mapController = controller;
+        (Platform.isAndroid)
+            ? (currentTheme.brightness == Brightness.light)
+            ? _mapController?.setMapStyle(_mapStyle!)
+            : _mapController?.setMapStyle(_mapStyleDark!)
+            : (currentTheme.brightness == Brightness.light)
+            ? _mapController?.setMapStyle(_mapStyleIos!)
+            : _mapController?.setMapStyle(_mapStyleIosDark!);
       },
       initialCameraPosition: CameraPosition(
         target: LatLng(userLocation!.latitude, userLocation!.longitude),
-        zoom: 16,
+        zoom: 12,
       ),
       myLocationEnabled: true,
       mapType: MapType.normal,
@@ -160,8 +192,10 @@ class _MapPageState extends State<MapPage> {
         _showObjectsOnMap();
       },
     )
-        : const Center(
-      child: CircularProgressIndicator(),
+        : Center(
+      child: CircularProgressIndicator(
+        color: currentTheme.primaryColor,
+      ),
     );
   }
 }

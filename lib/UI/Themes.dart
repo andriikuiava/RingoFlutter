@@ -6,10 +6,10 @@ var defaultWidgetPadding = const EdgeInsets.all(12);
 final lightTheme = ThemeData(
   brightness: Brightness.light,
   primaryColor: Colors.black,
-  scaffoldBackgroundColor: Colors.grey.shade200,
+  scaffoldBackgroundColor: Colors.grey.shade100,
   backgroundColor: Colors.white,
   shadowColor: Colors.grey.withOpacity(0.5),
-  bottomAppBarColor: Colors.grey.shade200,
+  bottomAppBarColor: Colors.grey.shade100,
   errorColor: Colors.red[400],
 );
 

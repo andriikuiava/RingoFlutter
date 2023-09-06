@@ -11,6 +11,7 @@ import 'package:ringoflutter/UI/Themes.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 import 'package:ringoflutter/Classes/RegistrationFormClass.dart';
 import 'package:ringoflutter/Classes/Answer.dart';
+import 'package:add_2_calendar/add_2_calendar.dart';
 
 class MyTicketPage extends StatefulWidget {
   final Ticket ticket;
@@ -71,6 +72,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
           child: Icon(
             CupertinoIcons.back,
             color: currentTheme.primaryColor,
+            size: 24,
           ),
         ),
       ),
@@ -141,7 +143,26 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                         color: currentTheme.backgroundColor,
                                       ),
                                     )
-                                    : Container(),
+                                    : CupertinoButton(
+                                      child: Icon(
+                                        CupertinoIcons.calendar_badge_plus,
+                                        color: currentTheme.backgroundColor,
+                                      ),
+                                      onPressed: () {
+                                        final Event event = Event(
+                                          title: widget.ticket.event.name,
+                                          description: widget.ticket.event.description,
+                                          location: widget.ticket.event.address,
+                                          iosParams: IOSParams(
+                                            reminder: Duration(hours: 12),
+                                            url: "https://ringo-events.com/event/${widget.ticket.event.id!}",
+                                          ),
+                                          startDate: DateTime.parse("${widget.ticket.event.startTime!}"),
+                                          endDate: DateTime.parse("${widget.ticket.event.endTime!}"),
+                                        );
+                                        Add2Calendar.addEvent2Cal(event);
+                                      },
+                                    ),
                                   ],
                                 )
                               ),

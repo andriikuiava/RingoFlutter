@@ -53,7 +53,7 @@ class _FeedBuilderState extends State<FeedBuilder> {
       };
       var response = await http.get(url, headers: headers);
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
+        final List<dynamic> data = customJsonDecode(response.body);
         final List<EventInFeed> newEvents = data.map((item) =>
             EventInFeed.fromJson(item)).toList();
 
@@ -110,6 +110,7 @@ class _FeedBuilderState extends State<FeedBuilder> {
           child: Icon(
             CupertinoIcons.back,
             color: currentTheme.primaryColor,
+            size: 24,
           ),
         ),
       ),
@@ -129,22 +130,27 @@ class _FeedBuilderState extends State<FeedBuilder> {
                     ),
                   );
                 },
-                child: eventCard(context, event),
+                child: Column(
+                  children: [
+                    SizedBox(height: 10),
+                    eventCard(context, event),
+                  ],
+                ),
               );
             } else if (isLoading) {
               return Center(child: CircularProgressIndicator(
                 color: currentTheme.primaryColor,
               ));
             } else {
-              // When no more data to load
-              return Center(
+              return (events.length != 0)
+                  ? Center(
                 child: Padding(
                   padding: defaultWidgetPadding,
                   child: ClipRRect(
                       borderRadius: defaultWidgetCornerRadius,
                       child: Container(
                         color: currentTheme.backgroundColor,
-                        child: Column(
+                        child: const Column(
                           children: [
                             SizedBox(height: 20),
                             Row(
@@ -167,7 +173,8 @@ class _FeedBuilderState extends State<FeedBuilder> {
                       )
                   ),
                 ),
-              );;
+              )
+                  : Container();
             }
           },
         ),

@@ -28,17 +28,22 @@ class CirclePainter extends CustomPainter {
     required this.center,
     required this.radius,
     required this.color,
-    this.strokeWidth = 2.0,
+    this.strokeWidth = 3.0,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
+    final backgroundPaint = Paint()
+      ..color = Colors.blue.withOpacity(0.1);
+    canvas.drawCircle(center, radius, backgroundPaint);
+
     final paint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth;
     canvas.drawCircle(center, radius, paint);
   }
+
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
@@ -928,7 +933,7 @@ class _SearchPageState extends State<SearchPage> {
                               },
                               initialCameraPosition: const CameraPosition(
                                 target: LatLng(59.47644736286131, 24.781226109442517),
-                                zoom: 10,
+                                zoom: 11,
                               ),
                               myLocationEnabled: true,
                               myLocationButtonEnabled: false,
@@ -938,7 +943,7 @@ class _SearchPageState extends State<SearchPage> {
                               painter: CirclePainter(
                                   center: Offset(MediaQuery.of(context).size.width * 0.465, MediaQuery.of(context).size.width * 0.465),
                                   radius: MediaQuery.of(context).size.width * 0.435,
-                                  color: currentTheme.primaryColor
+                                  color: Colors.blue,
                               ),
                             ),
                           ],
@@ -1153,7 +1158,12 @@ class _SearchPageState extends State<SearchPage> {
                                 ),
                               );
                             },
-                            child: eventCard(context, event),
+                            child: Column(
+                              children: [
+                                eventCard(context, event),
+                                const SizedBox(height: 10),
+                              ],
+                            ),
                           );
                         } else if (isLoading) {
                           return Center(child: CircularProgressIndicator(
