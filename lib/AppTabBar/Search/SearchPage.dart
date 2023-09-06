@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -135,7 +134,7 @@ class _SearchPageState extends State<SearchPage> {
 
     //location
     if (mapCenterLat != null) {
-      result = "$result&latitude=${mapCenterLat}&longitude=${mapCenterLong}&maxDistance=${radius}&";
+      result = "$result&latitude=$mapCenterLat&longitude=$mapCenterLong&maxDistance=$radius&";
     } else {
       result = "$result&latitude=${location.latitude}&longitude=${location.longitude}";
     }
@@ -227,7 +226,7 @@ class _SearchPageState extends State<SearchPage> {
     await checkTimestamp();
     const storage = FlutterSecureStorage();
     String? token = await storage.read(key: 'access_token');
-    var url = Uri.parse('${ApiEndpoints.GET_CURRENCY}');
+    var url = Uri.parse(ApiEndpoints.GET_CURRENCY);
     var headers = {
       'Authorization': 'Bearer $token'
     };
@@ -275,7 +274,7 @@ class _SearchPageState extends State<SearchPage> {
         ),
         child: GestureDetector(
           onTap: () {
-            FocusScope.of(context).requestFocus(new FocusNode());
+            FocusScope.of(context).requestFocus(FocusNode());
           },
           child: Column(
             children: [
@@ -295,7 +294,7 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: currentTheme.backgroundColor,
+                        color: currentTheme.colorScheme.background,
                         borderRadius: defaultWidgetCornerRadius,
                       ),
                       prefix: Padding(
@@ -312,7 +311,7 @@ class _SearchPageState extends State<SearchPage> {
                   ClipRRect(
                     borderRadius: defaultWidgetCornerRadius,
                     child: Container(
-                      color: currentTheme.backgroundColor,
+                      color: currentTheme.colorScheme.background,
                       width: MediaQuery.of(context).size.width * 0.24,
                       child: CupertinoButton(
                         padding: const EdgeInsets.all(10),
@@ -357,7 +356,7 @@ class _SearchPageState extends State<SearchPage> {
                                     : sortBy == "popularity"
                                     ? CupertinoIcons.person_2_fill
                                     : CupertinoIcons.sort_down,
-                                color: currentTheme.backgroundColor,
+                                color: currentTheme.colorScheme.background,
                               ),
                             ),
                             title: sortDirection == "ASC"
@@ -482,7 +481,7 @@ class _SearchPageState extends State<SearchPage> {
                           borderRadius: BorderRadius.circular(12),
                           child: CupertinoButton(
                             onPressed: showMenu,
-                            color: currentTheme.backgroundColor,
+                            color: currentTheme.colorScheme.background,
                             padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                             child: Row(
                               children: [
@@ -518,7 +517,8 @@ class _SearchPageState extends State<SearchPage> {
                               _isDateEndButtonTapped = false;
                             });
                           },
-                          color: (mapCenterLat == null) ? currentTheme.backgroundColor : currentTheme.primaryColor.withOpacity(0.5),
+                          color: (mapCenterLat == null) ? currentTheme.colorScheme.background
+                              : (currentTheme.brightness == Brightness.light) ? currentTheme.primaryColor.withOpacity(0.1) : currentTheme.primaryColor.withOpacity(0.3),
                           padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                           child: Row(
                             children: [
@@ -553,7 +553,8 @@ class _SearchPageState extends State<SearchPage> {
                               _isDateEndButtonTapped = false;
                             });
                           },
-                          color: (_TextFieldPriceTo.text != "" || _TextFieldPriceFrom.text != "") ? currentTheme.primaryColor.withOpacity(0.5) : currentTheme.backgroundColor,
+                          color: !(_TextFieldPriceTo.text != "" || _TextFieldPriceFrom.text != "") ? currentTheme.colorScheme.background
+                              : (currentTheme.brightness == Brightness.light) ? currentTheme.primaryColor.withOpacity(0.1) : currentTheme.primaryColor.withOpacity(0.3),
                           padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                           child: Row(
                             children: [
@@ -589,7 +590,8 @@ class _SearchPageState extends State<SearchPage> {
                             });
                           },
 
-                          color: (startTime != null) ? currentTheme.primaryColor.withOpacity(0.5) : currentTheme.backgroundColor,
+                          color: !(startTime != null) ? currentTheme.colorScheme.background
+                              : (currentTheme.brightness == Brightness.light) ? currentTheme.primaryColor.withOpacity(0.1) : currentTheme.primaryColor.withOpacity(0.3),
                           padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                           child: Row(
                             children: [
@@ -625,7 +627,8 @@ class _SearchPageState extends State<SearchPage> {
                             });
                           },
 
-                          color: (endTime != null) ? currentTheme.primaryColor.withOpacity(0.5) : currentTheme.backgroundColor,
+                          color: !(endTime != null) ? currentTheme.colorScheme.background
+                              : (currentTheme.brightness == Brightness.light) ? currentTheme.primaryColor.withOpacity(0.1) : currentTheme.primaryColor.withOpacity(0.3),
                           padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                           child: Row(
                             children: [
@@ -654,7 +657,7 @@ class _SearchPageState extends State<SearchPage> {
                         child: CupertinoButton(
                           onPressed: () async {
                             List<CategoryClass> listOfCategories = [];
-                            var url = Uri.parse('${ApiEndpoints.GET_CATEGORY}');
+                            var url = Uri.parse(ApiEndpoints.GET_CATEGORY);
                             var response = await http.get(url);
                             if (response.statusCode == 200) {
                               final List<dynamic> data = customJsonDecode(response.body);
@@ -668,13 +671,13 @@ class _SearchPageState extends State<SearchPage> {
                                 builder: (ctx) {
                                   return  MultiSelectDialog(
                                     width: MediaQuery.of(context).size.width * 1,
-                                    title: Text("Select categories"),
+                                    title: const Text("Select categories"),
                                     itemsTextStyle: TextStyle(
                                       color: currentTheme.primaryColor,
                                     ),
                                     searchable: true,
-                                    backgroundColor: currentTheme.backgroundColor,
-                                    checkColor: currentTheme.backgroundColor,
+                                    backgroundColor: currentTheme.colorScheme.background,
+                                    checkColor: currentTheme.colorScheme.background,
                                     colorator: (item) {
                                       return currentTheme.primaryColor;
                                     },
@@ -695,7 +698,7 @@ class _SearchPageState extends State<SearchPage> {
                                         category.name,
                                       );
                                     }).toList(),
-                                    initialValue: [],
+                                    initialValue: const [],
                                     onConfirm: (values) {
                                       setState(() {
                                         selectedCategoryList = [];
@@ -723,7 +726,8 @@ class _SearchPageState extends State<SearchPage> {
                               print('Failed to load currencies: ${response.statusCode}');
                             }
                           },
-                          color: (selectedCategoryList.isNotEmpty) ? currentTheme.primaryColor.withOpacity(0.5) : currentTheme.backgroundColor,
+                          color: !(selectedCategoryList.isNotEmpty) ? currentTheme.colorScheme.background
+                              : (currentTheme.brightness == Brightness.light) ? currentTheme.primaryColor.withOpacity(0.1) : currentTheme.primaryColor.withOpacity(0.3),
                           padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                           child: Row(
                             children: [
@@ -774,7 +778,7 @@ class _SearchPageState extends State<SearchPage> {
                                 color: currentTheme.primaryColor,
                               ),
                               decoration: BoxDecoration(
-                                color: currentTheme.backgroundColor,
+                                color: currentTheme.colorScheme.background,
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               cursorColor: currentTheme.primaryColor,
@@ -798,7 +802,7 @@ class _SearchPageState extends State<SearchPage> {
                             borderRadius: BorderRadius.circular(12),
                             child: CupertinoTextField(
                               decoration: BoxDecoration(
-                                color: currentTheme.backgroundColor,
+                                color: currentTheme.colorScheme.background,
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               cursorColor: currentTheme.primaryColor,
@@ -839,7 +843,7 @@ class _SearchPageState extends State<SearchPage> {
                               width: MediaQuery.of(context).size.width * 0.21,
                               height: 50,
                               decoration: BoxDecoration(
-                                color: currentTheme.backgroundColor,
+                                color: currentTheme.colorScheme.background,
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Center(
@@ -855,7 +859,7 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                     Row(
                       children: [
-                        Spacer(),
+                        const Spacer(),
                         CupertinoButton(
                           onPressed: () {
                             setState(() {
@@ -871,7 +875,7 @@ class _SearchPageState extends State<SearchPage> {
                             width: MediaQuery.of(context).size.width * 0.30,
                             height: 50,
                             decoration: BoxDecoration(
-                              color: currentTheme.backgroundColor,
+                              color: currentTheme.colorScheme.background,
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Center(
@@ -895,7 +899,7 @@ class _SearchPageState extends State<SearchPage> {
                             width: MediaQuery.of(context).size.width * 0.30,
                             height: 50,
                             decoration: BoxDecoration(
-                              color: currentTheme.backgroundColor,
+                              color: currentTheme.colorScheme.background,
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Center(
@@ -906,7 +910,7 @@ class _SearchPageState extends State<SearchPage> {
                             ),
                           ),
                         ),
-                        Spacer(),
+                        const Spacer(),
                       ],
                     ),
                   ],
@@ -968,7 +972,7 @@ class _SearchPageState extends State<SearchPage> {
                                 fetchEvents();
                               });
                             },
-                            color: currentTheme.backgroundColor,
+                            color: currentTheme.colorScheme.background,
                             child: Text(
                               'Cancel',
                               style: TextStyle(fontSize: 16, color: currentTheme.primaryColor),
@@ -995,7 +999,7 @@ class _SearchPageState extends State<SearchPage> {
                                 fetchEvents();
                               });
                             },
-                            color: currentTheme.backgroundColor,
+                            color: currentTheme.colorScheme.background,
                             child: Text(
                               'Apply',
                               style: TextStyle(fontSize: 16, color: currentTheme.primaryColor, fontWeight: FontWeight.bold),
@@ -1042,7 +1046,7 @@ class _SearchPageState extends State<SearchPage> {
                                 fetchEvents();
                               });
                             },
-                            color: currentTheme.backgroundColor,
+                            color: currentTheme.colorScheme.background,
                             child: Text(
                               'Cancel',
                               style: TextStyle(fontSize: 16, color: currentTheme.primaryColor),
@@ -1057,7 +1061,7 @@ class _SearchPageState extends State<SearchPage> {
                                 fetchEvents();
                               });
                             },
-                            color: currentTheme.backgroundColor,
+                            color: currentTheme.colorScheme.background,
                             child: Text(
                               'Apply',
                               style: TextStyle(fontSize: 16, color: currentTheme.primaryColor, fontWeight: FontWeight.bold),
@@ -1106,7 +1110,7 @@ class _SearchPageState extends State<SearchPage> {
                                   fetchEvents();
                                 });
                               },
-                              color: currentTheme.backgroundColor,
+                              color: currentTheme.colorScheme.background,
                               child: Text(
                                 'Cancel',
                                 style: TextStyle(fontSize: 16, color: currentTheme.primaryColor),
@@ -1121,7 +1125,7 @@ class _SearchPageState extends State<SearchPage> {
                                   fetchEvents();
                                 });
                               },
-                              color: currentTheme.backgroundColor,
+                              color: currentTheme.colorScheme.background,
                               child: Text(
                                 'Apply',
                                 style: TextStyle(fontSize: 16, color: currentTheme.primaryColor, fontWeight: FontWeight.bold),

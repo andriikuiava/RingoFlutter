@@ -86,7 +86,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
       }
       print('User activated successfully');
       navigatorKey.currentState?.pushReplacement(
-        MaterialPageRoute(builder: (_) => Home()),
+        MaterialPageRoute(builder: (_) => const Home()),
       );
     } else {
       print('User activation failed with status code: ${response.statusCode}');
@@ -128,6 +128,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
     return isFormValid;
   }
 
+  @override
   Widget build(BuildContext context) {
     final currentTheme = Theme.of(context);
     return CupertinoPageScaffold(
@@ -142,7 +143,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
       ),
       child: GestureDetector(
         onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
+          FocusScope.of(context).requestFocus(FocusNode());
         },
         child: SingleChildScrollView(
           child: SafeArea(
@@ -236,7 +237,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Text('Full Name',
                       style: TextStyle(
                         color: currentTheme.primaryColor,
@@ -245,7 +246,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                         decoration: TextDecoration.none,
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     SizedBox(
                       height: 50,
                       child: CupertinoTextField(
@@ -270,10 +271,10 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                       ),
                     ),
                     if (!isNameValid)
-                      Column(
+                      const Column(
                         children: [
-                          const SizedBox(height: 10),
-                          const Text(
+                          SizedBox(height: 10),
+                          Text(
                             'Please enter your full name',
                             style: TextStyle(
                               color: Colors.red,
@@ -283,7 +284,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                           ),
                         ],
                       ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Text('Username',
                       style: TextStyle(
                         color: currentTheme.primaryColor,
@@ -292,7 +293,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                         decoration: TextDecoration.none,
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     SizedBox(
                       height: 50,
                       child: CupertinoTextField(
@@ -315,10 +316,10 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                       ),
                     ),
                     if (!isUsernameValid)
-                      Column(
+                      const Column(
                         children: [
-                          const SizedBox(height: 10),
-                          const Text(
+                          SizedBox(height: 10),
+                          Text(
                             'Please enter a valid username',
                             style: TextStyle(
                               color: Colors.red,
@@ -328,7 +329,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                           ),
                         ],
                       ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Text('Email',
                       style: TextStyle(
                         color: currentTheme.primaryColor,
@@ -337,14 +338,14 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                         decoration: TextDecoration.none,
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     SizedBox(
                       height: 50,
                       child: CupertinoTextField(
                         enabled: false,
                         controller: _emailController,
                         placeholder: 'Enter your email',
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.grey,
                           fontSize: 16,
                         ),
@@ -354,7 +355,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Text('Date of Birth',
                       style: TextStyle(
                         color: currentTheme.primaryColor,
@@ -373,7 +374,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                         },
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Text('Gender',
                       style: TextStyle(
                         color: currentTheme.primaryColor,
@@ -382,7 +383,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                         decoration: TextDecoration.none,
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     SizedBox(
                       width: double.infinity, // Take up the full available width
                       child: SizedBox(
@@ -424,16 +425,16 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Row(
                       children: [
-                        Spacer(),
+                        const Spacer(),
                         ClipRRect(
                           borderRadius: defaultWidgetCornerRadius,
                           child: Container(
                             width: MediaQuery.of(context).size.width * 0.9,
                             height: 50,
-                            color: currentTheme.backgroundColor,
+                            color: currentTheme.colorScheme.background,
                             child: CupertinoButton(
                               onPressed: () async {
                                 if (validateForm()) {
@@ -451,7 +452,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                             ),
                           ),
                         ),
-                        Spacer(),
+                        const Spacer(),
                       ],
                     ),
                   ],

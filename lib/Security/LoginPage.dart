@@ -68,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
               key: "refresh_token",
               value: jsonResponse['refreshToken']);
           await checkTimestamp();
-          var url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
+          var url = Uri.parse(ApiEndpoints.CURRENT_PARTICIPANT);
           var responseCheckIfActivated = await http.get(url, headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ${jsonResponse['accessToken']}'
@@ -85,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
               );
             } else {
               navigatorKey.currentState?.pushReplacement(
-                MaterialPageRoute(builder: (_) => Home()),
+                MaterialPageRoute(builder: (_) => const Home()),
               );
             }
           } else {
@@ -114,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
                   key: "refresh_token",
                   value: jsonResponse['refreshToken']);
               await checkTimestamp();
-              var url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
+              var url = Uri.parse(ApiEndpoints.CURRENT_PARTICIPANT);
               var responseCheckIfActivated = await http.get(url, headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ${jsonResponse['accessToken']}'
@@ -131,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                   );
                 } else {
                   navigatorKey.currentState?.pushReplacement(
-                    MaterialPageRoute(builder: (_) => Home()),
+                    MaterialPageRoute(builder: (_) => const Home()),
                   );
                 }
               } else {
@@ -160,7 +160,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<Tokens> loginFunc(LoginCredentials loginCredentials, context) async {
-    final Uri url = Uri.parse('${ApiEndpoints.LOGIN_RINGO}');
+    final Uri url = Uri.parse(ApiEndpoints.LOGIN_RINGO);
     final jsonBody = jsonEncode(loginCredentials.toJson());
     final headers = {'Content-Type': 'application/json'};
 
@@ -182,7 +182,7 @@ class _LoginPageState extends State<LoginPage> {
           key: "refresh_token",
           value: jsonResponse['refreshToken']);
 
-      Uri url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
+      Uri url = Uri.parse(ApiEndpoints.CURRENT_PARTICIPANT);
       var responseId = await http.get(url, headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${jsonResponse['accessToken']}'
@@ -195,7 +195,7 @@ class _LoginPageState extends State<LoginPage> {
             value: jsonResponse['id'].toString());
         if (jsonResponse['emailVerified']) {
           navigatorKey.currentState?.pushReplacement(
-            MaterialPageRoute(builder: (_) => Home()),
+            MaterialPageRoute(builder: (_) => const Home()),
           );
         } else {
           navigatorKey.currentState?.pushReplacement(
@@ -228,7 +228,7 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: currentTheme.scaffoldBackgroundColor,
       child: GestureDetector(
         onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
+          FocusScope.of(context).requestFocus(FocusNode());
         },
         child: Stack(
           children: [
@@ -359,7 +359,7 @@ class _LoginPageState extends State<LoginPage> {
                                 width: MediaQuery.of(context).size.width * 0.9,
                                 height: 50,
                                 child: CupertinoButton(
-                                  color: currentTheme.backgroundColor,
+                                  color: currentTheme.colorScheme.background,
                                   onPressed: () async {
                                     setState(() {
                                       isRingoLoading = true;
@@ -420,7 +420,7 @@ class _LoginPageState extends State<LoginPage> {
                                 width: MediaQuery.of(context).size.width * 0.9,
                                 height: 50,
                                 child: CupertinoButton(
-                                  color: currentTheme.backgroundColor,
+                                  color: currentTheme.colorScheme.background,
                                   onPressed: () async {
                                     signInWithGoogle();
                                   },
@@ -507,7 +507,7 @@ class _LoginPageState extends State<LoginPage> {
                                                 key: "refresh_token",
                                                 value: jsonResponse['refreshToken']);
                                             await checkTimestamp();
-                                            var url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
+                                            var url = Uri.parse(ApiEndpoints.CURRENT_PARTICIPANT);
                                             var responseCheckIfActivated = await http.get(url, headers: {
                                               'Content-Type': 'application/json',
                                               'Authorization': 'Bearer ${jsonResponse['accessToken']}'
@@ -524,7 +524,7 @@ class _LoginPageState extends State<LoginPage> {
                                                 );
                                               } else {
                                                 navigatorKey.currentState?.pushReplacement(
-                                                  MaterialPageRoute(builder: (_) => Home()),
+                                                  MaterialPageRoute(builder: (_) => const Home()),
                                                 );
                                               }
                                             } else {
@@ -557,7 +557,7 @@ class _LoginPageState extends State<LoginPage> {
                                                     key: "refresh_token",
                                                     value: jsonResponse['refreshToken']);
                                                 await checkTimestamp();
-                                                var url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
+                                                var url = Uri.parse(ApiEndpoints.CURRENT_PARTICIPANT);
                                                 var responseCheckIfActivated = await http.get(url, headers: {
                                                   'Content-Type': 'application/json',
                                                   'Authorization': 'Bearer ${jsonResponse['accessToken']}'
@@ -574,7 +574,7 @@ class _LoginPageState extends State<LoginPage> {
                                                     );
                                                   } else {
                                                     navigatorKey.currentState?.pushReplacement(
-                                                      MaterialPageRoute(builder: (_) => Home()),
+                                                      MaterialPageRoute(builder: (_) => const Home()),
                                                     );
                                                   }
                                                 }
@@ -674,7 +674,7 @@ class _LoginPageState extends State<LoginPage> {
                 color: Colors.black.withOpacity(0.5),
                 child: CupertinoActivityIndicator(
                   radius: 20,
-                  color: currentTheme.backgroundColor,
+                  color: currentTheme.colorScheme.background,
                   animating: true,
                 ),
               ),

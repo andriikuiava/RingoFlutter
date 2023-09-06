@@ -13,7 +13,7 @@ class ForgotPassword extends StatefulWidget {
 }
 
 class _ForgotPasswordState extends State<ForgotPassword> {
-  TextEditingController _emailController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
 
   bool isEmailValid = false;
 
@@ -37,7 +37,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         middle: Text(
           "Forgot Password",
           style: TextStyle(
-            color: currentTheme.textTheme.headline1!.color,
+            color: currentTheme.textTheme.displayLarge!.color,
           ),
         ),
         leading: CupertinoNavigationBarBackButton(
@@ -50,14 +50,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       ),
       child: GestureDetector(
         onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
+          FocusScope.of(context).requestFocus(FocusNode());
         },
         child: SingleChildScrollView(
           child: Center(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Row(
@@ -73,13 +73,13 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       ),
                       child: const Text('Email'),
                     ),
-                    Spacer(),
+                    const Spacer(),
                   ],
                 ),
                 const SizedBox(
                   height: 10,
                 ),
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width * 0.9,
                   child:  SizedBox(
                     height: 50,
@@ -122,21 +122,21 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           decoration: TextDecoration.none,
                         ),
                       ),
-                    Spacer(),
+                    const Spacer(),
                   ],
                 ),
                 const SizedBox(
                   height: 10,
                 ),
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width * 0.9,
                   child: CupertinoButton(
-                    color: isEmailValid ? currentTheme.primaryColor : currentTheme.backgroundColor,
+                    color: isEmailValid ? currentTheme.primaryColor : currentTheme.colorScheme.background,
                     child: Text(
                       'Send',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: isEmailValid ? currentTheme.backgroundColor : currentTheme.primaryColor,
+                        color: isEmailValid ? currentTheme.colorScheme.background : currentTheme.primaryColor,
                         fontSize: 16,
                       ),
                     ),

@@ -40,7 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<User> getUserInfo() async {
     await checkTimestamp();
     const storage = FlutterSecureStorage();
-    Uri url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
+    Uri url = Uri.parse(ApiEndpoints.CURRENT_PARTICIPANT);
     var token = await storage.read(key: 'access_token');
     var headers = {
       'Authorization': 'Bearer $token',
@@ -107,9 +107,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             if (snapshot.connectionState == ConnectionState.done) {
                               if (snapshot.hasError) {
                                 return Center(
-                                  child: Text(
-                                    'An ${snapshot.error} occurred',
-                                    style: TextStyle(fontSize: 18, color: currentTheme.primaryColor),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      'An error occurred while loading your profile, check your internet connection and try again.',
+                                      style: TextStyle(fontSize: 18, color: currentTheme.primaryColor, decoration: TextDecoration.none, fontWeight: FontWeight.bold),
+                                    ),
                                   ),
                                 );
                               } else if (snapshot.hasData) {
@@ -137,7 +140,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               crossAxisAlignment: CrossAxisAlignment.center,
                                               children: [
                                                 const SizedBox(height: 10,),
-                                                Container(
+                                                SizedBox(
                                                   width: data.profilePictureId == null ? MediaQuery.of(context).size.width * 0.9 : MediaQuery.of(context).size.width * 0.6,
                                                   child: Text(
                                                     data.name,
@@ -151,7 +154,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                     ),
                                                   ),
                                                 ),
-                                                Container(
+                                                SizedBox(
                                                   width: data.profilePictureId == null ? MediaQuery.of(context).size.width * 0.9 : MediaQuery.of(context).size.width * 0.6,
                                                   child: Text(
                                                     '@${data.username}',

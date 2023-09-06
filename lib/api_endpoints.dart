@@ -56,7 +56,7 @@ class ApiEndpoints {
 void showSuccessAlert(String? title, String? message, context) {
   StatusAlert.show(
     context,
-    duration: Duration(seconds: 2),
+    duration: const Duration(seconds: 2),
     title: 'Success',
     subtitle: message,
     configuration: IconConfiguration(icon: CupertinoIcons.check_mark, size: MediaQuery.of(context).size.width * 0.25),
@@ -66,7 +66,7 @@ void showSuccessAlert(String? title, String? message, context) {
 void showErrorAlert(String? title, String? message, context) {
   StatusAlert.show(
     context,
-    duration: Duration(seconds: 2),
+    duration: const Duration(seconds: 2),
     title: 'Error',
     subtitle: message,
     configuration: IconConfiguration(icon: CupertinoIcons.exclamationmark_triangle, size: MediaQuery.of(context).size.width * 0.25),
@@ -76,7 +76,7 @@ void showErrorAlert(String? title, String? message, context) {
 void showSavedAlert(context) {
   StatusAlert.show(
     context,
-    duration: Duration(seconds: 2),
+    duration: const Duration(seconds: 2),
     title: 'Saved',
     configuration: IconConfiguration(icon: CupertinoIcons.bookmark_fill, size: MediaQuery.of(context).size.width * 0.25),
   );
@@ -85,7 +85,7 @@ void showSavedAlert(context) {
 void showUnsavedAlert(context) {
   StatusAlert.show(
     context,
-    duration: Duration(seconds: 2),
+    duration: const Duration(seconds: 2),
     title: 'Unsaved',
     configuration: IconConfiguration(icon: CupertinoIcons.bookmark, size: MediaQuery.of(context).size.width * 0.25),
   );

@@ -19,7 +19,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 import 'package:share_plus/share_plus.dart';
 import 'dart:io';
-import 'package:flutter/services.dart' show rootBundle;
 
 
 class EventPage extends StatefulWidget {
@@ -73,7 +72,7 @@ class _EventPageState extends State<EventPage>
 
   Future<EventFull> getEvent() async {
     await checkTimestamp();
-    final storage = FlutterSecureStorage();
+    const storage = FlutterSecureStorage();
 
     var token = await storage.read(key: 'access_token');
     Uri url = Uri.parse('${ApiEndpoints.SEARCH}/${widget.eventId}');
@@ -201,7 +200,7 @@ class _EventPageState extends State<EventPage>
                 trailing: GestureDetector(
                   onTap: () {
                     Share.share(
-                      subject: '${event.name}',
+                      subject: event.name,
                       'Find more info here: https://ringo-events.com/events/${event.id}',
                     );
                   },
@@ -282,7 +281,7 @@ class _EventPageState extends State<EventPage>
                                                   '${ApiEndpoints.GET_PHOTO}/${event.host.profilePictureId}',
                                                 ),
                                               ) : CircleAvatar(
-                                                backgroundColor: currentTheme.backgroundColor,
+                                                backgroundColor: currentTheme.colorScheme.background,
                                                 backgroundImage: Image.asset(
                                                     (currentTheme.brightness == Brightness.light)
                                                         ? "assets/images/Ringo-Black.png"
@@ -296,12 +295,12 @@ class _EventPageState extends State<EventPage>
                                             ),
                                           ],
                                         ),
-                                      SizedBox(width: 10,),
+                                      const SizedBox(width: 10,),
                                       Column(
                                         crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                         children: [
-                                          Container(
+                                          SizedBox(
                                             width: MediaQuery.of(context).size.width * 0.7,
                                             child: Text(
                                               event.host.name,
@@ -416,7 +415,7 @@ class _EventPageState extends State<EventPage>
                                 children: [
                                   Row(
                                     children: [
-                                      Container(
+                                      SizedBox(
                                         width: MediaQuery.of(context).size.width * 0.41,
                                         child: ElevatedButton(
                                           style: ElevatedButton.styleFrom(
@@ -424,7 +423,7 @@ class _EventPageState extends State<EventPage>
                                           ),
                                           child: Row(
                                             children: [
-                                              Spacer(),
+                                              const Spacer(),
                                               Icon(
                                                 (event.isSaved ? CupertinoIcons.bookmark_fill : CupertinoIcons.bookmark),
                                                 size: 16,
@@ -439,7 +438,7 @@ class _EventPageState extends State<EventPage>
                                                   fontSize: 16,
                                                 ),
                                               ),
-                                              Spacer(),
+                                              const Spacer(),
                                             ],
                                           ),
                                           onPressed: () {
@@ -448,7 +447,7 @@ class _EventPageState extends State<EventPage>
                                         ),
                                       ),
                                       SizedBox(width: MediaQuery.of(context).size.width * 0.07,),
-                                      Container(
+                                      SizedBox(
                                         width: MediaQuery.of(context).size.width * 0.41,
                                         child: ElevatedButton(
                                           style: ElevatedButton.styleFrom(
@@ -456,7 +455,7 @@ class _EventPageState extends State<EventPage>
                                           ),
                                           child: Row(
                                             children: [
-                                              Spacer(),
+                                              const Spacer(),
                                               Text(
                                                 ("Contact host"),
                                                 style: TextStyle(
@@ -465,7 +464,7 @@ class _EventPageState extends State<EventPage>
                                                   fontSize: 16,
                                                 ),
                                               ),
-                                              Spacer(),
+                                              const Spacer(),
                                             ],
                                           ),
                                           onPressed: () {
@@ -475,7 +474,7 @@ class _EventPageState extends State<EventPage>
                                               showModalBottomSheet<void>(
                                                 context: context,
                                                 elevation: 0,
-                                                builder: (context) => Container(
+                                                builder: (context) => SizedBox(
                                                   height: 370,
                                                   width: MediaQuery.of(context).size.width,
                                                   child: Column(
@@ -487,7 +486,7 @@ class _EventPageState extends State<EventPage>
                                                         itemCount: event.host.contacts.length,
                                                         itemBuilder: (context, index) {
                                                           ContactCard contactCard = event.host.contacts[index];
-                                                          bool _isNumeric(String str) {
+                                                          bool isNumeric(String str) {
                                                             if (str == null) {
                                                               return false;
                                                             }
@@ -515,7 +514,7 @@ class _EventPageState extends State<EventPage>
                                                                 launch("mailto:${contactCard.content}");
                                                               } else if (iconData == CupertinoIcons.phone) {
                                                                 String phoneNumber = contactCard.content.replaceAll(RegExp(r'[^0-9]'), '');
-                                                                launch("tel:${phoneNumber}");
+                                                                launch("tel:$phoneNumber");
                                                               } else if (iconData == CupertinoIcons.doc_on_doc) {
                                                                 await Clipboard.setData(ClipboardData(text: contactCard.content));
                                                                 Fluttertoast.showToast(
@@ -529,7 +528,7 @@ class _EventPageState extends State<EventPage>
                                                             },
                                                             child: Padding(
                                                               padding: const EdgeInsets.all(10.0),
-                                                              child: Container(
+                                                              child: SizedBox(
                                                                 width: MediaQuery.of(context).size.width * 0.9,
                                                                 child: Row(
                                                                   children: [
@@ -539,7 +538,7 @@ class _EventPageState extends State<EventPage>
                                                                       size: 16,
                                                                       color: currentTheme.primaryColor,
                                                                     ),
-                                                                    SizedBox(width: 16,),
+                                                                    const SizedBox(width: 16,),
                                                                     Column(
                                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                                       children: [
@@ -558,7 +557,7 @@ class _EventPageState extends State<EventPage>
                                                                           contactCard.content,
                                                                           maxLines: 1,
                                                                           overflow: TextOverflow.ellipsis,
-                                                                          style: TextStyle(
+                                                                          style: const TextStyle(
                                                                             color: Colors.blue,
                                                                             fontWeight: FontWeight.normal,
                                                                             fontSize: 16,
@@ -585,7 +584,7 @@ class _EventPageState extends State<EventPage>
                                                   ),
                                                 ),
                                               );
-                                            };
+                                            }
                                           },
                                         ),
                                       ),

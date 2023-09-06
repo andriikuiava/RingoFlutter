@@ -24,7 +24,7 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
     await checkTimestamp();
     var storage = const FlutterSecureStorage();
     var token = await storage.read(key: "access_token");
-    Uri url = Uri.parse('${ApiEndpoints.GET_SAVED_EVENTS}');
+    Uri url = Uri.parse(ApiEndpoints.GET_SAVED_EVENTS);
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -44,7 +44,7 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
   Widget build(BuildContext context) {
     final currentTheme = Theme.of(context);
     return VisibilityDetector(
-      key: Key("SavedEventsScreen"),
+      key: const Key("SavedEventsScreen"),
       onVisibilityChanged: (visibilityInfo) {
         if (visibilityInfo.visibleFraction == 1) {
           getSavedEvents().then((value) {
@@ -94,7 +94,7 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
                         return Column(
                           children: [
                             buildEvent(event),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                           ],
                         );
                       }).toList(),
@@ -108,8 +108,8 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
                   child: ClipRRect(
                       borderRadius: defaultWidgetCornerRadius,
                       child: Container(
-                        color: currentTheme.backgroundColor,
-                        child: Column(
+                        color: currentTheme.colorScheme.background,
+                        child: const Column(
                           children: [
                             SizedBox(height: 20),
                             Row(

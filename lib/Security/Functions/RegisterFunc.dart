@@ -7,7 +7,7 @@ import 'package:ringoflutter/api_endpoints.dart';
 
 Future<void> registerUser(RegistrationCredentials registrationCredentials, context) async {
   try {
-    Uri url = Uri.parse('${ApiEndpoints.REGISTER}');
+    Uri url = Uri.parse(ApiEndpoints.REGISTER);
     var headers = {'Content-Type': 'application/json'};
     var jsonBody = jsonEncode(registrationCredentials.toJson());
 

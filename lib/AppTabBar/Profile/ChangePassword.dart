@@ -32,6 +32,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
     _repeatNewPasswordController = TextEditingController();
   }
 
+  @override
   void dispose() {
     _oldPasswordController.dispose();
     _newPasswordController.dispose();
@@ -80,9 +81,9 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
     await checkTimestamp();
     var storage = const FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
-    Uri url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
+    Uri url = Uri.parse(ApiEndpoints.CURRENT_PARTICIPANT);
     var headers = {
-      'Authorization': 'Bearer ${token}',
+      'Authorization': 'Bearer $token',
     };
     var response = await http.delete(url, headers: headers);
     if (response.statusCode == 200) {
@@ -116,7 +117,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
       backgroundColor: currentTheme.scaffoldBackgroundColor,
       child: GestureDetector(
         onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
+          FocusScope.of(context).requestFocus(FocusNode());
         },
         child: CustomScrollView(
           slivers: [
@@ -175,7 +176,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                                         ),
                                         child: const Text('Current password'),
                                       ),
-                                      Spacer(),
+                                      const Spacer(),
                                     ],
                                   )
                               ),
@@ -216,7 +217,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                                         ),
                                         child: const Text('New password'),
                                       ),
-                                      Spacer(),
+                                      const Spacer(),
                                     ],
                                   )
                               ),
@@ -256,13 +257,13 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                                     children: [
                                       DefaultTextStyle(
                                         style: TextStyle(
-                                          color: currentTheme.errorColor,
+                                          color: currentTheme.colorScheme.error,
                                           fontWeight: FontWeight.bold,
                                           fontSize: 12,
                                         ),
                                         child: const Text('Enter a valid password'),
                                       ),
-                                      Spacer(),
+                                      const Spacer(),
                                     ],
                                   ),
                                 ),
@@ -279,7 +280,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                                       ),
                                       child: const Text('Repeat new password'),
                                     ),
-                                    Spacer(),
+                                    const Spacer(),
                                   ],
                                 ),
                               ),
@@ -319,13 +320,13 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                                     children: [
                                       DefaultTextStyle(
                                         style: TextStyle(
-                                          color: currentTheme.errorColor,
+                                          color: currentTheme.colorScheme.error,
                                           fontWeight: FontWeight.bold,
                                           fontSize: 12,
                                         ),
                                         child: const Text('Passwords do not match'),
                                       ),
-                                      Spacer(),
+                                      const Spacer(),
                                     ],
                                   ),
                                 ),
@@ -378,7 +379,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                                 color: currentTheme.primaryColor,
                                 size: 20,
                               ),
-                              SizedBox(width: 10,),
+                              const SizedBox(width: 10,),
                               Text('Log out',
                                 style: TextStyle(
                                   color: currentTheme.primaryColor,
@@ -400,20 +401,20 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                         width: MediaQuery.of(context).size.width * 0.9,
                         height: 50,
                         child: CupertinoButton(
-                          color: currentTheme.errorColor,
+                          color: currentTheme.colorScheme.error,
                           onPressed: deleteAccount,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
                                 CupertinoIcons.delete,
-                                color: currentTheme.backgroundColor,
+                                color: currentTheme.colorScheme.background,
                                 size: 20,
                               ),
-                              SizedBox(width: 10,),
+                              const SizedBox(width: 10,),
                               Text('Delete account',
                                 style: TextStyle(
-                                  color: currentTheme.backgroundColor,
+                                  color: currentTheme.colorScheme.background,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -436,7 +437,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
     await checkTimestamp();
     var storage = const FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
-    Uri url = Uri.parse('${ApiEndpoints.CHANGE_PASSWORD}');
+    Uri url = Uri.parse(ApiEndpoints.CHANGE_PASSWORD);
     var headers = {
       'Authorization': "Bearer $token",
       'Content-Type': "application/json",

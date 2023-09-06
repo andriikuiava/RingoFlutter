@@ -37,7 +37,7 @@ class _RateHostState extends State<RateHost> {
 
   void deleteReview() async {
     await checkTimestamp();
-    var storage = FlutterSecureStorage();
+    var storage = const FlutterSecureStorage();
     var token = await storage.read(key: "access_token");
     var url = Uri.parse("${ApiEndpoints.GET_ORGANISATION}/${widget.organisationId}/${ApiEndpoints.REVIEWS}");
     var headers = {
@@ -56,7 +56,7 @@ class _RateHostState extends State<RateHost> {
 
   void createReview() async {
     await checkTimestamp();
-    var storage = FlutterSecureStorage();
+    var storage = const FlutterSecureStorage();
     var token = await storage.read(key: "access_token");
     var url = Uri.parse("${ApiEndpoints.GET_ORGANISATION}/${widget.organisationId}/${ApiEndpoints.REVIEWS}");
     var headers = {
@@ -120,7 +120,7 @@ class _RateHostState extends State<RateHost> {
       ),
       child: GestureDetector(
         onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
+          FocusScope.of(context).requestFocus(FocusNode());
         },
         child: Center(
           child: Column(
@@ -130,7 +130,7 @@ class _RateHostState extends State<RateHost> {
                 borderRadius: defaultWidgetCornerRadius,
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.95,
-                  color: currentTheme.backgroundColor,
+                  color: currentTheme.colorScheme.background,
                   child: Column(
                     children: [
                       const SizedBox(height: 12),
@@ -145,7 +145,7 @@ class _RateHostState extends State<RateHost> {
                             direction: Axis.horizontal,
                             allowHalfRating: false,
                             itemCount: 5,
-                            itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                            itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
                             itemBuilder: (context, _) => Icon(
                               CupertinoIcons.star_fill,
                               color: currentTheme.primaryColor,
@@ -154,7 +154,7 @@ class _RateHostState extends State<RateHost> {
                               newRating = rating.toInt();
                             },
                           ),
-                          Spacer(),
+                          const Spacer(),
                           if (widget.createdReview)
                             GestureDetector(
                               onTap: deleteReview,
@@ -168,7 +168,7 @@ class _RateHostState extends State<RateHost> {
                         ],
                       ),
                       const SizedBox(height: 6),
-                      Container(
+                      SizedBox(
                         height: 200,
                         width: MediaQuery.of(context).size.width * 0.9,
                         child: CupertinoTextField(
@@ -183,7 +183,7 @@ class _RateHostState extends State<RateHost> {
                             fontSize: 16,
                           ),
                           decoration: BoxDecoration(
-                            color: currentTheme.backgroundColor,
+                            color: currentTheme.colorScheme.background,
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           onChanged: (value) {
@@ -196,17 +196,17 @@ class _RateHostState extends State<RateHost> {
                         borderRadius: defaultWidgetCornerRadius,
                         child: Container(
                             width: MediaQuery.of(context).size.width * 0.9,
-                            color: currentTheme.backgroundColor,
+                            color: currentTheme.colorScheme.background,
                             child: CupertinoButton(
                               color: currentTheme.primaryColor,
+                              onPressed: createReview,
                               child: Text(
                                 'Submit',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: currentTheme.backgroundColor,
+                                  color: currentTheme.colorScheme.background,
                                 ),
                               ),
-                              onPressed: createReview,
                             )
                         ),
                       ),

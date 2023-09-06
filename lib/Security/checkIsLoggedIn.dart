@@ -5,7 +5,6 @@ import 'package:ringoflutter/AppTabBar/Home.dart';
 import 'package:ringoflutter/Security/EmailVerificationPage.dart';
 import 'package:ringoflutter/Security/Functions/ActivateAccount.dart';
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
-import 'package:ringoflutter/Security/Functions/LogOutFunc.dart';
 import 'package:ringoflutter/Security/LoginPage.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 import 'package:ringoflutter/main.dart';
@@ -28,21 +27,21 @@ class _CheckerPageState extends State<CheckerPage> {
   }
 
   void doWhenLoaded() async {
-    final storage = FlutterSecureStorage();
+    const storage = FlutterSecureStorage();
     String currentTime = DateTime.now().toString();
     String? storedTime = await storage.read(key: 'timestamp');
     print(storedTime);
     var isConnect = await InternetConnectionChecker().hasConnection;
     if (storedTime != null && isConnect) {
       await checkTimestamp();
-      var storage = FlutterSecureStorage();
+      var storage = const FlutterSecureStorage();
       var token = await storage.read(key: "access_token");
       DateTime current = DateTime.parse(currentTime);
-      DateTime stored = DateTime.parse(storedTime!);
-      Uri url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
+      DateTime stored = DateTime.parse(storedTime);
+      Uri url = Uri.parse(ApiEndpoints.CURRENT_PARTICIPANT);
       var responseId = await http.get(url, headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${token}'
+        'Authorization': 'Bearer $token'
       });
       if (responseId.statusCode == 200) {
         final jsonResponse = customJsonDecode(responseId.body);
@@ -60,7 +59,7 @@ class _CheckerPageState extends State<CheckerPage> {
             );
           } else {
             navigatorKey.currentState?.pushReplacement(
-              MaterialPageRoute(builder: (_) => Home()),
+              MaterialPageRoute(builder: (_) => const Home()),
             );
           }
         }
@@ -74,7 +73,7 @@ class _CheckerPageState extends State<CheckerPage> {
         );
       } else {
         navigatorKey.currentState?.pushReplacement(
-          MaterialPageRoute(builder: (_) => Home()),
+          MaterialPageRoute(builder: (_) => const Home()),
         );
       }
       throw Exception('No timestamp found');
