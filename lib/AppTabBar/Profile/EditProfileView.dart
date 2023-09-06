@@ -86,7 +86,7 @@ class _EditProfileState extends State<EditProfile> {
     if (genderId == 2) {
       selectedGender = "OTHER";
     }
-    Uri url = Uri.parse('${ApiEndpoints.CURRENT_PARTICIPANT}');
+    Uri url = Uri.parse(ApiEndpoints.CURRENT_PARTICIPANT);
     var storage = const FlutterSecureStorage();
     var token = await storage.read(key: "access_token");
     var headers = {
@@ -142,7 +142,7 @@ class _EditProfileState extends State<EditProfile> {
       ),
       child: GestureDetector(
         onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
+          FocusScope.of(context).requestFocus(FocusNode());
         },
         child: CustomScrollView(
           slivers: [
@@ -175,7 +175,7 @@ class _EditProfileState extends State<EditProfile> {
                           child: Column(
                             children: [
                               CupertinoButton(
-                                color: currentTheme.backgroundColor,
+                                color: currentTheme.colorScheme.background,
                                 minSize: 40,
                                 padding: EdgeInsets.zero,
                                 child: Row(
@@ -186,7 +186,7 @@ class _EditProfileState extends State<EditProfile> {
                                       color: currentTheme.primaryColor,
                                     ),
                                     const SizedBox(width: 10),
-                                    Container(
+                                    SizedBox(
                                       width: MediaQuery.of(context).size.width * 0.35,
                                       child: Text(
                                         "Choose a photo",
@@ -209,7 +209,7 @@ class _EditProfileState extends State<EditProfile> {
                               ),
                               const SizedBox(height: 10),
                               CupertinoButton(
-                                color: currentTheme.backgroundColor,
+                                color: currentTheme.colorScheme.background,
                                 minSize: 40,
                                 padding: EdgeInsets.zero,
                                 child: Row(
@@ -276,7 +276,7 @@ class _EditProfileState extends State<EditProfile> {
                           fontSize: 16,
                         ),
                         decoration: BoxDecoration(
-                          color: currentTheme.backgroundColor,
+                          color: currentTheme.colorScheme.background,
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
@@ -292,7 +292,7 @@ class _EditProfileState extends State<EditProfile> {
                           fontWeight: FontWeight.bold,
                           fontSize: 12,
                         ),
-                        child: const Text('Full name is required'),
+                        child: Text('Full name is required'),
                       ),
                     ),
                   const SizedBox(height: 12.0),
@@ -328,7 +328,7 @@ class _EditProfileState extends State<EditProfile> {
                           fontSize: 16,
                         ),
                         decoration: BoxDecoration(
-                          color: currentTheme.backgroundColor,
+                          color: currentTheme.colorScheme.background,
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
@@ -344,7 +344,7 @@ class _EditProfileState extends State<EditProfile> {
                           fontWeight: FontWeight.bold,
                           fontSize: 12,
                         ),
-                        child: const Text('Username is required'),
+                        child: Text('Username is required'),
                       ),
                     ),
                   const SizedBox(height: 12.0),
@@ -435,12 +435,12 @@ class _EditProfileState extends State<EditProfile> {
                   Row(
                     children: [
                       SizedBox(width: MediaQuery.of(context).size.width * 0.05),
-                      Container(
+                      SizedBox(
                         width: MediaQuery.of(context).size.width * 0.9,
                         child: CupertinoButton(
                           color: (isFormValid)
                               ? currentTheme.primaryColor
-                              : currentTheme.backgroundColor,
+                              : currentTheme.colorScheme.background,
                           onPressed: () async {
                             validateFields();
                             if (isFormValid) {
@@ -456,7 +456,7 @@ class _EditProfileState extends State<EditProfile> {
                             'Save',
                             style: TextStyle(
                               color: (isFormValid)
-                                  ? currentTheme.backgroundColor
+                                  ? currentTheme.colorScheme.background
                                   : currentTheme.primaryColor,
                               fontWeight: FontWeight.bold,
                               fontSize: 16,

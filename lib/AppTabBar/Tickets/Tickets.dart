@@ -10,10 +10,9 @@ import 'package:ringoflutter/UI/Functions/Formats.dart';
 import 'package:ringoflutter/UI/Themes.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:developer';
 
 class TicketsScreen extends StatefulWidget {
-  TicketsScreen({Key? key}) : super(key: key);
+  const TicketsScreen({Key? key}) : super(key: key);
 
   @override
   _TicketsScreenState createState() => _TicketsScreenState();
@@ -33,12 +32,12 @@ class _TicketsScreenState extends State<TicketsScreen> {
   void loadTickets() async {
     if (await InternetConnectionChecker().hasConnection == true) {
       await checkTimestamp();
-      var storage = FlutterSecureStorage();
-      var url = Uri.parse('${ApiEndpoints.GET_TICKETS}');
+      var storage = const FlutterSecureStorage();
+      var url = Uri.parse(ApiEndpoints.GET_TICKETS);
       var token = await storage.read(key: "access_token");
       var response = await http.get(url, headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${token}'
+        'Authorization': 'Bearer $token'
       });
       if (response.statusCode == 200) {
         var decoded = customJsonDecode(response.body);
@@ -109,7 +108,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
               child: Card(
-                  color: currentTheme.backgroundColor,
+                  color: currentTheme.colorScheme.background,
                   elevation: 0,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -124,14 +123,16 @@ class _TicketsScreenState extends State<TicketsScreen> {
                               fit: BoxFit.cover,
                               errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
                                 return Image.asset(
-                                  'assets/images/Ringo-Black.png',
+                                  (currentTheme.brightness == Brightness.light)
+                                  ? 'assets/images/Ringo-Black.png'
+                                  : 'assets/images/Ringo-White.png',
                                   width: 80,
                                   height: 80,
                                 );
                               }
                           ),
                         ),
-                        SizedBox(width: 10,),
+                        const SizedBox(width: 10,),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -149,29 +150,29 @@ class _TicketsScreenState extends State<TicketsScreen> {
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     CupertinoIcons.map,
                                     color: Colors.grey,
                                     size: 14,
                                   ),
-                                  SizedBox(width: 5,),
+                                  const SizedBox(width: 5,),
                                   Text(
                                     ticket.event.address ?? 'No address provided',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.grey,
                                       fontSize: 14,
                                     ),
                                   ),
-                                  Spacer(),
+                                  const Spacer(),
                                   Icon(
                                     CupertinoIcons.circle_fill,
                                     color: ticket.isValidated ? Colors.red : Colors.green,
                                     size: 14,
                                   ),
-                                  SizedBox(width: 5,),
+                                  const SizedBox(width: 5,),
                                   Text(
                                     ticket.isValidated ? 'Validated' : 'Valid',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.grey,
                                       fontSize: 14,
                                     ),
@@ -181,23 +182,23 @@ class _TicketsScreenState extends State<TicketsScreen> {
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     CupertinoIcons.calendar,
                                     color: Colors.grey,
                                     size: 14,
                                   ),
-                                  SizedBox(width: 5,),
+                                  const SizedBox(width: 5,),
                                   Text(
-                                    '${convertHourTimestamp(ticket.event.startTime!)}',
-                                    style: TextStyle(
+                                    convertHourTimestamp(ticket.event.startTime!),
+                                    style: const TextStyle(
                                       color: Colors.grey,
                                       fontSize: 14,
                                     ),
                                   ),
-                                  Spacer(),
+                                  const Spacer(),
                                   Text(
                                     '${ticket.event.currency!.symbol}${ticket.event.price!.toStringAsFixed(2)}',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.grey,
                                       fontSize: 14,
                                     ),
@@ -224,13 +225,13 @@ class _TicketsScreenState extends State<TicketsScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(height: MediaQuery.of(context).size.height * 0.3),
-                    Icon(
+                    const Icon(
                       CupertinoIcons.tickets_fill,
                       color: Colors.grey,
                       size: 100,
                     ),
-                    SizedBox(height: 20,),
-                    Text(
+                    const SizedBox(height: 20,),
+                    const Text(
                       'You have no tickets yet',
                       style: TextStyle(
                         wordSpacing: 1.5,
@@ -239,8 +240,8 @@ class _TicketsScreenState extends State<TicketsScreen> {
                         decoration: TextDecoration.none,
                       ),
                     ),
-                    SizedBox(height: 20,),
-                    Row(
+                    const SizedBox(height: 20,),
+                    const Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Icon(

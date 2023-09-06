@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +9,6 @@ import 'package:ringoflutter/AppTabBar/Map/GetLocation.dart';
 import 'package:ringoflutter/Classes/EventClass.dart';
 import 'package:ringoflutter/Event/EventPage.dart';
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
-import 'package:ringoflutter/UI/Functions/Formats.dart';
 import 'package:ringoflutter/UI/Themes.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 
@@ -132,7 +130,7 @@ class _FeedBuilderState extends State<FeedBuilder> {
                 },
                 child: Column(
                   children: [
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     eventCard(context, event),
                   ],
                 ),
@@ -142,14 +140,14 @@ class _FeedBuilderState extends State<FeedBuilder> {
                 color: currentTheme.primaryColor,
               ));
             } else {
-              return (events.length != 0)
+              return (events.isNotEmpty)
                   ? Center(
                 child: Padding(
                   padding: defaultWidgetPadding,
                   child: ClipRRect(
                       borderRadius: defaultWidgetCornerRadius,
                       child: Container(
-                        color: currentTheme.backgroundColor,
+                        color: currentTheme.colorScheme.background,
                         child: const Column(
                           children: [
                             SizedBox(height: 20),

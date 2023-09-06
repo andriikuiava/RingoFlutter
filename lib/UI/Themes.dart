@@ -7,18 +7,12 @@ final lightTheme = ThemeData(
   brightness: Brightness.light,
   primaryColor: Colors.black,
   scaffoldBackgroundColor: Colors.grey.shade100,
-  backgroundColor: Colors.white,
-  shadowColor: Colors.grey.withOpacity(0.5),
-  bottomAppBarColor: Colors.grey.shade100,
-  errorColor: Colors.red[400],
+  shadowColor: Colors.grey.withOpacity(0.5), colorScheme: const ColorScheme.light(error: Colors.red), bottomAppBarTheme: BottomAppBarTheme(color: Colors.grey.shade100),
 );
 
 final darkTheme = ThemeData(
   brightness: Brightness.dark,
   primaryColor: Colors.white,
   scaffoldBackgroundColor: Colors.black,
-  backgroundColor: Colors.grey.shade900,
-  shadowColor: Colors.grey.withOpacity(0.0),
-  bottomAppBarColor: Colors.grey.shade900,
-  errorColor: Colors.red[400],
+  shadowColor: Colors.grey.withOpacity(0.0), colorScheme: const ColorScheme.dark(error: Colors.red), bottomAppBarTheme: BottomAppBarTheme(color: Colors.grey.shade900),
 );

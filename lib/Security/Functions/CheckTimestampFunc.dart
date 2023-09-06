@@ -4,7 +4,7 @@ import 'package:ringoflutter/Security/Functions/LogOutFunc.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 
 Future<bool> checkTimestamp() async {
-  final storage = FlutterSecureStorage();
+  const storage = FlutterSecureStorage();
   final String currentTime = DateTime.now().toString();
   final String? storedTime = await storage.read(key: 'timestamp');
 
@@ -29,8 +29,8 @@ Future<bool> checkTimestamp() async {
 }
 
 Future<bool> refreshTokens(String refreshToken) async {
-  final storage = FlutterSecureStorage();
-  final url = Uri.parse('${ApiEndpoints.REFRESH_TOKENS}');
+  const storage = FlutterSecureStorage();
+  final url = Uri.parse(ApiEndpoints.REFRESH_TOKENS);
   final headers = {
     'Authorization': 'Bearer $refreshToken',
   };

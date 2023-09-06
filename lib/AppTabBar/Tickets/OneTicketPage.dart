@@ -90,7 +90,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                           child: ClipRRect(
                             borderRadius: defaultWidgetCornerRadius,
                             child: Container(
-                              padding: EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(8),
                               color: currentTheme.primaryColor,
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -132,7 +132,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                         ],
                                       ),
                                     ),
-                                    Spacer(),
+                                    const Spacer(),
                                     (checkIfExpired(widget.ticket.expiryDate) || widget.ticket.event.price == 0)
                                     ? CupertinoButton(
                                       onPressed: () {
@@ -140,13 +140,13 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                       },
                                       child: Icon(
                                         CupertinoIcons.delete,
-                                        color: currentTheme.backgroundColor,
+                                        color: currentTheme.colorScheme.background,
                                       ),
                                     )
                                     : CupertinoButton(
                                       child: Icon(
                                         CupertinoIcons.calendar_badge_plus,
-                                        color: currentTheme.backgroundColor,
+                                        color: currentTheme.colorScheme.background,
                                       ),
                                       onPressed: () {
                                         final Event event = Event(
@@ -154,11 +154,11 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                           description: widget.ticket.event.description,
                                           location: widget.ticket.event.address,
                                           iosParams: IOSParams(
-                                            reminder: Duration(hours: 12),
+                                            reminder: const Duration(hours: 12),
                                             url: "https://ringo-events.com/event/${widget.ticket.event.id!}",
                                           ),
-                                          startDate: DateTime.parse("${widget.ticket.event.startTime!}"),
-                                          endDate: DateTime.parse("${widget.ticket.event.endTime!}"),
+                                          startDate: DateTime.parse(widget.ticket.event.startTime!),
+                                          endDate: DateTime.parse(widget.ticket.event.endTime!),
                                         );
                                         Add2Calendar.addEvent2Cal(event);
                                       },
@@ -175,7 +175,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                         child: ClipRRect(
                           borderRadius: defaultWidgetCornerRadius,
                           child: Container(
-                            color: currentTheme.backgroundColor,
+                            color: currentTheme.colorScheme.background,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Column(
@@ -291,8 +291,8 @@ class _MyTicketPageState extends State<MyTicketPage> {
                         child: ClipRRect(
                           borderRadius: defaultWidgetCornerRadius,
                           child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 8),
-                            color: currentTheme.backgroundColor,
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            color: currentTheme.colorScheme.background,
                             child: CupertinoButton(
                               onPressed: () {
                                 setState(() {
@@ -311,7 +311,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                       decoration: TextDecoration.none,
                                     ),
                                   ),
-                                  Spacer(),
+                                  const Spacer(),
                                   Icon(
                                     isAnswersExpanded
                                         ? CupertinoIcons.chevron_up
@@ -327,7 +327,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                       : Container(),
                       const SizedBox(height: 10,),
                       AnimatedSize(
-                        duration: Duration(milliseconds: 300),
+                        duration: const Duration(milliseconds: 300),
                         curve: Curves.easeInOut,
                         child: (isAnswersExpanded)
                             ? FractionallySizedBox(
@@ -335,9 +335,9 @@ class _MyTicketPageState extends State<MyTicketPage> {
                           child: ClipRRect(
                             borderRadius: defaultWidgetCornerRadius,
                             child: Container(
-                              color: currentTheme.backgroundColor,
+                              color: currentTheme.colorScheme.background,
                               child: ListView.builder(
-                                physics: NeverScrollableScrollPhysics(),
+                                physics: const NeverScrollableScrollPhysics(),
                                 itemCount: widget.ticket.registrationForm!.questions.length,
                                 shrinkWrap: true,
                                 itemBuilder: (context, index) {
@@ -373,16 +373,16 @@ class _MyTicketPageState extends State<MyTicketPage> {
     final currentTheme = Theme.of(context);
     return Card(
       elevation: 0,
-      margin: EdgeInsets.all(16),
+      margin: const EdgeInsets.all(16),
       color: Colors.transparent,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
+          SizedBox(
             width: MediaQuery.of(context).size.width * 0.8,
             child: Row(
               children: [
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width * 0.8,
                   child: Text(
                     "${question.content}${question.required ? ' *' : ''}",
@@ -401,13 +401,13 @@ class _MyTicketPageState extends State<MyTicketPage> {
             enabled: false,
             maxLength: question.maxCharacters,
             decoration: BoxDecoration(
-              color: currentTheme.backgroundColor,
+              color: currentTheme.colorScheme.background,
               borderRadius: BorderRadius.circular(8.0),
             ),
             controller: TextEditingController(
               text: answers.firstWhere((answer) => answer.questionId == question.id).content,
             ),
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             style: TextStyle(
               fontSize: 16,
               color: currentTheme.primaryColor,
@@ -423,14 +423,14 @@ class _MyTicketPageState extends State<MyTicketPage> {
     var currentTheme = Theme.of(context);
     return Card(
       elevation: 0,
-      margin: EdgeInsets.all(16),
+      margin: const EdgeInsets.all(16),
       color: Colors.transparent,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width * 0.7,
                 child: Text(
                   "${question.content}${question.required ? ' *' : ''}",
@@ -445,14 +445,14 @@ class _MyTicketPageState extends State<MyTicketPage> {
           ),
           ListView.builder(
             shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             itemCount: question.options!.length,
             itemBuilder: (context, index) {
               final option = question.options![index];
               return Container(
-                margin: EdgeInsets.symmetric(vertical: 6),
+                margin: const EdgeInsets.symmetric(vertical: 6),
                 decoration: BoxDecoration(
-                  color: currentTheme.backgroundColor,
+                  color: currentTheme.colorScheme.background,
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Row(
@@ -465,7 +465,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                           ? currentTheme.primaryColor
                           : currentTheme.primaryColor.withOpacity(0.3),
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     Text(
                       option.content,
                       style: TextStyle(
@@ -489,12 +489,12 @@ class _MyTicketPageState extends State<MyTicketPage> {
     var currentTheme = Theme.of(context);
     return Card(
       elevation: 0,
-      margin: EdgeInsets.all(16),
+      margin: const EdgeInsets.all(16),
       color: Colors.transparent,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
+          SizedBox(
             width: MediaQuery.of(context).size.width * 0.8,
             child: Text(
               "${question.content}${question.required ? ' *' : ''}",
@@ -507,14 +507,14 @@ class _MyTicketPageState extends State<MyTicketPage> {
           ),
           ListView.builder(
             shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             itemCount: question.options!.length,
             itemBuilder: (context, index) {
               final option = question.options![index];
               return Container(
-                margin: EdgeInsets.symmetric(vertical: 6),
+                margin: const EdgeInsets.symmetric(vertical: 6),
                 decoration: BoxDecoration(
-                  color: currentTheme.backgroundColor,
+                  color: currentTheme.colorScheme.background,
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Row(
@@ -527,7 +527,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                           ? currentTheme.primaryColor
                           : currentTheme.primaryColor.withOpacity(0.3),
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     Text(
                       option.content,
                       style: TextStyle(

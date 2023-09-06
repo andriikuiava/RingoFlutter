@@ -71,7 +71,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return VisibilityDetector(
-            key: Key('host_page_visibility_key'), // Provide a unique key
+            key: const Key('host_page_visibility_key'), // Provide a unique key
             onVisibilityChanged: (visibilityInfo) {
               if (visibilityInfo.visibleFraction == 1) {
                 // Page is fully visible, trigger a refresh here
@@ -112,7 +112,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                               .of(context)
                               .size
                               .width * 0.95,
-                          color: currentTheme.backgroundColor,
+                          color: currentTheme.colorScheme.background,
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,7 +148,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                           shape: BoxShape.circle,
                                         ),
                                         child: CircleAvatar(
-                                          backgroundColor: currentTheme.backgroundColor,
+                                          backgroundColor: currentTheme.colorScheme.background,
                                           radius: 30.0,
                                           backgroundImage: AssetImage(
                                             (currentTheme.brightness == Brightness.light)
@@ -165,7 +165,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                       crossAxisAlignment: CrossAxisAlignment
                                           .start,
                                       children: [
-                                        Container(
+                                        SizedBox(
                                           width: MediaQuery.of(context).size.width * 0.7,
                                           child: Text(
                                             snapshot.data!.name,
@@ -178,7 +178,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                             ),
                                           ),
                                         ),
-                                        Container(
+                                        SizedBox(
                                           width: MediaQuery.of(context).size.width * 0.7,
                                           child: Text(
                                             "@${snapshot.data!.username}",
@@ -192,7 +192,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                           ),
                                         ),
                                         const SizedBox(height: 10),
-                                        Container(
+                                        SizedBox(
                                           width: MediaQuery
                                               .of(context)
                                               .size
@@ -209,13 +209,13 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                                   milliseconds: 500),
                                               curve: Curves.easeInOut,
                                               child: (isDescriptionExpanded)
-                                                ? Container(
+                                                ? SizedBox(
                                                 width: MediaQuery
                                                     .of(context)
                                                     .size
                                                     .width * 0.7,
                                                 child: Text(
-                                                  "${snapshot.data!.description}",
+                                                  snapshot.data!.description,
                                                   style: TextStyle(
                                                     decoration: TextDecoration.none,
                                                     color: currentTheme.primaryColor,
@@ -224,13 +224,13 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                                   ),
                                                 ),
                                               )
-                                                  : Container(
+                                                  : SizedBox(
                                                 width: MediaQuery
                                                     .of(context)
                                                     .size
                                                     .width * 0.7,
                                                 child: Text(
-                                                  "${snapshot.data!.description}",
+                                                  snapshot.data!.description,
                                                   maxLines: 3,
                                                   overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
@@ -265,14 +265,14 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           elevation: 0,
-                          backgroundColor: currentTheme.backgroundColor,
+                          backgroundColor: currentTheme.colorScheme.background,
                         ),
                         onPressed: () {
                           showModalBottomSheet<void>(
                             context: context,
                             elevation: 0,
                             builder: (context) =>
-                                Container(
+                                SizedBox(
                                   height: 370,
                                   width: MediaQuery
                                       .of(context)
@@ -290,7 +290,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                         itemBuilder: (context, index) {
                                           ContactCard contactCard = snapshot
                                               .data!.contacts[index];
-                                          bool _isNumeric(String str) {
+                                          bool isNumeric(String str) {
                                             if (str == null) {
                                               return false;
                                             }
@@ -328,7 +328,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                               } else if (iconData ==
                                                   CupertinoIcons.phone) {
                                                 String phoneNumber = contactCard.content.replaceAll(RegExp(r'[^0-9]'), '');
-                                                launch("tel:${phoneNumber}");
+                                                launch("tel:$phoneNumber");
                                               } else if (iconData ==
                                                   CupertinoIcons.doc_on_doc) {
                                                 await Clipboard.setData(
@@ -339,7 +339,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                                   msg: "Copied to clipboard",
                                                   gravity: ToastGravity.CENTER,
                                                   backgroundColor: currentTheme
-                                                      .backgroundColor,
+                                                      .colorScheme.background,
                                                   textColor: currentTheme
                                                       .primaryColor,
                                                   fontSize: 24,
@@ -349,7 +349,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                             child: Padding(
                                               padding: const EdgeInsets.all(
                                                   10.0),
-                                              child: Container(
+                                              child: SizedBox(
                                                 width: MediaQuery
                                                     .of(context)
                                                     .size
@@ -363,7 +363,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                                       color: currentTheme
                                                           .primaryColor,
                                                     ),
-                                                    SizedBox(width: 16,),
+                                                    const SizedBox(width: 16,),
                                                     Column(
                                                       crossAxisAlignment: CrossAxisAlignment
                                                           .start,
@@ -427,7 +427,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                     height: 60,
                     child: Card(
                       elevation: 0,
-                      color: currentTheme.backgroundColor,
+                      color: currentTheme.colorScheme.background,
                       child: TabBar(
                         indicatorColor: currentTheme.primaryColor,
                         overlayColor: MaterialStateProperty.all(currentTheme
@@ -441,16 +441,16 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                               children: [
                                 if (snapshot.data!.rating != null)
                                   Text(
-                                    '${snapshot.data!.rating!.toStringAsFixed(
-                                        1)}',
+                                    snapshot.data!.rating!.toStringAsFixed(
+                                        1),
                                     style: const TextStyle(
                                       fontSize: 20,
                                     ),
                                   ),
                                 if (snapshot.data!.rating == null)
-                                  Text(
+                                  const Text(
                                     '-',
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 20,
                                     ),
                                   ),
@@ -518,7 +518,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         }
-        return Text("");
+        return const Text("");
       },
     );
   }
@@ -574,7 +574,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
         ClipRRect(
           borderRadius: defaultWidgetCornerRadius,
           child: Container(
-            color: currentTheme.backgroundColor,
+            color: currentTheme.colorScheme.background,
             width: MediaQuery
                 .of(context)
                 .size
@@ -591,7 +591,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
               ),
               onPressed: () async {
                 var isReviewCreated = false;
-                var storage = await FlutterSecureStorage();
+                var storage = const FlutterSecureStorage();
                 var participantId = await storage.read(key: "id");
                 if (participantId.toString() ==
                     firstReview?.participant.id.toString()) {
@@ -616,12 +616,12 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
         Expanded(
           child: Card(
             elevation: 0,
-            color: currentTheme.backgroundColor,
+            color: currentTheme.colorScheme.background,
             child: FutureBuilder<List<Review>>(
               future: getReviewsByOrganisationId(data?.id ?? 0, currentPage),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Container(
+                  return SizedBox(
                     width: MediaQuery.of(context).size.width * 0.95,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -633,11 +633,11 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                     ),
                   );
                 } else if (snapshot.hasError) {
-                  return Center(
+                  return const Center(
                     child: Text('No reviews found.'),
                   );
                 } else if (!snapshot.hasData) {
-                  return Center(
+                  return const Center(
                     child: Text('Loading reviews...'),
                   );
                 } else {
@@ -648,9 +648,9 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                     itemBuilder: (context, index) {
                       if (index == reviews.length) {
                         if (isLoading) {
-                          return Center(child: CircularProgressIndicator());
+                          return const Center(child: CircularProgressIndicator());
                         } else {
-                          return SizedBox(); // Return an empty SizedBox when no more reviews to load
+                          return const SizedBox(); // Return an empty SizedBox when no more reviews to load
                         }
                       }
                       var review = reviews[index];
@@ -669,7 +669,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                             radius: 20.0,
                             child: Icon(
                               CupertinoIcons.person,
-                              color: currentTheme.backgroundColor,
+                              color: currentTheme.colorScheme.background,
                             ),
                           ),
                           title: Text("${review.participant.name} ∘ @${review.participant.username}"),
@@ -681,7 +681,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                   const SizedBox(height: 2,),
                                   Row(
                                     children: [
-                                      SizedBox(height: 6,),
+                                      const SizedBox(height: 6,),
                                       RatingBarIndicator(
                                         itemBuilder: (context, _) =>
                                             Icon(
@@ -698,7 +698,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                 ],
                               ),
                               if (review.comment != "")
-                                Container(
+                                SizedBox(
                                   width: MediaQuery.of(context).size.width * 0.8,
                                   child: Text(review.comment!,
                                   style: TextStyle(
@@ -707,7 +707,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                   ),
                                 )
                               else if (review.comment == "")
-                                SizedBox(height: 0,),
+                                const SizedBox(height: 0,),
                             ],
                           ),
                         ),
@@ -747,12 +747,12 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
     final currentTheme = Theme.of(context);
     return Card(
       elevation: 0,
-      color: currentTheme.backgroundColor,
+      color: currentTheme.colorScheme.background,
       child: FutureBuilder<List<EventInFeed>>(
         future: getUpcomingEvents(data?.id ?? 0),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Container(
+            return SizedBox(
               width: MediaQuery.of(context).size.width * 0.95,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -911,12 +911,12 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
     final currentTheme = Theme.of(context);
     return Card(
       elevation: 0,
-      color: currentTheme.backgroundColor,
+      color: currentTheme.colorScheme.background,
       child: FutureBuilder<List<EventInFeed>>(
         future: getPastEvents(data?.id ?? 0),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Container(
+            return SizedBox(
               width: MediaQuery.of(context).size.width * 0.95,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

@@ -131,11 +131,11 @@ for (var question in widget.event.registrationForm!.questions) {
       ),
       child: GestureDetector(
         onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
+          FocusScope.of(context).requestFocus(FocusNode());
         },
         child: Column(
           children: [
-            Container(
+            SizedBox(
               height: MediaQuery.of(context).size.height * 0.9,
               child: ListView.builder(
                 itemCount: widget.event.registrationForm!.questions.length + 2,
@@ -154,7 +154,7 @@ for (var question in widget.event.registrationForm!.questions) {
                     }
                   } else {
                     return Container(
-                      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       height: 50,
                       child: Material(
                         elevation: (isFormCompleted) ? 6 : 0,
@@ -163,12 +163,12 @@ for (var question in widget.event.registrationForm!.questions) {
                           borderRadius: BorderRadius.circular(12.0),
                           child: Container(
                             color: isFormCompleted
-                                ? currentTheme.backgroundColor
+                                ? currentTheme.colorScheme.background
                                 : currentTheme.primaryColor.withOpacity(0.2),
                             width: MediaQuery.of(context).size.width * 0.8,
                             child: CupertinoButton(
                               child: Text(
-                                "${isFormCompleted ? 'Submit' : 'Please complete the form'}",
+                                isFormCompleted ? 'Submit' : 'Please complete the form',
                                 style: TextStyle(
                                   color: isFormCompleted
                                       ? currentTheme.primaryColor
@@ -189,6 +189,7 @@ for (var question in widget.event.registrationForm!.questions) {
                       ),
                     );
                   }
+                  return null;
                 },
               ),
             ),
@@ -201,19 +202,19 @@ for (var question in widget.event.registrationForm!.questions) {
   Widget buildNameAndDescriptionOfTheForm(RegistrationForm registrationForm) {
     var currentTheme = Theme.of(context);
     return Padding(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12.0),
         child: Container(
-          color: currentTheme.backgroundColor,
+          color: currentTheme.colorScheme.background,
           child: Padding(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
                   child: Text(
-                    "${registrationForm.title}",
+                    registrationForm.title,
                     style: TextStyle(
                       fontSize: 22,
                       color: currentTheme.primaryColor,
@@ -222,7 +223,7 @@ for (var question in widget.event.registrationForm!.questions) {
                     ),
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Container(
                   child: Text(
                     "${registrationForm.description}",
@@ -246,16 +247,16 @@ for (var question in widget.event.registrationForm!.questions) {
     final currentTheme = Theme.of(context);
     return Card(
       elevation: 0,
-      margin: EdgeInsets.all(16),
+      margin: const EdgeInsets.all(16),
       color: Colors.transparent,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
+          SizedBox(
             width: MediaQuery.of(context).size.width * 0.8,
             child: Row(
               children: [
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width * 0.8,
                   child: Text(
                     "${question.content}${question.required ? ' *' : ''}",
@@ -269,14 +270,14 @@ for (var question in widget.event.registrationForm!.questions) {
               ],
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           CupertinoTextField(
             maxLength: question.maxCharacters,
             decoration: BoxDecoration(
-              color: currentTheme.backgroundColor,
+              color: currentTheme.colorScheme.background,
               borderRadius: BorderRadius.circular(8.0),
             ),
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             placeholder: 'Answer here',
             clearButtonMode: OverlayVisibilityMode.editing,
             style: TextStyle(
@@ -300,14 +301,14 @@ for (var question in widget.event.registrationForm!.questions) {
     var currentTheme = Theme.of(context);
     return Card(
       elevation: 0,
-      margin: EdgeInsets.all(16),
+      margin: const EdgeInsets.all(16),
       color: Colors.transparent,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width * 0.7,
                 child: Text(
                   "${question.content}${question.required ? ' *' : ''}",
@@ -318,7 +319,7 @@ for (var question in widget.event.registrationForm!.questions) {
                   ),
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               Container(
                 child: CupertinoButton(
                   child: Icon(
@@ -339,10 +340,10 @@ for (var question in widget.event.registrationForm!.questions) {
               ),
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           ListView.builder(
             shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             itemCount: question.options!.length,
             itemBuilder: (context, index) {
               final option = question.options![index];
@@ -357,10 +358,10 @@ for (var question in widget.event.registrationForm!.questions) {
                   setState(() {});
                 },
                 child: Container(
-                  margin: EdgeInsets.symmetric(vertical: 8),
-                  padding: EdgeInsets.all(16),
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: currentTheme.backgroundColor,
+                    color: currentTheme.colorScheme.background,
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: Row(
@@ -371,7 +372,7 @@ for (var question in widget.event.registrationForm!.questions) {
                             : CupertinoIcons.circle,
                         color: currentTheme.primaryColor,
                       ),
-                      SizedBox(width: 16),
+                      const SizedBox(width: 16),
                       Text(
                         option.content,
                         style: TextStyle(
@@ -394,12 +395,12 @@ for (var question in widget.event.registrationForm!.questions) {
     var currentTheme = Theme.of(context);
     return Card(
       elevation: 0,
-      margin: EdgeInsets.all(16),
+      margin: const EdgeInsets.all(16),
       color: Colors.transparent,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
+          SizedBox(
             width: MediaQuery.of(context).size.width * 0.8,
             child: Text(
               "${question.content}${question.required ? ' *' : ''}",
@@ -410,10 +411,10 @@ for (var question in widget.event.registrationForm!.questions) {
               ),
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           ListView.builder(
             shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             itemCount: question.options!.length,
             itemBuilder: (context, index) {
               final option = question.options![index];
@@ -429,10 +430,10 @@ for (var question in widget.event.registrationForm!.questions) {
                   setState(() {});
                 },
                 child: Container(
-                  margin: EdgeInsets.symmetric(vertical: 8),
-                  padding: EdgeInsets.all(16),
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: currentTheme.backgroundColor,
+                    color: currentTheme.colorScheme.background,
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: Row(
@@ -443,7 +444,7 @@ for (var question in widget.event.registrationForm!.questions) {
                             : CupertinoIcons.square,
                         color: currentTheme.primaryColor,
                       ),
-                      SizedBox(width: 16),
+                      const SizedBox(width: 16),
                       Text(
                         option.content,
                         style: TextStyle(

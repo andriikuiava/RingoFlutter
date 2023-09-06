@@ -227,7 +227,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       ),
       child: GestureDetector(
         onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
+          FocusScope.of(context).requestFocus(FocusNode());
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -594,12 +594,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               fontSize: 13,
                             ),
                           ),
-                          SizedBox(width: 5),
+                          const SizedBox(width: 5),
                           GestureDetector(
                             onTap: () {
                               showPasswordRequirements();
                             },
-                            child: Icon(
+                            child: const Icon(
                               CupertinoIcons.info,
                               size: 16.0,
                               color: Colors.red,
@@ -672,7 +672,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           setState(() => dateController = newDate);
                         },
                         minimumDate: DateTime(1900),
-                        maximumDate: DateTime.now().add(Duration(seconds: 5)),
+                        maximumDate: DateTime.now().add(const Duration(seconds: 5)),
                       ),
                     ),
                   ],
@@ -745,12 +745,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: Container(
+                      child: SizedBox(
                         height: 50,
                         child: CupertinoButton(
                           color: isFormValid
                               ? currentTheme.primaryColor
-                              : currentTheme.backgroundColor,
+                              : currentTheme.colorScheme.background,
                           onPressed: () {
                             validateForm();
                             if (isFormValid) {
@@ -803,13 +803,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               'Register',
                               style: TextStyle(
                                 color: isFormValid
-                                    ? currentTheme.backgroundColor
+                                    ? currentTheme.colorScheme.background
                                     : currentTheme.primaryColor,
                                 fontWeight: FontWeight.bold,
                               ),
                             )
                               : CupertinoActivityIndicator(
-                              color: currentTheme.backgroundColor,
+                              color: currentTheme.colorScheme.background,
                               radius: 13,
                             ),
                           ),

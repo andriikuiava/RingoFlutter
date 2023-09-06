@@ -2,10 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
-import 'package:ringoflutter/Security/Functions/LogoutFunc.dart';
 import 'package:ringoflutter/Security/LoginPage.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 
@@ -34,7 +31,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
       _isResendActive = false;
       _resendTimer = 30;
     });
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (_resendTimer > 0) {
           _resendTimer--;
@@ -93,7 +90,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
               ),
             ),
             const SizedBox(height: 10),
-            Container(
+            SizedBox(
               width: MediaQuery.of(context).size.width * 0.9,
               child: Text(
                 'Please verify your e-mail address to continue',
@@ -110,18 +107,16 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
             const SizedBox(height: 20),
             Row(
               children: [
-                Spacer(),
+                const Spacer(),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    primary: currentTheme.primaryColor,
-                    onPrimary: currentTheme.backgroundColor,
-                    backgroundColor: currentTheme.primaryColor,
+                    foregroundColor: currentTheme.colorScheme.background, backgroundColor: currentTheme.primaryColor,
                   ),
                   onPressed: () {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => LoginPage(),
+                        builder: (context) => const LoginPage(),
                       ),
                     );
                   },
@@ -130,7 +125,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                     children: [
                       Icon(
                         CupertinoIcons.arrow_turn_down_left,
-                        color: currentTheme.backgroundColor,
+                        color: currentTheme.colorScheme.background,
                         size: 20,
                       ),
                       Text(
@@ -138,7 +133,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                         style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.normal,
-                            color: currentTheme.backgroundColor,
+                            color: currentTheme.colorScheme.background,
                             decoration: TextDecoration.none
                         ),
                       ),
@@ -146,14 +141,12 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                Container(
+                SizedBox(
                   height: 40,
                   width: 150,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: currentTheme.primaryColor,
-                      onPrimary: currentTheme.backgroundColor,
-                      backgroundColor: currentTheme.primaryColor,
+                      foregroundColor: currentTheme.colorScheme.background, backgroundColor: currentTheme.primaryColor,
                     ),
                     onPressed: _isResendActive
                         ? () async {
@@ -166,7 +159,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                         Icon(
                           CupertinoIcons.refresh,
                           color: _isResendActive
-                              ? currentTheme.backgroundColor
+                              ? currentTheme.colorScheme.background
                               : currentTheme.primaryColor,
                           size: 20,
                         ),
@@ -178,7 +171,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                             fontSize: 12,
                             fontWeight: FontWeight.normal,
                             color: _isResendActive
-                                ? currentTheme.backgroundColor
+                                ? currentTheme.colorScheme.background
                                 : currentTheme.primaryColor,
                             decoration: TextDecoration.none,
                           ),
@@ -217,7 +210,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                 //     ],
                 //   ),
                 // ),
-                Spacer(),
+                const Spacer(),
               ],
             )
           ],

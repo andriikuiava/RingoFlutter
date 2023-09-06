@@ -31,7 +31,7 @@ Future<XFile?> takeImage() async {
 void sendPhoto(File image) async {
   await checkTimestamp();
 
-  Uri url = Uri.parse('${ApiEndpoints.SET_PROFILE_PICTURE}');
+  Uri url = Uri.parse(ApiEndpoints.SET_PROFILE_PICTURE);
   const storage = FlutterSecureStorage();
   var token = await storage.read(key: "access_token");
 

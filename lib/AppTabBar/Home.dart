@@ -8,6 +8,8 @@ import 'Search/SearchPage.dart';
 import 'Tickets/Tickets.dart';
 
 class Home extends StatefulWidget {
+  const Home({super.key});
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -15,11 +17,11 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
   final List<Widget> _pages = [
-    MapPage(),
-    SearchPage(),
-    FeedPage(),
-    TicketsScreen(),
-    ProfileScreen(),
+    const MapPage(),
+    const SearchPage(),
+    const FeedPage(),
+    const TicketsScreen(),
+    const ProfileScreen(),
   ];
 
   final List<GlobalKey<NavigatorState>> _navigatorKeys =
@@ -54,7 +56,7 @@ class _HomeState extends State<Home> {
             ),
             label: 'Map',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.search,
                 size: 26,),
             label: 'Search',

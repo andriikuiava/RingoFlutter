@@ -13,7 +13,7 @@ import 'package:ringoflutter/UI/Themes.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 
 class FeedPage extends StatelessWidget {
-  FeedPage({Key? key}) : super(key: key);
+  const FeedPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +152,7 @@ class FeedPage extends StatelessWidget {
     await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
-    Uri url = await Uri.parse(
+    Uri url = Uri.parse(
         '${ApiEndpoints.SEARCH}?endTimeMin=${DateTime.now()
             .toIso8601String()}&latitude=${location.latitude}&longitude=${location.longitude}&sort=distance');
     var headers = {'Authorization': 'Bearer $token'};
@@ -181,7 +181,7 @@ class FeedPage extends StatelessWidget {
         } else {
           return DefaultTabController(
             length: snapshot.data!.length,
-            child: Container(
+            child: SizedBox(
               height: MediaQuery
                   .of(context)
                   .size
@@ -218,7 +218,7 @@ class FeedPage extends StatelessWidget {
     await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
-    Uri url = Uri.parse('${ApiEndpoints.GET_CATEGORY}');
+    Uri url = Uri.parse(ApiEndpoints.GET_CATEGORY);
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -249,7 +249,7 @@ class FeedPage extends StatelessWidget {
             ),
           );
         } else {
-          return Container(
+          return SizedBox(
             height: 70,
             child: ListView(
               scrollDirection: Axis.horizontal,
@@ -272,7 +272,7 @@ class FeedPage extends StatelessWidget {
                           child: ClipRRect(
                             borderRadius: defaultWidgetCornerRadius,
                             child: Container(
-                              color: currentTheme.backgroundColor,
+                              color: currentTheme.colorScheme.background,
                               child: Padding(
                                 padding: const EdgeInsets.all(18.0),
                                 child: Text(
@@ -420,7 +420,7 @@ class FeedPage extends StatelessWidget {
                                 .of(context)
                                 .size
                                 .width * 0.95,
-                            color: currentTheme.backgroundColor,
+                            color: currentTheme.colorScheme.background,
                             child: Padding(
                               padding: defaultWidgetPadding,
                               child: Row(
@@ -435,7 +435,7 @@ class FeedPage extends StatelessWidget {
                                     ),
                                   ),
                                   const SizedBox(width: 10),
-                                  Container(
+                                  SizedBox(
                                     width: MediaQuery
                                         .of(context)
                                         .size
@@ -443,7 +443,7 @@ class FeedPage extends StatelessWidget {
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Container(
+                                        SizedBox(
                                           width: MediaQuery
                                               .of(context)
                                               .size
@@ -469,7 +469,7 @@ class FeedPage extends StatelessWidget {
                                               size: 16,
                                             ),
                                             const SizedBox(width: 5),
-                                            Container(
+                                            SizedBox(
                                               width: MediaQuery
                                                   .of(context)
                                                   .size
@@ -569,7 +569,7 @@ Widget eventCard(context, EventInFeed event) {
               .of(context)
               .size
               .width - 20,
-          color: currentTheme.backgroundColor,
+          color: currentTheme.colorScheme.background,
           child: Padding(
             padding: defaultWidgetPadding,
             child: Stack(
@@ -616,7 +616,7 @@ Widget eventCard(context, EventInFeed event) {
                         ),
                         const SizedBox(width: 5),
                         Text(
-                          "${convertToKilometersOrMeters(event.distance!)}",
+                          convertToKilometersOrMeters(event.distance!),
                           style: TextStyle(
                             fontWeight: FontWeight.normal,
                             fontSize: 16,
@@ -695,8 +695,8 @@ Widget noEvents(context) {
       child: ClipRRect(
           borderRadius: defaultWidgetCornerRadius,
           child: Container(
-            color: currentTheme.backgroundColor,
-            child: Column(
+            color: currentTheme.colorScheme.background,
+            child: const Column(
               children: [
                 SizedBox(height: 20),
                 Row(
