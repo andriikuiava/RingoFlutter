@@ -87,7 +87,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                 middle: Text(
                   "Organisation",
                   style: TextStyle(
-                    color: currentTheme.primaryColor,
+                    color: currentTheme.colorScheme.primary,
                   ),
                 ),
                 leading: GestureDetector(
@@ -96,7 +96,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                   },
                   child: Icon(
                     CupertinoIcons.back,
-                    color: currentTheme.primaryColor,
+                    color: currentTheme.colorScheme.primary,
                   ),
                 ),
               ),
@@ -129,7 +129,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                           shape: BoxShape.circle,
                                         ),
                                         child: CircleAvatar(
-                                          backgroundColor: currentTheme.primaryColor,
+                                          backgroundColor: currentTheme.colorScheme.primary,
                                           radius: 30.0,
                                           backgroundImage: NetworkImage(
                                             '${ApiEndpoints
@@ -172,7 +172,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                             maxLines: 1,
                                             style: TextStyle(
                                               decoration: TextDecoration.none,
-                                              color: currentTheme.primaryColor,
+                                              color: currentTheme.colorScheme.primary,
                                               fontSize: 28,
                                               fontWeight: FontWeight.bold,
                                             ),
@@ -218,7 +218,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                                   snapshot.data!.description,
                                                   style: TextStyle(
                                                     decoration: TextDecoration.none,
-                                                    color: currentTheme.primaryColor,
+                                                    color: currentTheme.colorScheme.primary,
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.normal,
                                                   ),
@@ -235,7 +235,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                                   overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                     decoration: TextDecoration.none,
-                                                    color: currentTheme.primaryColor,
+                                                    color: currentTheme.colorScheme.primary,
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.normal,
                                                   ),
@@ -412,7 +412,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                           "Contact host",
                           style: TextStyle(
                             decoration: TextDecoration.none,
-                            color: currentTheme.primaryColor,
+                            color: currentTheme.colorScheme.primary,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
@@ -429,7 +429,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                       elevation: 0,
                       color: currentTheme.colorScheme.background,
                       child: TabBar(
-                        indicatorColor: currentTheme.primaryColor,
+                        indicatorColor: currentTheme.colorScheme.primary,
                         overlayColor: MaterialStateProperty.all(currentTheme
                             .primaryColor.withOpacity(0.1)),
                         splashBorderRadius: BorderRadius.circular(12),
@@ -487,7 +487,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                             ),
                           ),
                         ],
-                        labelColor: currentTheme.primaryColor,
+                        labelColor: currentTheme.colorScheme.primary,
                         unselectedLabelColor: Colors.grey,
                       ),
                     ),
@@ -584,7 +584,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                 "Manage review",
                 style: TextStyle(
                   decoration: TextDecoration.none,
-                  color: currentTheme.primaryColor,
+                  color: currentTheme.colorScheme.primary,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -627,7 +627,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CircularProgressIndicator(
-                          color: currentTheme.primaryColor,
+                          color: currentTheme.colorScheme.primary,
                         ),
                       ],
                     ),
@@ -658,14 +658,14 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                         child: ListTile(
                           leading: review.participant.profilePictureId != null
                               ? CircleAvatar(
-                            backgroundColor: currentTheme.primaryColor,
+                            backgroundColor: currentTheme.colorScheme.primary,
                             radius: 20.0,
                             backgroundImage: NetworkImage(
                               '${ApiEndpoints.GET_PHOTO}/${review.participant.profilePictureId}',
                             ),
                           )
                               : CircleAvatar(
-                            backgroundColor: currentTheme.primaryColor,
+                            backgroundColor: currentTheme.colorScheme.primary,
                             radius: 20.0,
                             child: Icon(
                               CupertinoIcons.person,
@@ -686,7 +686,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                         itemBuilder: (context, _) =>
                                             Icon(
                                               CupertinoIcons.star_fill,
-                                              color: currentTheme.primaryColor,
+                                              color: currentTheme.colorScheme.primary,
                                             ),
                                         rating: review.rate.toDouble(),
                                         itemCount: 5,
@@ -702,7 +702,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                   width: MediaQuery.of(context).size.width * 0.8,
                                   child: Text(review.comment!,
                                   style: TextStyle(
-                                    color: currentTheme.primaryColor,
+                                    color: currentTheme.colorScheme.primary,
                                   ),
                                   ),
                                 )
@@ -731,7 +731,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
     await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
-    Uri url = Uri.parse('${ApiEndpoints.SEARCH}?hostId=${widget.hostId}&startTimeMin=${DateTime.now().toIso8601String()}');
+    Uri url = Uri.parse('${ApiEndpoints.SEARCH}?hostId=${widget.hostId}&startTimeMin=${DateTime.now().toUtc().toIso8601String()}');
     print(url);
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
@@ -758,7 +758,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CircularProgressIndicator(
-                    color: currentTheme.primaryColor,
+                    color: currentTheme.colorScheme.primary,
                   ),
                 ],
               ),
@@ -813,7 +813,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                     maxLines: 1,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: currentTheme.primaryColor,
+                                      color: currentTheme.colorScheme.primary,
                                       fontSize: 20,
                                       decoration: TextDecoration.none,
                                     ),
@@ -822,7 +822,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                     children: [
                                       Icon(
                                         CupertinoIcons.location_fill,
-                                        color: currentTheme.primaryColor,
+                                        color: currentTheme.colorScheme.primary,
                                         size: 16,
                                       ),
                                       const SizedBox(width: 5),
@@ -832,7 +832,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
                                           style: TextStyle(
-                                            color: currentTheme.primaryColor,
+                                            color: currentTheme.colorScheme.primary,
                                             fontSize: 16,
                                             decoration: TextDecoration.none,
                                             fontWeight: FontWeight.normal,
@@ -841,9 +841,11 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                       ),
                                       const SizedBox(width: 5),
                                       Text(
-                                        "${event.currency!.symbol} ${event.price}",
+                                          (event.price! == 0)
+                                              ? "Free"
+                                              : "${event.currency!.symbol}${event.price!.toStringAsFixed(2)}",
                                         style: TextStyle(
-                                          color: currentTheme.primaryColor,
+                                          color: currentTheme.colorScheme.primary,
                                           fontSize: 16,
                                           decoration: TextDecoration.none,
                                           fontWeight: FontWeight.bold,
@@ -856,16 +858,16 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                     children: [
                                       Icon(
                                         CupertinoIcons.calendar,
-                                        color: currentTheme.primaryColor,
+                                        color: currentTheme.colorScheme.primary,
                                         size: 16,
                                       ),
                                       const SizedBox(width: 5),
                                       Text(
-                                        convertHourTimestamp(event.startTime!),
+                                        startTimeFromTimestamp(event.startTime!, null),
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
                                         style: TextStyle(
-                                          color: currentTheme.primaryColor,
+                                          color: currentTheme.colorScheme.primary,
                                           fontSize: 16,
                                           decoration: TextDecoration.none,
                                           fontWeight: FontWeight.normal,
@@ -922,7 +924,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CircularProgressIndicator(
-                    color: currentTheme.primaryColor,
+                    color: currentTheme.colorScheme.primary,
                   ),
                 ],
               ),
@@ -1002,7 +1004,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                         color: Colors.grey,
                                       ),
                                       Text(
-                                        convertHourTimestamp(event.startTime!),
+                                        startTimeFromTimestamp(event.startTime!, null),
                                         style: const TextStyle(
                                             color: Colors.grey,
                                             fontSize: 16

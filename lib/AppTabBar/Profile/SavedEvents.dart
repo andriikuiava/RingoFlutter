@@ -63,7 +63,7 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
               children: [
                 Icon(
                   CupertinoIcons.bookmark_solid,
-                  color: currentTheme.primaryColor,
+                  color: currentTheme.colorScheme.primary,
                 ),
                 const SizedBox(
                   width: 10,
@@ -71,7 +71,7 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
                 Text(
                   "Saved Events",
                   style: TextStyle(
-                    color: currentTheme.primaryColor,
+                    color: currentTheme.colorScheme.primary,
                     fontSize: 32,
                     decoration: TextDecoration.none,
                   ),
@@ -82,6 +82,37 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
           const SizedBox(
             height: 10,
           ),
+          if (eventsSaved.isEmpty && eventsSaved.length == 0)
+            ClipRRect(
+              borderRadius: defaultWidgetCornerRadius,
+              child: Container(
+                color: currentTheme.colorScheme.background,
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Row(
+                    children: [
+                      Icon(
+                        CupertinoIcons.bookmark,
+                        color: Colors.grey,
+                        size: 40,),
+                      const SizedBox(width: 20),
+                      Container(
+                        width: 0.7 * MediaQuery.of(context).size.width,
+                        child: const Text(
+                          "You don't have any saved events yet",
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 18,
+                            decoration: TextDecoration.none,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           FutureBuilder<List<EventInFeed>>(
             future: getSavedEvents(),
             builder: (context, snapshot) {
@@ -134,7 +165,7 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
                 );
               } else {
                 return CircularProgressIndicator(
-                  color: currentTheme.primaryColor,
+                  color: currentTheme.colorScheme.primary,
                 );
               }
             },
@@ -148,12 +179,16 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
     final currentTheme = Theme.of(context);
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          CupertinoPageRoute(
-            builder: (context) => EventPage(eventId: event.id!),
-          ),
-        );
+        if (event.isActive) {
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (context) => EventPage(eventId: event.id!),
+            ),
+          );
+        } else {
+          showErrorAlert("Error", "Event is not active", context);
+        }
       },
       child: Container(
         decoration: BoxDecoration(
@@ -185,7 +220,7 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
                           maxLines: 1,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: currentTheme.primaryColor,
+                            color: currentTheme.colorScheme.primary,
                             fontSize: 18,
                             decoration: TextDecoration.none,
                           ),
@@ -195,7 +230,7 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
                           children: [
                             Icon(
                               CupertinoIcons.location_fill,
-                              color: currentTheme.primaryColor,
+                              color: currentTheme.colorScheme.primary,
                               size: 14,
                             ),
                             const SizedBox(width: 5),
@@ -204,7 +239,7 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                               style: TextStyle(
-                                color: currentTheme.primaryColor,
+                                color: currentTheme.colorScheme.primary,
                                 fontSize: 14,
                                 decoration: TextDecoration.none,
                                 fontWeight: FontWeight.normal,
@@ -218,16 +253,16 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
                           children: [
                             Icon(
                               CupertinoIcons.calendar,
-                              color: currentTheme.primaryColor,
+                              color: currentTheme.colorScheme.primary,
                               size: 14,
                             ),
                             const SizedBox(width: 5),
                             Text(
-                              convertHourTimestamp(event.startTime!),
+                              startTimeFromTimestamp(event.startTime!, null),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                               style: TextStyle(
-                                color: currentTheme.primaryColor,
+                                color: currentTheme.colorScheme.primary,
                                 fontSize: 14,
                                 decoration: TextDecoration.none,
                                 fontWeight: FontWeight.normal,
@@ -241,9 +276,9 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
                       right: 0,
                       bottom: 0,
                       child: Text(
-                        "${event.currency!.symbol}${event.price}",
+                        (event.price == 0 || event.price == null) ? 'Free' : '${event.currency!.symbol}${event.price!.toStringAsFixed(2)}',
                         style: TextStyle(
-                          color: currentTheme.primaryColor,
+                          color: currentTheme.colorScheme.primary,
                           fontSize: 20,
                           decoration: TextDecoration.none,
                           fontWeight: FontWeight.w600,

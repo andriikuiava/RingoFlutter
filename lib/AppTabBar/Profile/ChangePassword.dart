@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -9,7 +8,7 @@ import 'package:ringoflutter/Security/Functions/LogOutFunc.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 
 class ChangePasswordView extends StatefulWidget {
-  final shouldShowChangePassword;
+  final bool shouldShowChangePassword;
 
   const ChangePasswordView({super.key, required this.shouldShowChangePassword});
 
@@ -45,7 +44,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
   bool isFormValid = false;
 
   void validatePasswords() {
-    if (RegExp(r"((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,64})").hasMatch(
+    if (RegExp(r"((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,64})").hasMatch(
         _newPasswordController.text)) {
       setState(() {
         isPasswordValid = true;
@@ -87,10 +86,8 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
     };
     var response = await http.delete(url, headers: headers);
     if (response.statusCode == 200) {
-      print('Account deleted');
       logOut();
     } else {
-      print('Account not deleted');
     }
   }
 
@@ -106,12 +103,12 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
           },
           child: Icon(
             CupertinoIcons.back,
-            color: currentTheme.primaryColor,
+            color: currentTheme.colorScheme.primary,
           ),
         ),
         middle: Text('Settings',
         style: TextStyle(
-          color: currentTheme.primaryColor,
+          color: currentTheme.colorScheme.primary,
         ),),
       ),
       backgroundColor: currentTheme.scaffoldBackgroundColor,
@@ -140,7 +137,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                               children: [
                                 DefaultTextStyle(
                                   style: TextStyle(
-                                    color: currentTheme.primaryColor,
+                                    color: currentTheme.colorScheme.primary,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 24,
                                   ),
@@ -151,7 +148,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                                   _expandChangePassword
                                       ? CupertinoIcons.chevron_up
                                       : CupertinoIcons.chevron_down,
-                                  color: currentTheme.primaryColor,
+                                  color: currentTheme.colorScheme.primary,
                                 ),
                               ],
                             ),
@@ -170,7 +167,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                                     children: [
                                       DefaultTextStyle(
                                         style: TextStyle(
-                                          color: currentTheme.primaryColor,
+                                          color: currentTheme.colorScheme.primary,
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16,
                                         ),
@@ -189,12 +186,12 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                                     autocorrect: false,
                                     clearButtonMode: OverlayVisibilityMode.editing,
                                     obscureText: true,
-                                    cursorColor: currentTheme.primaryColor,
+                                    cursorColor: currentTheme.colorScheme.primary,
                                     controller: _oldPasswordController,
                                     placeholder: 'Enter your current password',
                                     keyboardType: TextInputType.text,
                                     style: TextStyle(
-                                      color: currentTheme.primaryColor,
+                                      color: currentTheme.colorScheme.primary,
                                       fontSize: 16,
                                     ),
                                     decoration: BoxDecoration(
@@ -211,7 +208,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                                     children: [
                                       DefaultTextStyle(
                                         style: TextStyle(
-                                          color: currentTheme.primaryColor,
+                                          color: currentTheme.colorScheme.primary,
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16,
                                         ),
@@ -234,12 +231,12 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                                       validatePasswords();
                                     },
                                     maxLength: 64,
-                                    cursorColor: currentTheme.primaryColor,
+                                    cursorColor: currentTheme.colorScheme.primary,
                                     controller: _newPasswordController,
                                     placeholder: 'Enter your new password',
                                     keyboardType: TextInputType.text,
                                     style: TextStyle(
-                                      color: currentTheme.primaryColor,
+                                      color: currentTheme.colorScheme.primary,
                                       fontSize: 16,
                                     ),
                                     decoration: BoxDecoration(
@@ -274,7 +271,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                                   children: [
                                     DefaultTextStyle(
                                       style: TextStyle(
-                                        color: currentTheme.primaryColor,
+                                        color: currentTheme.colorScheme.primary,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16,
                                       ),
@@ -297,12 +294,12 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                                       validatePasswords();
                                     },
                                     maxLength: 64,
-                                    cursorColor: currentTheme.primaryColor,
+                                    cursorColor: currentTheme.colorScheme.primary,
                                     controller: _repeatNewPasswordController,
                                     placeholder: 'Repeat your new password',
                                     keyboardType: TextInputType.text,
                                     style: TextStyle(
-                                      color: currentTheme.primaryColor,
+                                      color: currentTheme.colorScheme.primary,
                                       fontSize: 16,
                                     ),
                                     decoration: BoxDecoration(
@@ -348,7 +345,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                                     },
                                     child: Text('Change password',
                                       style: TextStyle(
-                                        color: isFormValid ? currentTheme.primaryColor : currentTheme.primaryColor.withOpacity(0.5),
+                                        color: isFormValid ? currentTheme.colorScheme.primary : currentTheme.colorScheme.primary.withOpacity(0.5),
                                         fontWeight: FontWeight.bold,
                                       ),),
                                   ),
@@ -376,13 +373,13 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                             children: [
                               Icon(
                                 CupertinoIcons.square_arrow_left,
-                                color: currentTheme.primaryColor,
+                                color: currentTheme.colorScheme.primary,
                                 size: 20,
                               ),
                               const SizedBox(width: 10,),
                               Text('Log out',
                                 style: TextStyle(
-                                  color: currentTheme.primaryColor,
+                                  color: currentTheme.colorScheme.primary,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -403,18 +400,18 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                         child: CupertinoButton(
                           color: currentTheme.colorScheme.error,
                           onPressed: deleteAccount,
-                          child: Row(
+                          child: const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
                                 CupertinoIcons.delete,
-                                color: currentTheme.colorScheme.background,
+                                color: Colors.white,
                                 size: 20,
                               ),
-                              const SizedBox(width: 10,),
+                              SizedBox(width: 10,),
                               Text('Delete account',
                                 style: TextStyle(
-                                  color: currentTheme.colorScheme.background,
+                                  color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -446,7 +443,6 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
       'password': oldPassword,
       'newPassword': newPassword,
     };
-    print(headers);
     var response = await http.post(url, headers: headers, body: json.encode(body));
     if (response.statusCode == 200) {
       final jsonResponse = customJsonDecode(response.body);
@@ -459,7 +455,6 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
 
       Navigator.pop(context);
     } else {
-      print('Password not changed');
     }
   }
 }

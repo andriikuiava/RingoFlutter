@@ -41,7 +41,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           ),
         ),
         leading: CupertinoNavigationBarBackButton(
-          color: currentTheme.primaryColor,
+          color: currentTheme.colorScheme.primary,
           onPressed: () {
             Navigator.pop(context);
           },
@@ -67,7 +67,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     ),
                     DefaultTextStyle(
                       style: TextStyle(
-                        color: currentTheme.primaryColor,
+                        color: currentTheme.colorScheme.primary,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
@@ -90,12 +90,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       onChanged: (value) {
                         validateEmail();
                       },
-                      cursorColor: currentTheme.primaryColor,
+                      cursorColor: currentTheme.colorScheme.primary,
                       controller: _emailController,
                       placeholder: 'Enter your email',
                       keyboardType: TextInputType.emailAddress,
                       style: TextStyle(
-                        color: currentTheme.primaryColor,
+                        color: currentTheme.colorScheme.primary,
                         fontSize: 16,
                       ),
                       decoration: BoxDecoration(
@@ -131,12 +131,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.9,
                   child: CupertinoButton(
-                    color: isEmailValid ? currentTheme.primaryColor : currentTheme.colorScheme.background,
+                    color: isEmailValid ? currentTheme.colorScheme.primary : currentTheme.colorScheme.background,
                     child: Text(
                       'Send',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: isEmailValid ? currentTheme.colorScheme.background : currentTheme.primaryColor,
+                        color: isEmailValid ? currentTheme.colorScheme.background : currentTheme.colorScheme.primary,
                         fontSize: 16,
                       ),
                     ),

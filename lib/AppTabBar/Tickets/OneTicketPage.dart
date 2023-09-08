@@ -62,7 +62,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
         middle: Text(
           "Ticket",
           style: TextStyle(
-            color: currentTheme.primaryColor,
+            color: currentTheme.colorScheme.primary,
           ),
         ),
         leading: GestureDetector(
@@ -71,7 +71,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
           },
           child: Icon(
             CupertinoIcons.back,
-            color: currentTheme.primaryColor,
+            color: currentTheme.colorScheme.primary,
             size: 24,
           ),
         ),
@@ -91,21 +91,23 @@ class _MyTicketPageState extends State<MyTicketPage> {
                             borderRadius: defaultWidgetCornerRadius,
                             child: Container(
                               padding: const EdgeInsets.all(8),
-                              color: currentTheme.primaryColor,
+                              color: currentTheme.colorScheme.primary,
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Row(
                                   children: [
                                     GestureDetector(
                                       onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          CupertinoPageRoute(
-                                            builder: (context) => EventPage(
-                                              eventId: widget.ticket.event.id!,
+                                        if (!widget.ticket.isValidated && widget.ticket.event.isActive) {
+                                          Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                              builder: (context) => EventPage(
+                                                eventId: widget.ticket.event.id!,
+                                              ),
                                             ),
-                                          ),
-                                        );
+                                          );
+                                        }
                                       },
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,7 +122,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                               )
                                           ),
                                           const SizedBox(height: 2,),
-                                          Text(convertHourTimestamp(widget.ticket.event.startTime!),
+                                          Text(startTimeFromTimestamp(widget.ticket.event.startTime!, widget.ticket.event.endTime!),
                                               style: const TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.bold,
@@ -193,7 +195,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                       style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
-                                        color: currentTheme.primaryColor,
+                                        color: currentTheme.colorScheme.primary,
                                         decoration: TextDecoration.none,
                                       )
                                   ),
@@ -210,7 +212,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                       style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
-                                        color: currentTheme.primaryColor,
+                                        color: currentTheme.colorScheme.primary,
                                         decoration: TextDecoration.none,
                                       )
                                   ),
@@ -227,7 +229,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                       style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
-                                        color: currentTheme.primaryColor,
+                                        color: currentTheme.colorScheme.primary,
                                         decoration: TextDecoration.none,
                                       )
                                   ),
@@ -240,11 +242,11 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                         decoration: TextDecoration.none,
                                       )
                                   ),
-                                  Text(convertHourTimestamp(widget.ticket.timeOfSubmission),
+                                  Text(startTimeFromTimestamp(widget.ticket.timeOfSubmission, null),
                                       style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
-                                        color: currentTheme.primaryColor,
+                                        color: currentTheme.colorScheme.primary,
                                         decoration: TextDecoration.none,
                                       )
                                   ),
@@ -257,11 +259,11 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                         decoration: TextDecoration.none,
                                       )
                                   ),
-                                  Text(convertHourTimestamp(widget.ticket.expiryDate),
+                                  Text(startTimeFromTimestamp(widget.ticket.expiryDate, null),
                                       style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
-                                        color: currentTheme.primaryColor,
+                                        color: currentTheme.colorScheme.primary,
                                         decoration: TextDecoration.none,
                                       )
                                   ),
@@ -316,7 +318,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                     isAnswersExpanded
                                         ? CupertinoIcons.chevron_up
                                         : CupertinoIcons.chevron_down,
-                                    color: currentTheme.primaryColor,
+                                    color: currentTheme.colorScheme.primary,
                                   ),
                                 ],
                               ),
@@ -388,7 +390,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                     "${question.content}${question.required ? ' *' : ''}",
                     style: TextStyle(
                       fontSize: 16,
-                      color: currentTheme.primaryColor,
+                      color: currentTheme.colorScheme.primary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -410,9 +412,9 @@ class _MyTicketPageState extends State<MyTicketPage> {
             padding: const EdgeInsets.all(16),
             style: TextStyle(
               fontSize: 16,
-              color: currentTheme.primaryColor,
+              color: currentTheme.colorScheme.primary,
             ),
-            cursorColor: currentTheme.primaryColor
+            cursorColor: currentTheme.colorScheme.primary
           ),
         ],
       ),
@@ -436,7 +438,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                   "${question.content}${question.required ? ' *' : ''}",
                   style: TextStyle(
                     fontSize: 16,
-                    color: currentTheme.primaryColor,
+                    color: currentTheme.colorScheme.primary,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -452,7 +454,6 @@ class _MyTicketPageState extends State<MyTicketPage> {
               return Container(
                 margin: const EdgeInsets.symmetric(vertical: 6),
                 decoration: BoxDecoration(
-                  color: currentTheme.colorScheme.background,
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Row(
@@ -462,8 +463,8 @@ class _MyTicketPageState extends State<MyTicketPage> {
                           ? CupertinoIcons.smallcircle_fill_circle
                           : CupertinoIcons.circle,
                       color: answers.firstWhere((answer) => answer.questionId == question.id).optionIds!.contains(option.id)
-                          ? currentTheme.primaryColor
-                          : currentTheme.primaryColor.withOpacity(0.3),
+                          ? currentTheme.colorScheme.primary
+                          : currentTheme.colorScheme.primary.withOpacity(0.3),
                     ),
                     const SizedBox(width: 16),
                     Text(
@@ -471,8 +472,8 @@ class _MyTicketPageState extends State<MyTicketPage> {
                       style: TextStyle(
                         fontSize: 16,
                         color: answers.firstWhere((answer) => answer.questionId == question.id).optionIds!.contains(option.id)
-                            ? currentTheme.primaryColor
-                            : currentTheme.primaryColor.withOpacity(0.3),
+                            ? currentTheme.colorScheme.primary
+                            : currentTheme.colorScheme.primary.withOpacity(0.3),
                       ),
                     ),
                   ],
@@ -500,7 +501,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
               "${question.content}${question.required ? ' *' : ''}",
               style: TextStyle(
                 fontSize: 16,
-                color: currentTheme.primaryColor,
+                color: currentTheme.colorScheme.primary,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -514,7 +515,6 @@ class _MyTicketPageState extends State<MyTicketPage> {
               return Container(
                 margin: const EdgeInsets.symmetric(vertical: 6),
                 decoration: BoxDecoration(
-                  color: currentTheme.colorScheme.background,
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Row(
@@ -524,8 +524,8 @@ class _MyTicketPageState extends State<MyTicketPage> {
                           ? CupertinoIcons.checkmark_square_fill
                           : CupertinoIcons.square,
                       color: answers.firstWhere((answer) => answer.questionId == question.id).optionIds!.contains(option.id)
-                          ? currentTheme.primaryColor
-                          : currentTheme.primaryColor.withOpacity(0.3),
+                          ? currentTheme.colorScheme.primary
+                          : currentTheme.colorScheme.primary.withOpacity(0.3),
                     ),
                     const SizedBox(width: 16),
                     Text(
@@ -533,8 +533,8 @@ class _MyTicketPageState extends State<MyTicketPage> {
                       style: TextStyle(
                         fontSize: 16,
                         color: answers.firstWhere((answer) => answer.questionId == question.id).optionIds!.contains(option.id)
-                            ? currentTheme.primaryColor
-                            : currentTheme.primaryColor.withOpacity(0.3),
+                            ? currentTheme.colorScheme.primary
+                            : currentTheme.colorScheme.primary.withOpacity(0.3),
                       ),
                     ),
                   ],

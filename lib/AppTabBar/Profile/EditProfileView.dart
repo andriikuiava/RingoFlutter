@@ -126,7 +126,7 @@ class _EditProfileState extends State<EditProfile> {
         middle: Text(
           "Edit Profile",
           style: TextStyle(
-            color: currentTheme.primaryColor,
+            color: currentTheme.colorScheme.primary,
             fontSize: 16,
           ),
         ),
@@ -136,7 +136,7 @@ class _EditProfileState extends State<EditProfile> {
           },
           child: Icon(
             CupertinoIcons.back,
-            color: currentTheme.primaryColor,
+            color: currentTheme.colorScheme.primary,
           ),
         ),
       ),
@@ -158,15 +158,15 @@ class _EditProfileState extends State<EditProfile> {
                             ? (widget.beforeEdit.profilePictureId == null)
                             ? Icon(
                           CupertinoIcons.person_circle,
-                          color: currentTheme.primaryColor,
+                          color: currentTheme.colorScheme.primary,
                           size: 120,
                         )
                             : CircleAvatar(
-                          backgroundColor: currentTheme.primaryColor,
+                          backgroundColor: currentTheme.colorScheme.primary,
                           radius: 45,
                           backgroundImage: NetworkImage("${ApiEndpoints.GET_PHOTO}/${widget.beforeEdit.profilePictureId}"),)
                             : CircleAvatar(
-                          backgroundColor: currentTheme.primaryColor,
+                          backgroundColor: currentTheme.colorScheme.primary,
                           radius: 60,
                           backgroundImage: FileImage(image!),
                         ),
@@ -183,7 +183,7 @@ class _EditProfileState extends State<EditProfile> {
                                     const SizedBox(width: 15),
                                     Icon(
                                       CupertinoIcons.photo_fill,
-                                      color: currentTheme.primaryColor,
+                                      color: currentTheme.colorScheme.primary,
                                     ),
                                     const SizedBox(width: 10),
                                     SizedBox(
@@ -191,7 +191,7 @@ class _EditProfileState extends State<EditProfile> {
                                       child: Text(
                                         "Choose a photo",
                                         style: TextStyle(
-                                          color: currentTheme.primaryColor,
+                                          color: currentTheme.colorScheme.primary,
                                         ),
                                         overflow: TextOverflow.ellipsis,
                                       ),
@@ -217,13 +217,13 @@ class _EditProfileState extends State<EditProfile> {
                                     const SizedBox(width: 15),
                                     Icon(
                                       CupertinoIcons.camera_fill,
-                                      color: currentTheme.primaryColor,
+                                      color: currentTheme.colorScheme.primary,
                                     ),
                                     const SizedBox(width: 10),
                                     Text(
                                       "Take a photo",
                                       style: TextStyle(
-                                        color: currentTheme.primaryColor,
+                                        color: currentTheme.colorScheme.primary,
                                       ),
                                     ),
                                   ],
@@ -248,7 +248,7 @@ class _EditProfileState extends State<EditProfile> {
                     padding: EdgeInsets.only(left: leadingPadding),
                     child: DefaultTextStyle(
                       style: TextStyle(
-                        color: currentTheme.primaryColor,
+                        color: currentTheme.colorScheme.primary,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
@@ -267,12 +267,12 @@ class _EditProfileState extends State<EditProfile> {
                         },
                         clearButtonMode: OverlayVisibilityMode.editing,
                         maxLength: 49,
-                        cursorColor: currentTheme.primaryColor,
+                        cursorColor: currentTheme.colorScheme.primary,
                         controller: _fullNameController,
                         placeholder: 'Enter your name',
                         keyboardType: TextInputType.text,
                         style: TextStyle(
-                          color: currentTheme.primaryColor,
+                          color: currentTheme.colorScheme.primary,
                           fontSize: 16,
                         ),
                         decoration: BoxDecoration(
@@ -300,7 +300,7 @@ class _EditProfileState extends State<EditProfile> {
                     padding: EdgeInsets.only(left: leadingPadding),
                     child: DefaultTextStyle(
                       style: TextStyle(
-                        color: currentTheme.primaryColor,
+                        color: currentTheme.colorScheme.primary,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
@@ -319,12 +319,12 @@ class _EditProfileState extends State<EditProfile> {
                         onChanged: (value) {
                           validateFields();
                         },
-                        cursorColor: currentTheme.primaryColor,
+                        cursorColor: currentTheme.colorScheme.primary,
                         controller: _usernameController,
                         placeholder: 'Enter your username',
                         keyboardType: TextInputType.text,
                         style: TextStyle(
-                          color: currentTheme.primaryColor,
+                          color: currentTheme.colorScheme.primary,
                           fontSize: 16,
                         ),
                         decoration: BoxDecoration(
@@ -352,7 +352,7 @@ class _EditProfileState extends State<EditProfile> {
                     padding: EdgeInsets.only(left: leadingPadding),
                     child: DefaultTextStyle(
                       style: TextStyle(
-                        color: currentTheme.primaryColor,
+                        color: currentTheme.colorScheme.primary,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
@@ -386,7 +386,7 @@ class _EditProfileState extends State<EditProfile> {
                     padding: EdgeInsets.only(left: leadingPadding),
                     child: DefaultTextStyle(
                       style: TextStyle(
-                        color: currentTheme.primaryColor,
+                        color: currentTheme.colorScheme.primary,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
@@ -405,7 +405,7 @@ class _EditProfileState extends State<EditProfile> {
                       0: Text(
                         'Male',
                         style: TextStyle(
-                          color: currentTheme.primaryColor,
+                          color: currentTheme.colorScheme.primary,
                           fontSize: 16,
                           fontWeight: FontWeight.normal,
                           decoration: TextDecoration.none,
@@ -414,7 +414,7 @@ class _EditProfileState extends State<EditProfile> {
                       1: Text(
                         'Female',
                         style: TextStyle(
-                          color: currentTheme.primaryColor,
+                          color: currentTheme.colorScheme.primary,
                           fontSize: 16,
                           fontWeight: FontWeight.normal,
                           decoration: TextDecoration.none,
@@ -423,7 +423,7 @@ class _EditProfileState extends State<EditProfile> {
                       2: Text(
                         'Other',
                         style: TextStyle(
-                          color: currentTheme.primaryColor,
+                          color: currentTheme.colorScheme.primary,
                           fontSize: 16,
                           fontWeight: FontWeight.normal,
                           decoration: TextDecoration.none,
@@ -439,7 +439,7 @@ class _EditProfileState extends State<EditProfile> {
                         width: MediaQuery.of(context).size.width * 0.9,
                         child: CupertinoButton(
                           color: (isFormValid)
-                              ? currentTheme.primaryColor
+                              ? currentTheme.colorScheme.primary
                               : currentTheme.colorScheme.background,
                           onPressed: () async {
                             validateFields();
@@ -457,7 +457,7 @@ class _EditProfileState extends State<EditProfile> {
                             style: TextStyle(
                               color: (isFormValid)
                                   ? currentTheme.colorScheme.background
-                                  : currentTheme.primaryColor,
+                                  : currentTheme.colorScheme.primary,
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
                             ),

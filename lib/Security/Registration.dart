@@ -211,14 +211,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
         middle: Text(
           'Sign Up',
           style: TextStyle(
-            color: currentTheme.primaryColor,
+            color: currentTheme.colorScheme.primary,
           ),
         ),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
           child: Icon(
             CupertinoIcons.back,
-            color: currentTheme.primaryColor,
+            color: currentTheme.colorScheme.primary,
           ),
           onPressed: () {
             Navigator.pop(context);
@@ -241,7 +241,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         (image == null)
                             ? Icon(
                           CupertinoIcons.person_circle,
-                          color: currentTheme.primaryColor,
+                          color: currentTheme.colorScheme.primary,
                           size: 120,
                         )
                             : CircleAvatar(
@@ -261,13 +261,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                     const SizedBox(width: 15),
                                     Icon(
                                       CupertinoIcons.photo_fill,
-                                      color: currentTheme.primaryColor,
+                                      color: currentTheme.colorScheme.primary,
                                     ),
                                     const SizedBox(width: 10),
                                     Text(
                                       "Choose from photos",
                                       style: TextStyle(
-                                        color: currentTheme.primaryColor,
+                                        color: currentTheme.colorScheme.primary,
                                       ),
                                     ),
                                   ],
@@ -291,13 +291,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                     const SizedBox(width: 15),
                                     Icon(
                                       CupertinoIcons.camera_fill,
-                                      color: currentTheme.primaryColor,
+                                      color: currentTheme.colorScheme.primary,
                                     ),
                                     const SizedBox(width: 10),
                                     Text(
                                       "Take a photo",
                                       style: TextStyle(
-                                        color: currentTheme.primaryColor,
+                                        color: currentTheme.colorScheme.primary,
                                       ),
                                     ),
                                   ],
@@ -328,7 +328,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   children: [
                     DefaultTextStyle(
                       style: TextStyle(
-                        color: currentTheme.primaryColor,
+                        color: currentTheme.colorScheme.primary,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
@@ -341,12 +341,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         autocorrect: false,
                         clearButtonMode: OverlayVisibilityMode.editing,
                         maxLength: 49,
-                        cursorColor: currentTheme.primaryColor,
+                        cursorColor: currentTheme.colorScheme.primary,
                         controller: _fullNameController,
                         placeholder: 'Enter your name',
                         keyboardType: TextInputType.emailAddress,
                         style: TextStyle(
-                          color: currentTheme.primaryColor,
+                          color: currentTheme.colorScheme.primary,
                           fontSize: 16,
                         ),
                         decoration: BoxDecoration(
@@ -388,7 +388,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       children: [
                         DefaultTextStyle(
                           style: TextStyle(
-                            color: currentTheme.primaryColor,
+                            color: currentTheme.colorScheme.primary,
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
@@ -411,7 +411,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                     CupertinoActionSheetAction(
                                       child: Text('Close',
                                         style: TextStyle(
-                                          color: currentTheme.primaryColor,
+                                          color: currentTheme.colorScheme.primary,
                                         ),),
                                       onPressed: () {
                                         Navigator.pop(context);
@@ -425,7 +425,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           child: Icon(
                             CupertinoIcons.info,
                             size: 16.0,
-                            color: currentTheme.primaryColor,
+                            color: currentTheme.colorScheme.primary,
                           ),
                         ),
                       ],
@@ -436,12 +436,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       child: CupertinoTextField(
                         autocorrect: false,
                         clearButtonMode: OverlayVisibilityMode.editing,
-                        cursorColor: currentTheme.primaryColor,
+                        cursorColor: currentTheme.colorScheme.primary,
                         controller: _usernameController,
                         placeholder: 'Enter your username',
                         keyboardType: TextInputType.emailAddress,
                         style: TextStyle(
-                          color: currentTheme.primaryColor,
+                          color: currentTheme.colorScheme.primary,
                           fontSize: 16,
                         ),
                         decoration: BoxDecoration(
@@ -480,7 +480,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   children: [
                     DefaultTextStyle(
                       style: TextStyle(
-                        color: currentTheme.primaryColor,
+                        color: currentTheme.colorScheme.primary,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
@@ -493,12 +493,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         autocorrect: false,
                         clearButtonMode: OverlayVisibilityMode.editing,
                         maxLength: 256,
-                        cursorColor: currentTheme.primaryColor,
+                        cursorColor: currentTheme.colorScheme.primary,
                         controller: _emailController,
                         placeholder: 'Enter your email',
                         keyboardType: TextInputType.emailAddress,
                         style: TextStyle(
-                          color: currentTheme.primaryColor,
+                          color: currentTheme.colorScheme.primary,
                           fontSize: 16,
                         ),
                         decoration: BoxDecoration(
@@ -545,7 +545,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       children: [
                         DefaultTextStyle(
                           style: TextStyle(
-                            color: currentTheme.primaryColor,
+                            color: currentTheme.colorScheme.primary,
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
@@ -560,12 +560,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         autocorrect: false,
                         clearButtonMode: OverlayVisibilityMode.editing,
                         obscureText: true,
-                        cursorColor: currentTheme.primaryColor,
+                        cursorColor: currentTheme.colorScheme.primary,
                         controller: _passwordController,
                         placeholder: 'Enter your password',
                         keyboardType: TextInputType.emailAddress,
                         style: TextStyle(
-                          color: currentTheme.primaryColor,
+                          color: currentTheme.colorScheme.primary,
                           fontSize: 16,
                         ),
                         decoration: BoxDecoration(
@@ -610,7 +610,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     const SizedBox(height: 20.0),
                     DefaultTextStyle(
                       style: TextStyle(
-                        color: currentTheme.primaryColor,
+                        color: currentTheme.colorScheme.primary,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
@@ -623,12 +623,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         autocorrect: false,
                         clearButtonMode: OverlayVisibilityMode.editing,
                         obscureText: true,
-                        cursorColor: currentTheme.primaryColor,
+                        cursorColor: currentTheme.colorScheme.primary,
                         controller: _repeatPasswordController,
                         placeholder: 'Repeat your password',
                         keyboardType: TextInputType.emailAddress,
                         style: TextStyle(
-                          color: currentTheme.primaryColor,
+                          color: currentTheme.colorScheme.primary,
                           fontSize: 16,
                         ),
                         decoration: BoxDecoration(
@@ -656,7 +656,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   children: [
                     DefaultTextStyle(
                       style: TextStyle(
-                        color: currentTheme.primaryColor,
+                        color: currentTheme.colorScheme.primary,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
@@ -687,7 +687,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   children: [
                     DefaultTextStyle(
                       style: TextStyle(
-                        color: currentTheme.primaryColor,
+                        color: currentTheme.colorScheme.primary,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
@@ -709,7 +709,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             0: Text(
                               'Male',
                               style: TextStyle(
-                                color: currentTheme.primaryColor,
+                                color: currentTheme.colorScheme.primary,
                                 fontSize: 16,
                                 decoration: TextDecoration.none,
                               ),
@@ -717,7 +717,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             1: Text(
                               'Female',
                               style: TextStyle(
-                                color: currentTheme.primaryColor,
+                                color: currentTheme.colorScheme.primary,
                                 fontSize: 16,
                                 decoration: TextDecoration.none,
 
@@ -726,7 +726,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             2: Text(
                               'Other',
                               style: TextStyle(
-                                color: currentTheme.primaryColor,
+                                color: currentTheme.colorScheme.primary,
                                 fontSize: 16,
                                 decoration: TextDecoration.none,
                               ),
@@ -749,7 +749,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         height: 50,
                         child: CupertinoButton(
                           color: isFormValid
-                              ? currentTheme.primaryColor
+                              ? currentTheme.colorScheme.primary
                               : currentTheme.colorScheme.background,
                           onPressed: () {
                             validateForm();
@@ -804,7 +804,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               style: TextStyle(
                                 color: isFormValid
                                     ? currentTheme.colorScheme.background
-                                    : currentTheme.primaryColor,
+                                    : currentTheme.colorScheme.primary,
                                 fontWeight: FontWeight.bold,
                               ),
                             )

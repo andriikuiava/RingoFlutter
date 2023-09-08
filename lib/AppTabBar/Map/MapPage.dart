@@ -143,7 +143,7 @@ class _MapPageState extends State<MapPage> {
     final Canvas canvas = Canvas(pictureRecorder);
 
     const int size = 150;
-    final Paint paint = Paint()..color = currentTheme.primaryColor;
+    final Paint paint = Paint()..color = currentTheme.colorScheme.primary;
 
     canvas.drawCircle(const Offset(size / 2, size / 2), size / 2, paint);
 
@@ -186,6 +186,7 @@ class _MapPageState extends State<MapPage> {
       ),
       myLocationEnabled: true,
       mapType: MapType.normal,
+      myLocationButtonEnabled: false,
       compassEnabled: true,
       markers: Set<Marker>.of(_markers),
       onCameraMove: (position) {
@@ -194,7 +195,7 @@ class _MapPageState extends State<MapPage> {
     )
         : Center(
       child: CircularProgressIndicator(
-        color: currentTheme.primaryColor,
+        color: currentTheme.colorScheme.primary,
       ),
     );
   }

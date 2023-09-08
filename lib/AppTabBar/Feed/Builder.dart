@@ -28,6 +28,7 @@ class _FeedBuilderState extends State<FeedBuilder> {
   int currentPage = 0;
   bool isLoading = false;
   bool hasMoreData = true;
+  bool isRequestSent = false;
 
   @override
   void initState() {
@@ -50,6 +51,9 @@ class _FeedBuilderState extends State<FeedBuilder> {
         'Authorization': 'Bearer $token',
       };
       var response = await http.get(url, headers: headers);
+      setState(() {
+        isRequestSent = true;
+      });
       if (response.statusCode == 200) {
         final List<dynamic> data = customJsonDecode(response.body);
         final List<EventInFeed> newEvents = data.map((item) =>
@@ -97,7 +101,7 @@ class _FeedBuilderState extends State<FeedBuilder> {
         middle: Text(
           widget.title ?? 'Feed',
           style: TextStyle(
-            color: currentTheme.primaryColor,
+            color: currentTheme.colorScheme.primary,
           ),
         ),
         leading: CupertinoButton(
@@ -107,74 +111,87 @@ class _FeedBuilderState extends State<FeedBuilder> {
           },
           child: Icon(
             CupertinoIcons.back,
-            color: currentTheme.primaryColor,
+            color: currentTheme.colorScheme.primary,
             size: 24,
           ),
         ),
       ),
       child: NotificationListener<ScrollNotification>(
         onNotification: _onNotification,
-        child: ListView.builder(
-          itemCount: events.length + 1,
-          itemBuilder: (context, index) {
-            if (index < events.length) {
-              final event = events[index];
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => EventPage(eventId: event.id!),
-                    ),
-                  );
-                },
-                child: Column(
-                  children: [
-                    const SizedBox(height: 10),
-                    eventCard(context, event),
-                  ],
-                ),
-              );
-            } else if (isLoading) {
-              return Center(child: CircularProgressIndicator(
-                color: currentTheme.primaryColor,
-              ));
-            } else {
-              return (events.isNotEmpty)
-                  ? Center(
-                child: Padding(
-                  padding: defaultWidgetPadding,
-                  child: ClipRRect(
-                      borderRadius: defaultWidgetCornerRadius,
-                      child: Container(
-                        color: currentTheme.colorScheme.background,
-                        child: const Column(
-                          children: [
-                            SizedBox(height: 20),
-                            Row(
-                              children: [
-                                Spacer(),
-                                Text('No more events available',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    decoration: TextDecoration.none,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 24,
-                                  ),
-                                ),
-                                Spacer(),
-                              ],
-                            ),
-                            SizedBox(height: 20)
-                          ],
-                        ),
-                      )
-                  ),
-                ),
-              )
-                  : Container();
-            }
+        child: RefreshIndicator(
+          onRefresh: () async {
+            setState(() {
+              events = [];
+              currentPage = 0;
+              isLoading = false;
+              hasMoreData = true;
+              isRequestSent = false;
+            });
+            fetchEvents();
           },
+          color: currentTheme.colorScheme.primary,
+          child: ListView.builder(
+            itemCount: events.length + 1,
+            itemBuilder: (context, index) {
+              if (index < events.length) {
+                final event = events[index];
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => EventPage(eventId: event.id!),
+                      ),
+                    );
+                  },
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 10),
+                      eventCard(context, event, false),
+                    ],
+                  ),
+                );
+              } else if (isLoading) {
+                return Center(child: CircularProgressIndicator(
+                  color: currentTheme.colorScheme.primary,
+                ));
+              } else {
+                return Center(
+                  child: (isRequestSent && events.isEmpty)
+                      ? Padding(
+                    padding: defaultWidgetPadding,
+                    child: ClipRRect(
+                        borderRadius: defaultWidgetCornerRadius,
+                        child: Container(
+                          color: currentTheme.colorScheme.background,
+                          child: const Column(
+                            children: [
+                              SizedBox(height: 20),
+                              Row(
+                                children: [
+                                  Spacer(),
+                                  Text('No events available',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      decoration: TextDecoration.none,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 24,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                ],
+                              ),
+                              SizedBox(height: 20)
+                            ],
+                          ),
+                        )
+                    ),
+                  )
+                      : const SizedBox(height: 0),
+                );
+              }
+            },
+          ),
         ),
       ),
     );

@@ -116,7 +116,7 @@ for (var question in widget.event.registrationForm!.questions) {
         backgroundColor: currentTheme.scaffoldBackgroundColor,
         middle: Text(
         'Form completion',
-        style: TextStyle(color: currentTheme.primaryColor),
+        style: TextStyle(color: currentTheme.colorScheme.primary),
         ),
         leading: GestureDetector(
           onTap: () {
@@ -124,7 +124,7 @@ for (var question in widget.event.registrationForm!.questions) {
           },
           child: Icon(
             CupertinoIcons.back,
-            color: currentTheme.primaryColor,
+            color: currentTheme.colorScheme.primary,
             size: 24,
           ),
         ),
@@ -164,15 +164,15 @@ for (var question in widget.event.registrationForm!.questions) {
                           child: Container(
                             color: isFormCompleted
                                 ? currentTheme.colorScheme.background
-                                : currentTheme.primaryColor.withOpacity(0.2),
+                                : currentTheme.colorScheme.primary.withOpacity(0.2),
                             width: MediaQuery.of(context).size.width * 0.8,
                             child: CupertinoButton(
                               child: Text(
                                 isFormCompleted ? 'Submit' : 'Please complete the form',
                                 style: TextStyle(
                                   color: isFormCompleted
-                                      ? currentTheme.primaryColor
-                                      : currentTheme.primaryColor.withOpacity(0.6),
+                                      ? currentTheme.colorScheme.primary
+                                      : currentTheme.colorScheme.primary.withOpacity(0.6),
                                 ),
                               ),
                               onPressed: () {
@@ -217,7 +217,7 @@ for (var question in widget.event.registrationForm!.questions) {
                     registrationForm.title,
                     style: TextStyle(
                       fontSize: 22,
-                      color: currentTheme.primaryColor,
+                      color: currentTheme.colorScheme.primary,
                       fontWeight: FontWeight.bold,
                       decoration: TextDecoration.none,
                     ),
@@ -229,7 +229,7 @@ for (var question in widget.event.registrationForm!.questions) {
                     "${registrationForm.description}",
                     style: TextStyle(
                       fontSize: 18,
-                      color: currentTheme.primaryColor,
+                      color: currentTheme.colorScheme.primary,
                       fontWeight: FontWeight.normal,
                       decoration: TextDecoration.none,
                     ),
@@ -262,7 +262,7 @@ for (var question in widget.event.registrationForm!.questions) {
                     "${question.content}${question.required ? ' *' : ''}",
                     style: TextStyle(
                       fontSize: 16,
-                      color: currentTheme.primaryColor,
+                      color: currentTheme.colorScheme.primary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -282,9 +282,9 @@ for (var question in widget.event.registrationForm!.questions) {
             clearButtonMode: OverlayVisibilityMode.editing,
             style: TextStyle(
               fontSize: 16,
-              color: currentTheme.primaryColor,
+              color: currentTheme.colorScheme.primary,
             ),
-            cursorColor: currentTheme.primaryColor,
+            cursorColor: currentTheme.colorScheme.primary,
             onChanged: (value) {
               final answer = answers.firstWhere((answer) => answer.questionId == question.id);
               answer.content = value;
@@ -314,7 +314,7 @@ for (var question in widget.event.registrationForm!.questions) {
                   "${question.content}${question.required ? ' *' : ''}",
                   style: TextStyle(
                     fontSize: 16,
-                    color: currentTheme.primaryColor,
+                    color: currentTheme.colorScheme.primary,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -326,7 +326,7 @@ for (var question in widget.event.registrationForm!.questions) {
                     (answers.firstWhere((answer) => answer.questionId == question.id).optionIds!.isNotEmpty)
                         ? CupertinoIcons.clear_circled_solid
                         : CupertinoIcons.clear_circled,
-                    color: currentTheme.primaryColor,
+                    color: currentTheme.colorScheme.primary,
                   ),
                   onPressed: () {
                     final answer = answers.firstWhere((answer) => answer.questionId == question.id);
@@ -370,14 +370,14 @@ for (var question in widget.event.registrationForm!.questions) {
                         answers.firstWhere((answer) => answer.questionId == question.id).optionIds!.contains(option.id)
                             ? CupertinoIcons.smallcircle_fill_circle
                             : CupertinoIcons.circle,
-                        color: currentTheme.primaryColor,
+                        color: currentTheme.colorScheme.primary,
                       ),
                       const SizedBox(width: 16),
                       Text(
                         option.content,
                         style: TextStyle(
                           fontSize: 16,
-                          color: currentTheme.primaryColor,
+                          color: currentTheme.colorScheme.primary,
                         ),
                       ),
                     ],
@@ -406,7 +406,7 @@ for (var question in widget.event.registrationForm!.questions) {
               "${question.content}${question.required ? ' *' : ''}",
               style: TextStyle(
                 fontSize: 16,
-                color: currentTheme.primaryColor,
+                color: currentTheme.colorScheme.primary,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -442,14 +442,14 @@ for (var question in widget.event.registrationForm!.questions) {
                         answers.firstWhere((answer) => answer.questionId == question.id).optionIds!.contains(option.id)
                             ? CupertinoIcons.checkmark_square_fill
                             : CupertinoIcons.square,
-                        color: currentTheme.primaryColor,
+                        color: currentTheme.colorScheme.primary,
                       ),
                       const SizedBox(width: 16),
                       Text(
                         option.content,
                         style: TextStyle(
                           fontSize: 16,
-                          color: currentTheme.primaryColor,
+                          color: currentTheme.colorScheme.primary,
                         ),
                       ),
                     ],

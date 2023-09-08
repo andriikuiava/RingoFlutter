@@ -84,12 +84,12 @@ class _TicketsScreenState extends State<TicketsScreen> {
         middle: Text(
           'Tickets',
           style: TextStyle(
-            color: currentTheme.primaryColor,
+            color: currentTheme.colorScheme.primary,
           ),
         ),
       ),
       child: RefreshIndicator(
-        color: currentTheme.primaryColor,
+        color: currentTheme.colorScheme.primary,
         child: (tickets.isNotEmpty)
           ? ListView.builder(
         itemCount: tickets.length,
@@ -141,7 +141,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                                 child: Text(
                                   ticket.event.name,
                                   style: TextStyle(
-                                    color: currentTheme.primaryColor,
+                                    color: currentTheme.colorScheme.primary,
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -189,7 +189,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                                   ),
                                   const SizedBox(width: 5,),
                                   Text(
-                                    convertHourTimestamp(ticket.event.startTime!),
+                                    startTimeFromTimestamp(ticket.event.startTime!, null),
                                     style: const TextStyle(
                                       color: Colors.grey,
                                       fontSize: 14,
