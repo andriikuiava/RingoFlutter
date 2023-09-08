@@ -19,6 +19,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 import 'package:share_plus/share_plus.dart';
 import 'dart:io';
+import 'package:ringoflutter/AppTabBar/Feed/Builder.dart';
+import 'package:ringoflutter/AppTabBar/Map/GetLocation.dart';
 
 
 class EventPage extends StatefulWidget {
@@ -194,7 +196,7 @@ class _EventPageState extends State<EventPage>
                 middle: Text(
                   "Event",
                   style: TextStyle(
-                    color: currentTheme.primaryColor,
+                    color: currentTheme.colorScheme.primary,
                   ),
                 ),
                 trailing: GestureDetector(
@@ -206,7 +208,7 @@ class _EventPageState extends State<EventPage>
                   },
                   child: Icon(
                     CupertinoIcons.share,
-                    color: currentTheme.primaryColor,
+                    color: currentTheme.colorScheme.primary,
                     size: 24,
                   ),
                 ),
@@ -216,57 +218,60 @@ class _EventPageState extends State<EventPage>
                   },
                   child: Icon(
                     CupertinoIcons.back,
-                    color: currentTheme.primaryColor,
+                    color: currentTheme.colorScheme.primary,
                     size: 24,
                   ),
                 ),
               ),
               backgroundColor: currentTheme.scaffoldBackgroundColor,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: defaultWidgetPadding,
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.95,
-                        decoration: BoxDecoration(
-                          color: currentTheme.colorScheme.background,
-                          borderRadius: defaultWidgetCornerRadius,
-                        ),
-                        constraints: const BoxConstraints(maxWidth: double.infinity),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                event.name,
-                                style: TextStyle(
-                                  color: currentTheme.primaryColor,
-                                  decoration: TextDecoration.none,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 24.0,
+              child: RefreshIndicator(
+                onRefresh: _refreshEvent,
+                color: currentTheme.colorScheme.primary,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: defaultWidgetPadding,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.95,
+                          decoration: BoxDecoration(
+                            color: currentTheme.colorScheme.background,
+                            borderRadius: defaultWidgetCornerRadius,
+                          ),
+                          constraints: const BoxConstraints(maxWidth: double.infinity),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  event.name,
+                                  style: TextStyle(
+                                    color: currentTheme.colorScheme.primary,
+                                    decoration: TextDecoration.none,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 24.0,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 6,
-                              ),
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => HostPage(
-                                          hostId: event.host.id,
+                                const SizedBox(
+                                  height: 6,
+                                ),
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => HostPage(
+                                            hostId: event.host.id,
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
+                                      );
+                                    },
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
                                         Column(
                                           children: [
                                             Container(
@@ -274,8 +279,8 @@ class _EventPageState extends State<EventPage>
                                                 shape: BoxShape.circle,
                                               ),
                                               child: (event.host.profilePictureId != null)
-                                              ? CircleAvatar(
-                                                backgroundColor: currentTheme.primaryColor,
+                                                  ? CircleAvatar(
+                                                backgroundColor: currentTheme.colorScheme.primary,
                                                 radius: 32.0,
                                                 backgroundImage: NetworkImage(
                                                   '${ApiEndpoints.GET_PHOTO}/${event.host.profilePictureId}',
@@ -295,497 +300,567 @@ class _EventPageState extends State<EventPage>
                                             ),
                                           ],
                                         ),
-                                      const SizedBox(width: 10,),
-                                      Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            width: MediaQuery.of(context).size.width * 0.7,
-                                            child: Text(
-                                              event.host.name,
-                                              style: TextStyle(
-                                                color: currentTheme.primaryColor,
+                                        const SizedBox(width: 10,),
+                                        Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            SizedBox(
+                                              width: MediaQuery.of(context).size.width * 0.7,
+                                              child: Text(
+                                                event.host.name,
+                                                style: TextStyle(
+                                                  color: currentTheme.colorScheme.primary,
+                                                  decoration:
+                                                  TextDecoration.none,
+                                                  fontSize: 16.0,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                            Text(
+                                              "@${event.host.username}",
+                                              style: const TextStyle(
+                                                color: Colors.grey,
                                                 decoration:
                                                 TextDecoration.none,
+                                                fontWeight: FontWeight.normal,
                                                 fontSize: 16.0,
-                                                fontWeight: FontWeight.bold,
                                               ),
                                             ),
-                                          ),
-                                          Text(
-                                            "@${event.host.username}",
-                                            style: const TextStyle(
-                                              color: Colors.grey,
-                                              decoration:
-                                              TextDecoration.none,
-                                              fontWeight: FontWeight.normal,
-                                              fontSize: 16.0,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 12,
-                              ),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.9,
-                                child: ElevatedButton(
-                                  onPressed: () async {
-                                    if (!event.isRegistered) {
-                                      if (event.registrationForm == null) {
-                                        getTicketNoForm();
-                                      } else {
-                                        final wasBought = await Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => FormCompletion(
-                                              event: event,
+                                const SizedBox(
+                                  height: 12,
+                                ),
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width * 0.9,
+                                  child: (event.isTicketNeeded)
+                                      ? ElevatedButton(
+                                    onPressed: () async {
+                                      if (!event.isRegistered) {
+                                        if (event.registrationForm == null) {
+                                          getTicketNoForm();
+                                        } else {
+                                          final wasBought = await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => FormCompletion(
+                                                event: event,
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                        if (wasBought) {
-                                          _refreshEvent();
+                                          );
+                                          if (wasBought) {
+                                            _refreshEvent();
+                                          }
                                         }
+                                      } else {
+                                        getBoughtTicket();
                                       }
-                                    } else {
-                                      getBoughtTicket();
-                                    }
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: currentTheme.primaryColor,
-                                  ),
-                                  child: !event.isRegistered
-                                      ? Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        child: Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            (event.price == 0.0 ? "Get Ticket" : "Buy Ticket"),
-                                            style: TextStyle(
-                                              color: currentTheme.colorScheme.background,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      foregroundColor: currentTheme.colorScheme.primary,
+                                      backgroundColor: currentTheme.colorScheme.primary,
+                                    ),
+                                    child: !event.isRegistered
+                                        ? Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              (event.price == 0.0 ? "Register" : "Buy Ticket"),
+                                              style: TextStyle(
+                                                color: currentTheme.scaffoldBackgroundColor,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      Expanded(
-                                        child: Align(
-                                          alignment: Alignment.centerRight,
-                                          child: Text(
-                                            (event.price == 0.0 ? "Free" : "${event.currency!.symbol}${event.price!.toStringAsFixed(2)}"),
-                                            style: TextStyle(
-                                              color: currentTheme.colorScheme.background,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
+                                        Expanded(
+                                          child: Align(
+                                            alignment: Alignment.centerRight,
+                                            child: Text(
+                                              (event.price == 0.0 ? "Free" : "${event.currency!.symbol}${event.price!.toStringAsFixed(2)}"),
+                                              style: TextStyle(
+                                                color: currentTheme.scaffoldBackgroundColor,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    )
+                                        : Row(
+                                      children: [
+                                        Expanded(
+                                          child: Align(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              ("Open Ticket"),
+                                              style: TextStyle(
+                                                color: currentTheme.scaffoldBackgroundColor,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   )
-                                      : Row(
-                                    children: [
-                                      Expanded(
-                                        child: Align(
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            ("Open Ticket"),
-                                            style: TextStyle(
-                                              color: currentTheme.colorScheme.background,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                      : SizedBox(),
                                 ),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: MediaQuery.of(context).size.width * 0.41,
-                                        child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: currentTheme.scaffoldBackgroundColor,
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              const Spacer(),
-                                              Icon(
-                                                (event.isSaved ? CupertinoIcons.bookmark_fill : CupertinoIcons.bookmark),
-                                                size: 16,
-                                                color: currentTheme.primaryColor,
-                                              ),
-                                              const SizedBox(width: 4,),
-                                              Text(
-                                                (event.isSaved ? "Unsave" : "Save"),
-                                                style: TextStyle(
-                                                  color: currentTheme.primaryColor,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 16,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: MediaQuery.of(context).size.width * 0.41,
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              elevation: 0,
+                                              foregroundColor: currentTheme.colorScheme.primary,
+                                              backgroundColor: currentTheme.scaffoldBackgroundColor,
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                const Spacer(),
+                                                Icon(
+                                                  (event.isSaved ? CupertinoIcons.bookmark_fill : CupertinoIcons.bookmark),
+                                                  size: 16,
+                                                  color: currentTheme.colorScheme.primary,
                                                 ),
-                                              ),
-                                              const Spacer(),
-                                            ],
-                                          ),
-                                          onPressed: () {
-                                            saveEvent(event.isSaved);
-                                          },
-                                        ),
-                                      ),
-                                      SizedBox(width: MediaQuery.of(context).size.width * 0.07,),
-                                      SizedBox(
-                                        width: MediaQuery.of(context).size.width * 0.41,
-                                        child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: (event.host.contacts.isNotEmpty ? currentTheme.scaffoldBackgroundColor : Colors.grey),
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              const Spacer(),
-                                              Text(
-                                                ("Contact host"),
-                                                style: TextStyle(
-                                                  color: (event.host.contacts.isNotEmpty ? currentTheme.primaryColor : Colors.grey.shade50),
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 16,
-                                                ),
-                                              ),
-                                              const Spacer(),
-                                            ],
-                                          ),
-                                          onPressed: () {
-                                            if (event.host.contacts.isEmpty) {
-                                              null;
-                                            } else {
-                                              showModalBottomSheet<void>(
-                                                context: context,
-                                                elevation: 0,
-                                                builder: (context) => SizedBox(
-                                                  height: 370,
-                                                  width: MediaQuery.of(context).size.width,
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      const SizedBox(height: 16,),
-                                                      ListView.builder(
-                                                        shrinkWrap: true,
-                                                        itemCount: event.host.contacts.length,
-                                                        itemBuilder: (context, index) {
-                                                          ContactCard contactCard = event.host.contacts[index];
-                                                          bool isNumeric(String str) {
-                                                            if (str == null) {
-                                                              return false;
-                                                            }
-                                                            return double.tryParse(str) != null;
-                                                          }
-
-                                                          IconData iconData;
-                                                          if (RegExp(r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)').hasMatch(contactCard.content)) {
-                                                            iconData = CupertinoIcons.link;
-                                                          } else if (RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
-                                                              .hasMatch(contactCard.content)) {
-                                                            iconData = CupertinoIcons.mail;
-                                                          } else if (RegExp(r'^\+?[1-9][0-9\s-\(\)]{7,14}$').hasMatch(contactCard.content)) {
-                                                            iconData = CupertinoIcons.phone;
-                                                          } else {
-                                                            iconData = CupertinoIcons.doc_on_doc;
-                                                          }
-
-
-                                                          return GestureDetector(
-                                                            onTap: () async {
-                                                              if (iconData == CupertinoIcons.link) {
-                                                                launch(contactCard.content);
-                                                              } else if (iconData == CupertinoIcons.mail) {
-                                                                launch("mailto:${contactCard.content}");
-                                                              } else if (iconData == CupertinoIcons.phone) {
-                                                                String phoneNumber = contactCard.content.replaceAll(RegExp(r'[^0-9]'), '');
-                                                                launch("tel:$phoneNumber");
-                                                              } else if (iconData == CupertinoIcons.doc_on_doc) {
-                                                                await Clipboard.setData(ClipboardData(text: contactCard.content));
-                                                                Fluttertoast.showToast(
-                                                                  msg: "Copied to clipboard",
-                                                                  gravity: ToastGravity.CENTER,
-                                                                  backgroundColor: currentTheme.colorScheme.background,
-                                                                  textColor: currentTheme.primaryColor,
-                                                                  fontSize: 24,
-                                                                );
-                                                              }
-                                                            },
-                                                            child: Padding(
-                                                              padding: const EdgeInsets.all(10.0),
-                                                              child: SizedBox(
-                                                                width: MediaQuery.of(context).size.width * 0.9,
-                                                                child: Row(
-                                                                  children: [
-                                                                    const SizedBox(width: 10,),
-                                                                    Icon(
-                                                                      iconData,
-                                                                      size: 16,
-                                                                      color: currentTheme.primaryColor,
-                                                                    ),
-                                                                    const SizedBox(width: 16,),
-                                                                    Column(
-                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                      children: [
-                                                                        Text(
-                                                                          contactCard.title,
-                                                                          maxLines: 1,
-                                                                          overflow: TextOverflow.ellipsis,
-                                                                          style: TextStyle(
-                                                                            color: currentTheme.primaryColor,
-                                                                            fontWeight: FontWeight.bold,
-                                                                            fontSize: 16,
-                                                                          ),
-                                                                        ),
-                                                                        (iconData == CupertinoIcons.link)
-                                                                            ? Text(
-                                                                          contactCard.content,
-                                                                          maxLines: 1,
-                                                                          overflow: TextOverflow.ellipsis,
-                                                                          style: const TextStyle(
-                                                                            color: Colors.blue,
-                                                                            fontWeight: FontWeight.normal,
-                                                                            fontSize: 16,
-                                                                          ),
-                                                                        )
-                                                                            : Text(
-                                                                          contactCard.content,
-                                                                          style: TextStyle(
-                                                                            color: currentTheme.primaryColor,
-                                                                            fontWeight: FontWeight.normal,
-                                                                            fontSize: 16,
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          );
-                                                        },
-                                                      ),
-                                                    ],
+                                                const SizedBox(width: 4,),
+                                                Text(
+                                                  (event.isSaved ? "Unsave" : "Save"),
+                                                  style: TextStyle(
+                                                    color: currentTheme.colorScheme.primary,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16,
                                                   ),
                                                 ),
+                                                const Spacer(),
+                                              ],
+                                            ),
+                                            onPressed: () {
+                                              saveEvent(event.isSaved);
+                                            },
+                                          ),
+                                        ),
+                                        SizedBox(width: MediaQuery.of(context).size.width * 0.07,),
+                                        SizedBox(
+                                          width: MediaQuery.of(context).size.width * 0.41,
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              foregroundColor: currentTheme.colorScheme.primary,
+                                              elevation: 0,
+                                              backgroundColor: (event.host.contacts.isNotEmpty ? currentTheme.scaffoldBackgroundColor : Colors.grey),
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                const Spacer(),
+                                                Text(
+                                                  ("Contact host"),
+                                                  style: TextStyle(
+                                                    color: (event.host.contacts.isNotEmpty ? currentTheme.colorScheme.primary : Colors.grey.shade50),
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                                const Spacer(),
+                                              ],
+                                            ),
+                                            onPressed: () {
+                                              if (event.host.contacts.isEmpty) {
+                                                null;
+                                              } else {
+                                                showModalBottomSheet<void>(
+                                                  context: context,
+                                                  elevation: 0,
+                                                  builder: (context) => SizedBox(
+                                                    height: 370,
+                                                    width: MediaQuery.of(context).size.width,
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        const SizedBox(height: 16,),
+                                                        ListView.builder(
+                                                          shrinkWrap: true,
+                                                          itemCount: event.host.contacts.length,
+                                                          itemBuilder: (context, index) {
+                                                            ContactCard contactCard = event.host.contacts[index];
+                                                            bool isNumeric(String str) {
+                                                              if (str == null) {
+                                                                return false;
+                                                              }
+                                                              return double.tryParse(str) != null;
+                                                            }
+
+                                                            IconData iconData;
+                                                            if (RegExp(r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)').hasMatch(contactCard.content)) {
+                                                              iconData = CupertinoIcons.link;
+                                                            } else if (RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+                                                                .hasMatch(contactCard.content)) {
+                                                              iconData = CupertinoIcons.mail;
+                                                            } else if (RegExp(r'^\+?[1-9][0-9\s-\(\)]{7,14}$').hasMatch(contactCard.content)) {
+                                                              iconData = CupertinoIcons.phone;
+                                                            } else {
+                                                              iconData = CupertinoIcons.doc_on_doc;
+                                                            }
+
+
+                                                            return GestureDetector(
+                                                              onTap: () async {
+                                                                if (iconData == CupertinoIcons.link) {
+                                                                  launch(contactCard.content);
+                                                                } else if (iconData == CupertinoIcons.mail) {
+                                                                  launch("mailto:${contactCard.content}");
+                                                                } else if (iconData == CupertinoIcons.phone) {
+                                                                  String phoneNumber = contactCard.content.replaceAll(RegExp(r'[^0-9]'), '');
+                                                                  launch("tel:$phoneNumber");
+                                                                } else if (iconData == CupertinoIcons.doc_on_doc) {
+                                                                  await Clipboard.setData(ClipboardData(text: contactCard.content));
+                                                                  Fluttertoast.showToast(
+                                                                    msg: "Copied to clipboard",
+                                                                    gravity: ToastGravity.CENTER,
+                                                                    backgroundColor: currentTheme.colorScheme.background,
+                                                                    textColor: currentTheme.colorScheme.primary,
+                                                                    fontSize: 24,
+                                                                  );
+                                                                }
+                                                              },
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.all(10.0),
+                                                                child: SizedBox(
+                                                                  width: MediaQuery.of(context).size.width * 0.9,
+                                                                  child: Row(
+                                                                    children: [
+                                                                      const SizedBox(width: 10,),
+                                                                      Icon(
+                                                                        iconData,
+                                                                        size: 16,
+                                                                        color: currentTheme.colorScheme.primary,
+                                                                      ),
+                                                                      const SizedBox(width: 16,),
+                                                                      Column(
+                                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          Text(
+                                                                            contactCard.title,
+                                                                            maxLines: 1,
+                                                                            overflow: TextOverflow.ellipsis,
+                                                                            style: TextStyle(
+                                                                              color: currentTheme.colorScheme.primary,
+                                                                              fontWeight: FontWeight.bold,
+                                                                              fontSize: 16,
+                                                                            ),
+                                                                          ),
+                                                                          (iconData == CupertinoIcons.link)
+                                                                              ? Text(
+                                                                            contactCard.content,
+                                                                            maxLines: 1,
+                                                                            overflow: TextOverflow.ellipsis,
+                                                                            style: const TextStyle(
+                                                                              color: Colors.blue,
+                                                                              fontWeight: FontWeight.normal,
+                                                                              fontSize: 16,
+                                                                            ),
+                                                                          )
+                                                                              : Text(
+                                                                            contactCard.content,
+                                                                            style: TextStyle(
+                                                                              color: currentTheme.colorScheme.primary,
+                                                                              fontWeight: FontWeight.normal,
+                                                                              fontSize: 16,
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.width,
+                        child: PageView.builder(
+                          onPageChanged: (value) {
+                            setState(() {
+                              index = value;
+                            });
+                          },
+                          itemCount: imgList.length,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              children: [
+                                Center(
+                                  child: Image.network(
+                                    imgList[index],
+                                    width: MediaQuery.of(context).size.width,
+                                    height: MediaQuery.of(context).size.width,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      if (event.photos.isNotEmpty)
+                        Column(
+                          children: [
+                            PageViewDotIndicator(
+                              currentItem: index,
+                              count: imgList.length,
+                              unselectedColor: Colors.grey,
+                              selectedColor: currentTheme.colorScheme.primary,
+                              size: const Size(8, 6),
+                              duration: const Duration(milliseconds: 200),
+                            ),
+                            const SizedBox(height: 12),
+                          ],
+                        ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.95,
+                        height: 150,
+                        child: ClipRRect(
+                          borderRadius: defaultWidgetCornerRadius,
+                          child: Stack(
+                            children: [
+                              GoogleMap(
+                                onMapCreated: (GoogleMapController controller) {
+                                  _controller = controller;
+                                  (Platform.isAndroid)
+                                      ? (currentTheme.brightness == Brightness.light)
+                                      ? _controller?.setMapStyle(_mapStyle!)
+                                      : _controller?.setMapStyle(_mapStyleDark!)
+                                      : (currentTheme.brightness == Brightness.light)
+                                      ? _controller?.setMapStyle(_mapStyleIos!)
+                                      : _controller?.setMapStyle(_mapStyleIosDark!);
+                                },
+                                myLocationButtonEnabled: false,
+                                buildingsEnabled: true,
+                                mapType: MapType.normal,
+                                initialCameraPosition: CameraPosition(
+                                  target: LatLng(event.coordinates!.latitude, event.coordinates!.longitude),
+                                  zoom: 10.0,
+                                ),
+                                markers: {
+                                  Marker(
+                                    markerId: MarkerId(event.name),
+                                    position: LatLng(event.coordinates!.latitude, event.coordinates!.longitude),
+                                    draggable: true,
+                                  )
+                                },
+                              ),
+                              GestureDetector(
+                                child: Container(
+                                  color: Colors.transparent,
+                                  constraints: const BoxConstraints.expand(),
+
+                                ),
+                                onTap: () {
+                                  launch("https://www.google.com/maps/search/?api=1&query=${event.coordinates!.latitude},${event.coordinates!.longitude}");
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: defaultWidgetPadding,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.95,
+                          decoration: BoxDecoration(
+                            color: currentTheme.colorScheme.background,
+                            borderRadius: defaultWidgetCornerRadius,
+                          ),
+                          constraints: const BoxConstraints(maxWidth: double.infinity),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      isDescriptionExpanded = !isDescriptionExpanded;
+                                    });
+                                  },
+                                  child: AnimatedSize(
+                                    duration: const Duration(milliseconds: 200),
+                                    curve: Curves.easeInOut,
+                                    child: (isDescriptionExpanded)
+                                        ? Text((event.description!),
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                        color: currentTheme.colorScheme.primary,
+                                      ),
+                                    )
+                                        : Text((event.description!),
+                                      maxLines: 4,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                        color: currentTheme.colorScheme.primary,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 6),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      CupertinoIcons.clock_fill,
+                                      size: 17,
+                                      color: currentTheme.colorScheme.primary,
+                                    ),
+                                    const SizedBox(width: 4,),
+                                    Text(startTimeFromTimestamp(event.startTime!, event.endTime!),
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                        color: currentTheme.colorScheme.primary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 6,),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      CupertinoIcons.map_pin,
+                                      size: 17,
+                                      color: currentTheme.colorScheme.primary,
+                                    ),
+                                    const SizedBox(width: 4,),
+                                    Text((event.address!),
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                        color: currentTheme.colorScheme.primary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 6,),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      CupertinoIcons.person_2_fill,
+                                      size: 17,
+                                      color: currentTheme.colorScheme.primary,
+                                    ),
+                                    const SizedBox(width: 4,),
+                                    Text(("People going: ${event.peopleCount}/${event.capacity}"),
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                        color: currentTheme.colorScheme.primary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                if (event.categories != null)
+                                  Column(
+                                    children: [
+                                      const SizedBox(height: 6,),
+                                      Container(
+                                        height: 30,
+                                        width: MediaQuery.of(context).size.width * 0.9,
+                                        child: SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Row(
+                                            children: List.generate(event.categories!.length, (index) {
+                                              return Row(
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () async {
+                                                      var location = await getUserLocation();
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) => FeedBuilder(request: '${ApiEndpoints.SEARCH}?categoryIds=${event.categories![index].id}&endTimeMin=${convertToUtc(DateTime.now())}&latitude=${location.latitude}&longitude=${location.longitude}&sort=distance&dir=ASC', title: event.categories![index].name,),
+                                                        ),
+                                                      );
+                                                    },
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(100),
+                                                      child: Container(
+                                                        color: (currentTheme.brightness == Brightness.light)
+                                                            ? Colors.grey.shade200
+                                                            : Colors.grey.shade700,
+                                                        child: Row(
+                                                          children: [
+                                                            const SizedBox(width: 8,),
+                                                            Icon(
+                                                              CupertinoIcons.list_bullet_below_rectangle,
+                                                              size: 17,
+                                                              color: currentTheme.colorScheme.primary,
+                                                            ),
+                                                            const SizedBox(width: 6,),
+                                                            Text(
+                                                              event.categories![index].name,
+                                                              style: TextStyle(
+                                                                fontSize: 17,
+                                                                color: currentTheme.colorScheme.primary,
+                                                              ),
+                                                            ),
+                                                            const SizedBox(width: 8,),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 10,),
+                                                ],
                                               );
-                                            }
-                                          },
+                                            }),
+                                          ),
                                         ),
                                       ),
                                     ],
                                   ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.width,
-                      child: PageView.builder(
-                        onPageChanged: (value) {
-                          setState(() {
-                            index = value;
-                          });
-                        },
-                        itemCount: imgList.length,
-                        itemBuilder: (context, index) {
-                          return Column(
-                            children: [
-                              Center(
-                                child: Image.network(
-                                  imgList[index],
-                                  width: MediaQuery.of(context).size.width,
-                                  height: MediaQuery.of(context).size.width,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    if (event.photos.isNotEmpty)
-                      Column(
-                        children: [
-                          PageViewDotIndicator(
-                            currentItem: index,
-                            count: imgList.length,
-                            unselectedColor: Colors.grey,
-                            selectedColor: currentTheme.primaryColor,
-                            size: const Size(8, 6),
-                            duration: const Duration(milliseconds: 200),
-                          ),
-                          const SizedBox(height: 12),
-                        ],
-                      ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.95,
-                      height: 150,
-                      child: ClipRRect(
-                        borderRadius: defaultWidgetCornerRadius,
-                        child: Stack(
-                          children: [
-                            GoogleMap(
-                              onMapCreated: (GoogleMapController controller) {
-                                _controller = controller;
-                                (Platform.isAndroid)
-                                ? (currentTheme.brightness == Brightness.light)
-                                  ? _controller?.setMapStyle(_mapStyle!)
-                                  : _controller?.setMapStyle(_mapStyleDark!)
-                                : (currentTheme.brightness == Brightness.light)
-                                  ? _controller?.setMapStyle(_mapStyleIos!)
-                                  : _controller?.setMapStyle(_mapStyleIosDark!);
-                              },
-                              myLocationButtonEnabled: false,
-                              buildingsEnabled: true,
-                              mapType: MapType.normal,
-                              initialCameraPosition: CameraPosition(
-                                target: LatLng(event.coordinates!.latitude, event.coordinates!.longitude),
-                                zoom: 11.0,
-                              ),
-                              markers: {
-                                Marker(
-                                  markerId: MarkerId(event.name),
-                                  position: LatLng(event.coordinates!.latitude, event.coordinates!.longitude),
-                                  draggable: true,
-                                )
-                              },
-                            ),
-                            GestureDetector(
-                              child: Container(
-                                color: Colors.transparent,
-                                constraints: const BoxConstraints.expand(),
 
-                              ),
-                              onTap: () {
-                                launch("https://www.google.com/maps/search/?api=1&query=${event.coordinates!.latitude},${event.coordinates!.longitude}");
-                              },
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: defaultWidgetPadding,
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.95,
-                        decoration: BoxDecoration(
-                          color: currentTheme.colorScheme.background,
-                          borderRadius: defaultWidgetCornerRadius,
-                        ),
-                        constraints: const BoxConstraints(maxWidth: double.infinity),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    isDescriptionExpanded = !isDescriptionExpanded;
-                                  });
-                                },
-                                child: AnimatedSize(
-                                  duration: const Duration(milliseconds: 200),
-                                  curve: Curves.easeInOut,
-                                  child: (isDescriptionExpanded)
-                                      ? Text((event.description!),
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                      color: currentTheme.primaryColor,
-                                    ),
-                                  )
-                                      : Text((event.description!),
-                                    maxLines: 4,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                      color: currentTheme.primaryColor,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 6),
-                              Row(
-                                children: [
-                                  Icon(
-                                    CupertinoIcons.clock_fill,
-                                    size: 17,
-                                    color: currentTheme.primaryColor,
-                                  ),
-                                  const SizedBox(width: 4,),
-                                  Text(convertHourTimestamp(event.startTime!),
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                      color: currentTheme.primaryColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 6,),
-                              Row(
-                                children: [
-                                  Icon(
-                                    CupertinoIcons.map_pin,
-                                    size: 17,
-                                    color: currentTheme.primaryColor,
-                                  ),
-                                  const SizedBox(width: 4,),
-                                  Text((event.address!),
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                      color: currentTheme.primaryColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 6,),
-                              Row(
-                                children: [
-                                  Icon(
-                                    CupertinoIcons.person_2_fill,
-                                    size: 17,
-                                    color: currentTheme.primaryColor,
-                                  ),
-                                  const SizedBox(width: 4,),
-                                  Text(("People going: ${event.peopleCount}/${event.capacity}"),
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                      color: currentTheme.primaryColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 90,
-                    ),
-                  ],
+                      const SizedBox(
+                        height: 90,
+                      ),
+                    ],
+                  ),
                 ),
-              )
+              ),
             ),
           );
         } else if (snapshot.hasError) {
@@ -795,7 +870,7 @@ class _EventPageState extends State<EventPage>
         }
         return Center(
           child: CircularProgressIndicator(
-            color: currentTheme.primaryColor,
+            color: currentTheme.colorScheme.primary,
           ),
         );
       },

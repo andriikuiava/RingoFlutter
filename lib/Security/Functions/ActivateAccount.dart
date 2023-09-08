@@ -137,7 +137,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
         backgroundColor: currentTheme.scaffoldBackgroundColor,
         middle: Text('Activate Account',
             style: TextStyle(
-                color: currentTheme.primaryColor,
+                color: currentTheme.colorScheme.primary,
             ),
         ),
       ),
@@ -160,7 +160,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                             (image == null)
                                 ? Icon(
                               CupertinoIcons.person_circle,
-                              color: currentTheme.primaryColor,
+                              color: currentTheme.colorScheme.primary,
                               size: 120,
                             )
                                 : CircleAvatar(
@@ -180,13 +180,13 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                                         const SizedBox(width: 15),
                                         Icon(
                                           CupertinoIcons.photo_fill,
-                                          color: currentTheme.primaryColor,
+                                          color: currentTheme.colorScheme.primary,
                                         ),
                                         const SizedBox(width: 10),
                                         Text(
                                           "Choose from photos",
                                           style: TextStyle(
-                                            color: currentTheme.primaryColor,
+                                            color: currentTheme.colorScheme.primary,
                                           ),
                                         ),
                                       ],
@@ -210,13 +210,13 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                                         const SizedBox(width: 15),
                                         Icon(
                                           CupertinoIcons.camera_fill,
-                                          color: currentTheme.primaryColor,
+                                          color: currentTheme.colorScheme.primary,
                                         ),
                                         const SizedBox(width: 10),
                                         Text(
                                           "Take a photo",
                                           style: TextStyle(
-                                            color: currentTheme.primaryColor,
+                                            color: currentTheme.colorScheme.primary,
                                           ),
                                         ),
                                       ],
@@ -240,7 +240,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                     const SizedBox(height: 20),
                     Text('Full Name',
                       style: TextStyle(
-                        color: currentTheme.primaryColor,
+                        color: currentTheme.colorScheme.primary,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         decoration: TextDecoration.none,
@@ -250,7 +250,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                     SizedBox(
                       height: 50,
                       child: CupertinoTextField(
-                        cursorColor: currentTheme.primaryColor,
+                        cursorColor: currentTheme.colorScheme.primary,
                         controller: _nameController,
                         maxLength: 50,
                         placeholder: 'Enter your full name',
@@ -261,7 +261,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                           }
                         },
                         style: TextStyle(
-                          color: currentTheme.primaryColor,
+                          color: currentTheme.colorScheme.primary,
                           fontSize: 16,
                         ),
                         decoration: BoxDecoration(
@@ -287,7 +287,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                     const SizedBox(height: 20),
                     Text('Username',
                       style: TextStyle(
-                        color: currentTheme.primaryColor,
+                        color: currentTheme.colorScheme.primary,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         decoration: TextDecoration.none,
@@ -297,7 +297,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                     SizedBox(
                       height: 50,
                       child: CupertinoTextField(
-                        cursorColor: currentTheme.primaryColor,
+                        cursorColor: currentTheme.colorScheme.primary,
                         controller: _usernameController,
                         onChanged: (value) {
                           validateUsername();
@@ -306,7 +306,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                         placeholder: 'Enter your username',
                         keyboardType: TextInputType.text,
                         style: TextStyle(
-                          color: currentTheme.primaryColor,
+                          color: currentTheme.colorScheme.primary,
                           fontSize: 16,
                         ),
                         decoration: BoxDecoration(
@@ -332,7 +332,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                     const SizedBox(height: 20),
                     Text('Email',
                       style: TextStyle(
-                        color: currentTheme.primaryColor,
+                        color: currentTheme.colorScheme.primary,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         decoration: TextDecoration.none,
@@ -358,7 +358,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                     const SizedBox(height: 20),
                     Text('Date of Birth',
                       style: TextStyle(
-                        color: currentTheme.primaryColor,
+                        color: currentTheme.colorScheme.primary,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         decoration: TextDecoration.none,
@@ -377,7 +377,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                     const SizedBox(height: 20),
                     Text('Gender',
                       style: TextStyle(
-                        color: currentTheme.primaryColor,
+                        color: currentTheme.colorScheme.primary,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         decoration: TextDecoration.none,
@@ -399,7 +399,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                             0: Text(
                               'Male',
                               style: TextStyle(
-                                color: currentTheme.primaryColor,
+                                color: currentTheme.colorScheme.primary,
                                 fontSize: 16,
                                 decoration: TextDecoration.none,
                               ),
@@ -407,7 +407,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                             1: Text(
                               'Female',
                               style: TextStyle(
-                                color: currentTheme.primaryColor,
+                                color: currentTheme.colorScheme.primary,
                                 fontSize: 16,
                                 decoration: TextDecoration.none,
 
@@ -416,7 +416,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                             2: Text(
                               'Other',
                               style: TextStyle(
-                                color: currentTheme.primaryColor,
+                                color: currentTheme.colorScheme.primary,
                                 fontSize: 16,
                                 decoration: TextDecoration.none,
                               ),
@@ -443,7 +443,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                               },
                               child: Text('Finish Registration',
                                 style: TextStyle(
-                                  color: currentTheme.primaryColor,
+                                  color: currentTheme.colorScheme.primary,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                   decoration: TextDecoration.none,

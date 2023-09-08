@@ -253,7 +253,7 @@ class _LoginPageState extends State<LoginPage> {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: currentTheme.primaryColor,
+                        color: currentTheme.colorScheme.primary,
                       ),
                       child: const Text("Login to Ringo"),
                     ),
@@ -265,7 +265,7 @@ class _LoginPageState extends State<LoginPage> {
                           children: [
                             DefaultTextStyle(
                               style: TextStyle(
-                                color: currentTheme.primaryColor,
+                                color: currentTheme.colorScheme.primary,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
                               ),
@@ -288,12 +288,12 @@ class _LoginPageState extends State<LoginPage> {
                               });
                             },
                             clearButtonMode: OverlayVisibilityMode.editing,
-                            cursorColor: currentTheme.primaryColor,
+                            cursorColor: currentTheme.colorScheme.primary,
                             controller: _emailController,
                             placeholder: 'Enter your email',
                             keyboardType: TextInputType.emailAddress,
                             style: TextStyle(
-                              color: currentTheme.primaryColor,
+                              color: currentTheme.colorScheme.primary,
                               fontSize: 16,
                             ),
                             decoration: BoxDecoration(
@@ -310,7 +310,7 @@ class _LoginPageState extends State<LoginPage> {
                       children: [
                         DefaultTextStyle(
                           style: TextStyle(
-                            color: currentTheme.primaryColor,
+                            color: currentTheme.colorScheme.primary,
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
@@ -322,12 +322,12 @@ class _LoginPageState extends State<LoginPage> {
                           child: CupertinoTextField(
                             autocorrect: false,
                             clearButtonMode: OverlayVisibilityMode.editing,
-                            cursorColor: currentTheme.primaryColor,
+                            cursorColor: currentTheme.colorScheme.primary,
                             controller: _passwordController,
                             placeholder: 'Enter your password',
                             obscureText: true,
                             style: TextStyle(
-                              color: currentTheme.primaryColor,
+                              color: currentTheme.colorScheme.primary,
                               fontSize: 16,
                             ),
                             decoration: BoxDecoration(
@@ -383,7 +383,7 @@ class _LoginPageState extends State<LoginPage> {
                                         ? Text(
                                       'Login',
                                       style: TextStyle(
-                                        color: currentTheme.primaryColor,
+                                        color: currentTheme.colorScheme.primary,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     )
@@ -392,7 +392,7 @@ class _LoginPageState extends State<LoginPage> {
                                       height: 24,
                                       child: CupertinoActivityIndicator(
                                         radius: 13,
-                                        color: currentTheme.primaryColor,
+                                        color: currentTheme.colorScheme.primary,
                                         animating: true,
                                       ),
                                     ),
@@ -437,7 +437,7 @@ class _LoginPageState extends State<LoginPage> {
                                       Text(
                                         'Continue with Google',
                                         style: TextStyle(
-                                          color: currentTheme.primaryColor,
+                                          color: currentTheme.colorScheme.primary,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -447,7 +447,7 @@ class _LoginPageState extends State<LoginPage> {
                                     width: 24,
                                     height: 24,
                                     child: CircularProgressIndicator(
-                                      color: currentTheme.primaryColor,
+                                      color: currentTheme.colorScheme.primary,
                                     ),
                                   ),
                                 ),
@@ -618,7 +618,7 @@ class _LoginPageState extends State<LoginPage> {
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
-                                    color: currentTheme.primaryColor,
+                                    color: currentTheme.colorScheme.primary,
                                   ),
                                 ),
                               ),
@@ -630,7 +630,7 @@ class _LoginPageState extends State<LoginPage> {
                           children: [
                             DefaultTextStyle(
                               style: TextStyle(
-                                color: currentTheme.primaryColor,
+                                color: currentTheme.colorScheme.primary,
                                 fontSize: 16,
                               ),
                               child: const Text("Don't have an account?"),
@@ -654,7 +654,7 @@ class _LoginPageState extends State<LoginPage> {
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
-                                    color: currentTheme.primaryColor,
+                                    color: currentTheme.colorScheme.primary,
                                   ),
                                 ),
                               ),

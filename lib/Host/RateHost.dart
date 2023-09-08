@@ -105,7 +105,7 @@ class _RateHostState extends State<RateHost> {
           ? 'Edit a review'
           : 'Rate this host',
           style: TextStyle(
-            color: currentTheme.primaryColor,
+            color: currentTheme.colorScheme.primary,
           ),
         ),
         leading: GestureDetector(
@@ -114,7 +114,7 @@ class _RateHostState extends State<RateHost> {
           },
           child: Icon(
             CupertinoIcons.back,
-            color: currentTheme.primaryColor,
+            color: currentTheme.colorScheme.primary,
           ),
         ),
       ),
@@ -148,7 +148,7 @@ class _RateHostState extends State<RateHost> {
                             itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
                             itemBuilder: (context, _) => Icon(
                               CupertinoIcons.star_fill,
-                              color: currentTheme.primaryColor,
+                              color: currentTheme.colorScheme.primary,
                             ),
                             onRatingUpdate: (rating) {
                               newRating = rating.toInt();
@@ -161,7 +161,7 @@ class _RateHostState extends State<RateHost> {
                               child: Icon(
                                 CupertinoIcons.delete,
                                 size: 24,
-                                color: currentTheme.primaryColor,
+                                color: currentTheme.colorScheme.primary,
                               ),
                             ),
                           const SizedBox(width: 10,)
@@ -173,13 +173,13 @@ class _RateHostState extends State<RateHost> {
                         width: MediaQuery.of(context).size.width * 0.9,
                         child: CupertinoTextField(
                           maxLength: 2048,
-                          cursorColor: currentTheme.primaryColor,
+                          cursorColor: currentTheme.colorScheme.primary,
                           placeholder: 'Create a review',
                           controller: _reviewController,
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
                           style: TextStyle(
-                            color: currentTheme.primaryColor,
+                            color: currentTheme.colorScheme.primary,
                             fontSize: 16,
                           ),
                           decoration: BoxDecoration(
@@ -198,7 +198,7 @@ class _RateHostState extends State<RateHost> {
                             width: MediaQuery.of(context).size.width * 0.9,
                             color: currentTheme.colorScheme.background,
                             child: CupertinoButton(
-                              color: currentTheme.primaryColor,
+                              color: currentTheme.colorScheme.primary,
                               onPressed: createReview,
                               child: Text(
                                 'Submit',

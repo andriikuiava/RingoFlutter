@@ -74,7 +74,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           },
           child: Icon(
             CupertinoIcons.settings_solid,
-            color: currentTheme.primaryColor,
+            color: currentTheme.colorScheme.primary,
             size: 26,
           ),
         ),
@@ -82,13 +82,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         middle: Text(
           'Profile',
           style: TextStyle(
-            color: currentTheme.primaryColor,
+            color: currentTheme.colorScheme.primary,
           ),
         ),
       ),
       child: RefreshIndicator(
         onRefresh: _refreshData,
-        color: currentTheme.primaryColor,
+        color: currentTheme.colorScheme.primary,
         child: ListView(
           children: [
             SingleChildScrollView(
@@ -111,7 +111,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     padding: const EdgeInsets.all(8.0),
                                     child: Text(
                                       'An error occurred while loading your profile, check your internet connection and try again.',
-                                      style: TextStyle(fontSize: 18, color: currentTheme.primaryColor, decoration: TextDecoration.none, fontWeight: FontWeight.bold),
+                                      style: TextStyle(fontSize: 18, color: currentTheme.colorScheme.primary, decoration: TextDecoration.none, fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                 );
@@ -125,7 +125,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           Padding(
                                             padding: defaultWidgetPadding,
                                             child: CircleAvatar(
-                                              backgroundColor: currentTheme.primaryColor,
+                                              backgroundColor: currentTheme.colorScheme.primary,
                                               radius: 40,
                                               backgroundImage: NetworkImage(
                                                 '${ApiEndpoints.GET_PHOTO}/${data.profilePictureId}',
@@ -148,7 +148,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                     overflow: TextOverflow.ellipsis,
                                                     style: TextStyle(
                                                       decoration: TextDecoration.none,
-                                                      color: currentTheme.primaryColor,
+                                                      color: currentTheme.colorScheme.primary,
                                                       fontWeight: FontWeight.bold,
                                                       fontSize: 24,
                                                     ),
@@ -185,7 +185,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           (data.dateOfBirth == null) ? 'No date of birth provided' : convertTimestampToBigDate(data.dateOfBirth!),
                                           style: TextStyle(
                                             decoration: TextDecoration.none,
-                                            color: currentTheme.primaryColor,
+                                            color: currentTheme.colorScheme.primary,
                                             fontSize: 16,
                                             fontWeight: FontWeight.normal,
                                           ),
@@ -205,7 +205,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           (data.gender == null) ? 'No gender provided' : capitalizeFirstLetter(data.gender!),
                                           style: TextStyle(
                                             decoration: TextDecoration.none,
-                                            color: currentTheme.primaryColor,
+                                            color: currentTheme.colorScheme.primary,
                                             fontSize: 16,
                                             fontWeight: FontWeight.normal,
                                           ),
@@ -218,7 +218,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         const SizedBox(width: 12,),
                                         ElevatedButton(
                                           style: ElevatedButton.styleFrom(
-                                            foregroundColor: currentTheme.colorScheme.background, backgroundColor: currentTheme.primaryColor,
+                                            foregroundColor: currentTheme.colorScheme.background,
+                                            backgroundColor: (currentTheme.brightness == Brightness.light)
+                                                ? Colors.grey.shade200
+                                                : currentTheme.colorScheme.background,
                                           ),
                                           onPressed: () async {
                                             final wasEdited = await Navigator.push(
@@ -234,15 +237,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               });
                                             }
                                           },
-                                          child: const Row(
+                                          child: Row(
                                             crossAxisAlignment: CrossAxisAlignment.center,
                                             children: [
                                               Icon(
                                                 CupertinoIcons.pencil,
                                                 size: 22,
+                                                color: currentTheme.colorScheme.primary,
                                               ),
                                               SizedBox(width: 5,),
-                                              Text('Edit Profile')
+                                              Text('Edit Profile',
+                                                style: TextStyle(
+                                                  decoration: TextDecoration.none,
+                                                  color: currentTheme.colorScheme.primary,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.normal,
+                                                ),
+                                              ),
                                             ],
                                           ),
                                         ),

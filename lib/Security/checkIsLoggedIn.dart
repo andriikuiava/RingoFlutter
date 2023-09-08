@@ -86,7 +86,7 @@ class _CheckerPageState extends State<CheckerPage> {
     return Scaffold(
       body: Center(
         child: CircularProgressIndicator(
-          color: currentTheme.primaryColor,
+          color: currentTheme.colorScheme.primary,
         ),
       ),
     );

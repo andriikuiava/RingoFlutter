@@ -43,6 +43,7 @@ class _HomeState extends State<Home> {
     var currentTheme = CupertinoTheme.of(context);
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
+        backgroundColor: currentTheme.scaffoldBackgroundColor.withOpacity(0.8),
         activeColor: (currentTheme.brightness == Brightness.dark)
             ? Colors.white
             : Colors.black,

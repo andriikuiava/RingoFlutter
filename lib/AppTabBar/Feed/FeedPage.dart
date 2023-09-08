@@ -24,7 +24,7 @@ class FeedPage extends StatelessWidget {
         backgroundColor: currentTheme.scaffoldBackgroundColor,
         middle: Text('Feed',
         style: TextStyle(
-          color: currentTheme.primaryColor,
+          color: currentTheme.colorScheme.primary,
         ),),
       ),
       child: SingleChildScrollView(
@@ -40,7 +40,7 @@ class FeedPage extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: currentTheme.primaryColor,
+                      color: currentTheme.colorScheme.primary,
                       decoration: TextDecoration.none,
                     ),
                   ),
@@ -53,14 +53,14 @@ class FeedPage extends StatelessWidget {
                       "See all",
                       style: TextStyle(
                         fontSize: 16,
-                        color: currentTheme.primaryColor,
+                        color: currentTheme.colorScheme.primary,
                         decoration: TextDecoration.none,
                       ),
                     ),
                   ),
                 ],
               ),
-              closeEvents(context),
+              nearbyAdventures(context),
               const SizedBox(height: 10),
               Row(
                 children: [
@@ -70,14 +70,14 @@ class FeedPage extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: currentTheme.primaryColor,
+                      color: currentTheme.colorScheme.primary,
                       decoration: TextDecoration.none,
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 10),
-              categoriesList(context),
+              exploreCategories(context),
               const SizedBox(height: 10),
               Row(
                 children: [
@@ -87,7 +87,7 @@ class FeedPage extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: currentTheme.primaryColor,
+                      color: currentTheme.colorScheme.primary,
                       decoration: TextDecoration.none,
                     ),
                   ),
@@ -100,14 +100,14 @@ class FeedPage extends StatelessWidget {
                       "See all",
                       style: TextStyle(
                         fontSize: 16,
-                        color: currentTheme.primaryColor,
+                        color: currentTheme.colorScheme.primary,
                         decoration: TextDecoration.none,
                       ),
                     ),
                   ),
                 ],
               ),
-              popularEvents(context),
+              crowdFavorites(context),
               const SizedBox(height: 10),
               Row(
                 children: [
@@ -117,7 +117,7 @@ class FeedPage extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: currentTheme.primaryColor,
+                      color: currentTheme.colorScheme.primary,
                       decoration: TextDecoration.none,
                     ),
                   ),
@@ -130,7 +130,7 @@ class FeedPage extends StatelessWidget {
                       "See all",
                       style: TextStyle(
                         fontSize: 16,
-                        color: currentTheme.primaryColor,
+                        color: currentTheme.colorScheme.primary,
                         decoration: TextDecoration.none,
                       ),
                     ),
@@ -153,8 +153,7 @@ class FeedPage extends StatelessWidget {
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     Uri url = Uri.parse(
-        '${ApiEndpoints.SEARCH}?endTimeMin=${DateTime.now()
-            .toIso8601String()}&latitude=${location.latitude}&longitude=${location.longitude}&sort=distance');
+        '${ApiEndpoints.SEARCH}?endTimeMin=${convertToUtc(DateTime.now())}&latitude=${location.latitude}&longitude=${location.longitude}&sort=distance');
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -165,14 +164,14 @@ class FeedPage extends StatelessWidget {
       throw Exception('Failed to load events');
     }
   }
-  Widget closeEvents(context) {
+  Widget nearbyAdventures(context) {
     final currentTheme = Theme.of(context);
     return FutureBuilder<List<EventInFeed>>(
       future: getCloseEvents(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator(
-            color: currentTheme.primaryColor,
+            color: currentTheme.colorScheme.primary,
           ),);
         } else if (snapshot.hasError) {
           return noEvents(context);
@@ -185,7 +184,7 @@ class FeedPage extends StatelessWidget {
               height: MediaQuery
                   .of(context)
                   .size
-                  .width + 150,
+                  .width * 1.4,
               child: Card(
                 elevation: 0,
                 color: Colors.transparent,
@@ -201,7 +200,7 @@ class FeedPage extends StatelessWidget {
                         );
                       },
                       child: Center(
-                        child: eventCard(context, event)
+                        child: eventCard(context, event, false)
                       ),
                     );
                   }).toList(),
@@ -228,14 +227,14 @@ class FeedPage extends StatelessWidget {
       throw Exception('Failed to load categories');
     }
   }
-  Widget categoriesList(context) {
+  Widget exploreCategories(context) {
     final currentTheme = Theme.of(context);
     return FutureBuilder<List<CategoryClass>>(
       future: getCategories(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator(
-            color: currentTheme.primaryColor,
+            color: currentTheme.colorScheme.primary,
           ),);
         } else if (snapshot.hasError) {
           return noEvents(context);
@@ -243,7 +242,7 @@ class FeedPage extends StatelessWidget {
           return Text('No categories available.',
             style: TextStyle(
               decoration: TextDecoration.none,
-              color: currentTheme.primaryColor,
+              color: currentTheme.colorScheme.primary,
               fontWeight: FontWeight.bold,
               fontSize: 24,
             ),
@@ -254,45 +253,41 @@ class FeedPage extends StatelessWidget {
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: snapshot.data!.map((category) {
-                return Column(
-                  children: [
-                    Row(
-                      children: [
-                        const SizedBox(width: 6),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    FeedBuilder(request: '${ApiEndpoints.SEARCH}?categoryIds=${category.id}&endTimeMin=${DateTime.now().toIso8601String()}', title: category.name,)
-                              ),
-                            );
-                          },
-                          child: ClipRRect(
-                            borderRadius: defaultWidgetCornerRadius,
-                            child: Container(
-                              color: currentTheme.colorScheme.background,
-                              child: Padding(
-                                padding: const EdgeInsets.all(18.0),
-                                child: Text(
-                                  category.name,
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: currentTheme.primaryColor,
-                                    decoration: TextDecoration.none,
-                                  ),
+                return Row(
+                    children: [
+                      const SizedBox(width: 6),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  FeedBuilder(request: '${ApiEndpoints.SEARCH}?categoryIds=${category.id}&endTimeMin=${convertToUtc(DateTime.now())}', title: category.name,)
+                            ),
+                          );
+                        },
+                        child: ClipRRect(
+                          borderRadius: defaultWidgetCornerRadius,
+                          child: Container(
+                            color: currentTheme.colorScheme.background,
+                            child: Padding(
+                              padding: const EdgeInsets.all(18.0),
+                              child: Text(
+                                category.name,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: currentTheme.colorScheme.primary,
+                                  decoration: TextDecoration.none,
                                 ),
                               ),
                             ),
                           ),
                         ),
-                        const SizedBox(width: 6),
-                      ],
-                    )
-                  ],
-                );
+                      ),
+                      const SizedBox(width: 6),
+                    ],
+                  );
               }).toList(),
             ),
           );
@@ -306,8 +301,7 @@ class FeedPage extends StatelessWidget {
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     Uri url = Uri.parse(
-        '${ApiEndpoints.SEARCH}?endTimeMin=${DateTime.now()
-            .toIso8601String()}&limit=20&isTicketNeeded=false&priceMax=0&currencyId=1');
+        '${ApiEndpoints.SEARCH}?endTimeMin=${convertToUtc(DateTime.now())}&limit=20&isTicketNeeded=false&priceMax=0&currencyId=1');
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -324,7 +318,7 @@ class FeedPage extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator(
-            color: currentTheme.primaryColor,
+            color: currentTheme.colorScheme.primary,
           ),);
         } else if (snapshot.hasError) {
           return noEvents(context);
@@ -355,7 +349,7 @@ class FeedPage extends StatelessWidget {
                         );
                       },
                       child: Center(
-                        child: eventCard(context, event),
+                        child: eventCard(context, event, false),
                       ),
                     );
                   }).toList(),
@@ -374,8 +368,7 @@ class FeedPage extends StatelessWidget {
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     Uri url = Uri.parse(
-        '${ApiEndpoints.SEARCH}?endTimeMin=${DateTime.now()
-            .toIso8601String()}&sort=peopleCount&latitude=${location.latitude}&longitude=${location.longitude}&limit=3&maxDistance=20000');
+        '${ApiEndpoints.SEARCH}?endTimeMin=${convertToUtc(DateTime.now())}&sort=peopleCount&latitude=${location.latitude}&longitude=${location.longitude}&limit=3&maxDistance=20000');
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -385,14 +378,14 @@ class FeedPage extends StatelessWidget {
       throw Exception('Failed to load events');
     }
   }
-  Widget popularEvents(context) {
+  Widget crowdFavorites(context) {
     final currentTheme = Theme.of(context);
     return FutureBuilder<List<EventInFeed>>(
       future: getPopularEvents(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator(
-            color: currentTheme.primaryColor,
+            color: currentTheme.colorScheme.primary,
           ),);
         } else if (snapshot.hasError) {
           return noEvents(context);
@@ -455,7 +448,7 @@ class FeedPage extends StatelessWidget {
                                             style: TextStyle(
                                               fontSize: 20,
                                               fontWeight: FontWeight.bold,
-                                              color: currentTheme.primaryColor,
+                                              color: currentTheme.colorScheme.primary,
                                               decoration: TextDecoration.none,
                                             ),
                                           ),
@@ -465,7 +458,7 @@ class FeedPage extends StatelessWidget {
                                           children: [
                                             Icon(
                                               CupertinoIcons.calendar_today,
-                                              color: currentTheme.primaryColor,
+                                              color: currentTheme.colorScheme.primary,
                                               size: 16,
                                             ),
                                             const SizedBox(width: 5),
@@ -475,13 +468,13 @@ class FeedPage extends StatelessWidget {
                                                   .size
                                                   .width * 0.7 - 80,
                                               child: Text(
-                                                convertHourTimestamp(
-                                                    event.startTime!),
+                                                startTimeFromTimestamp(
+                                                    event.startTime!, event.endTime!),
                                                 maxLines: 1,
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.normal,
                                                   fontSize: 16,
-                                                  color: currentTheme.primaryColor,
+                                                  color: currentTheme.colorScheme.primary,
                                                   decoration: TextDecoration.none,
                                                 ),
                                               ),
@@ -493,7 +486,7 @@ class FeedPage extends StatelessWidget {
                                           children: [
                                             Icon(
                                               CupertinoIcons.person_2,
-                                              color: currentTheme.primaryColor,
+                                              color: currentTheme.colorScheme.primary,
                                               size: 16,
                                             ),
                                             const SizedBox(width: 5),
@@ -502,7 +495,7 @@ class FeedPage extends StatelessWidget {
                                               style: TextStyle(
                                                 fontWeight: FontWeight.normal,
                                                 fontSize: 16,
-                                                color: currentTheme.primaryColor,
+                                                color: currentTheme.colorScheme.primary,
                                                 decoration: TextDecoration.none,
                                               ),
                                             ),
@@ -515,7 +508,7 @@ class FeedPage extends StatelessWidget {
                                           style: TextStyle(
                                             fontWeight: FontWeight.normal,
                                             fontSize: 16,
-                                            color: currentTheme.primaryColor,
+                                            color: currentTheme.colorScheme.primary,
                                             decoration: TextDecoration.none,
                                           ),
                                         ),
@@ -541,7 +534,7 @@ class FeedPage extends StatelessWidget {
   }
 }
 
-Widget eventCard(context, EventInFeed event) {
+Widget eventCard(context, EventInFeed event, bool isSelectedOnMap) {
   final currentTheme = Theme.of(context);
   return Column(
     children: [
@@ -583,7 +576,7 @@ Widget eventCard(context, EventInFeed event) {
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: currentTheme.primaryColor,
+                        color: currentTheme.colorScheme.primary,
                         decoration: TextDecoration.none,
                       ),
                     ),
@@ -591,7 +584,7 @@ Widget eventCard(context, EventInFeed event) {
                       children: [
                         Icon(
                           CupertinoIcons.map_pin,
-                          color: currentTheme.primaryColor,
+                          color: currentTheme.colorScheme.primary,
                           size: 16,
                         ),
                         const SizedBox(width: 5),
@@ -600,7 +593,7 @@ Widget eventCard(context, EventInFeed event) {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.normal,
-                            color: currentTheme.primaryColor,
+                            color: currentTheme.colorScheme.primary,
                             decoration: TextDecoration.none,
                           ),
                         ),
@@ -611,16 +604,18 @@ Widget eventCard(context, EventInFeed event) {
                       children: [
                         Icon(
                           CupertinoIcons.location,
-                          color: currentTheme.primaryColor,
+                          color: currentTheme.colorScheme.primary,
                           size: 16,
                         ),
                         const SizedBox(width: 5),
                         Text(
-                          convertToKilometersOrMeters(event.distance!),
+                          (isSelectedOnMap)
+                              ? "${convertToKilometersOrMeters(event.distance!)} from selected point"
+                              : "${convertToKilometersOrMeters(event.distance!)}",
                           style: TextStyle(
                             fontWeight: FontWeight.normal,
                             fontSize: 16,
-                            color: currentTheme.primaryColor,
+                            color: currentTheme.colorScheme.primary,
                             decoration: TextDecoration.none,
                           ),
                         ),
@@ -630,7 +625,7 @@ Widget eventCard(context, EventInFeed event) {
                       children: [
                         Icon(
                           CupertinoIcons.location,
-                          color: currentTheme.primaryColor,
+                          color: currentTheme.colorScheme.primary,
                           size: 16,
                         ),
                         const SizedBox(width: 5),
@@ -639,7 +634,7 @@ Widget eventCard(context, EventInFeed event) {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.normal,
-                            color: currentTheme.primaryColor,
+                            color: currentTheme.colorScheme.primary,
                             decoration: TextDecoration.none,
                           ),
                         ),
@@ -649,15 +644,15 @@ Widget eventCard(context, EventInFeed event) {
                       children: [
                         Icon(
                           CupertinoIcons.calendar_today,
-                          color: currentTheme.primaryColor,
+                          color: currentTheme.colorScheme.primary,
                           size: 16,
                         ),
                         const SizedBox(width: 5),
-                        Text(convertHourTimestamp(event.startTime!),
+                        Text(startTimeFromTimestamp(event.startTime!, null),
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.normal,
-                            color: currentTheme.primaryColor,
+                            color: currentTheme.colorScheme.primary,
                             decoration: TextDecoration.none,
                           ),
                         ),
@@ -673,7 +668,7 @@ Widget eventCard(context, EventInFeed event) {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w600,
-                      color: currentTheme.primaryColor,
+                      color: currentTheme.colorScheme.primary,
                       decoration: TextDecoration.none,
                     ),
                   ),
@@ -728,7 +723,7 @@ void seeAll(context, String title, String params) async {
     context,
     MaterialPageRoute(
       builder: (context) => FeedBuilder(request:
-      "${ApiEndpoints.SEARCH}?latitude=${location.latitude}&longitude=${location.longitude}&$params&endTimeMin=${DateTime.now().toIso8601String()}",
+      "${ApiEndpoints.SEARCH}?latitude=${location.latitude}&longitude=${location.longitude}&$params&endTimeMin=${convertToUtc(DateTime.now())}",
         title: title,
       ),
     ),

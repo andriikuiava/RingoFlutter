@@ -1,7 +1,6 @@
 import 'package:intl/intl.dart';
 
 String convertTimestampToBigDate(String timestamp) {
-  // Parse the input timestamp
   DateTime dateTime = DateTime.parse(timestamp);
 
   // Create a DateFormat object with the desired output format
@@ -24,57 +23,117 @@ String capitalizeFirstLetter(String input) {
   return firstLetter + restOfWord;
 }
 
+String startTimeFromTimestamp(String timestampStart, String? timestampEnd) {
+  DateTime parsedDateTimeStart = DateTime.parse('${timestampStart}Z').toLocal();
+  String formattedDateStart = parsedDateTimeStart.day.toString();
+  String formattedTimeStart = '${parsedDateTimeStart.hour.toString().padLeft(2, '0')}:${parsedDateTimeStart.minute.toString().padLeft(2, '0')}';
+  String formattedMonthStart;
 
-String convertHourTimestamp(String timestamp) {
-  DateTime parsedDateTime = DateTime.parse(timestamp);
-  String formattedDate = parsedDateTime.day.toString();
-  String formattedTime = '${parsedDateTime.hour.toString().padLeft(2, '0')}:${parsedDateTime.minute.toString().padLeft(2, '0')}';
-  String formattedMonth;
+    switch (parsedDateTimeStart.month) {
+      case 1:
+        formattedMonthStart = 'Jan';
+        break;
+      case 2:
+        formattedMonthStart = 'Feb';
+        break;
+      case 3:
+        formattedMonthStart = 'Mar';
+        break;
+      case 4:
+        formattedMonthStart = 'Apr';
+        break;
+      case 5:
+        formattedMonthStart = 'May';
+        break;
+      case 6:
+        formattedMonthStart = 'Jun';
+        break;
+      case 7:
+        formattedMonthStart = 'Jul';
+        break;
+      case 8:
+        formattedMonthStart = 'Aug';
+        break;
+      case 9:
+        formattedMonthStart = 'Sep';
+        break;
+      case 10:
+        formattedMonthStart = 'Oct';
+        break;
+      case 11:
+        formattedMonthStart = 'Nov';
+        break;
+      case 12:
+        formattedMonthStart = 'Dec';
+        break;
+      default:
+        formattedMonthStart = '';
+        break;
+    }
 
-  switch (parsedDateTime.month) {
-    case 1:
-      formattedMonth = 'Jan';
-      break;
-    case 2:
-      formattedMonth = 'Feb';
-      break;
-    case 3:
-      formattedMonth = 'Mar';
-      break;
-    case 4:
-      formattedMonth = 'Apr';
-      break;
-    case 5:
-      formattedMonth = 'May';
-      break;
-    case 6:
-      formattedMonth = 'Jun';
-      break;
-    case 7:
-      formattedMonth = 'Jul';
-      break;
-    case 8:
-      formattedMonth = 'Aug';
-      break;
-    case 9:
-      formattedMonth = 'Sep';
-      break;
-    case 10:
-      formattedMonth = 'Oct';
-      break;
-    case 11:
-      formattedMonth = 'Nov';
-      break;
-    case 12:
-      formattedMonth = 'Dec';
-      break;
-    default:
-      formattedMonth = '';
-      break;
+  if (timestampEnd == null) {
+    String formattedTimestamp = '$formattedMonthStart $formattedDateStart ${parsedDateTimeStart.year}, $formattedTimeStart';
+    return formattedTimestamp;
+  } else {
+
+    DateTime parsedDateTimeEnd = DateTime.parse('${timestampEnd}Z').toLocal();
+    String formattedDateEnd = parsedDateTimeEnd.day.toString();
+    String formattedTimeEnd = '${parsedDateTimeEnd.hour.toString().padLeft(2, '0')}:${parsedDateTimeEnd.minute.toString().padLeft(2, '0')}';
+    String formattedMonthEnd;
+
+    switch (parsedDateTimeEnd.month) {
+      case 1:
+        formattedMonthEnd = 'Jan';
+        break;
+      case 2:
+        formattedMonthEnd = 'Feb';
+        break;
+      case 3:
+        formattedMonthEnd = 'Mar';
+        break;
+      case 4:
+        formattedMonthEnd = 'Apr';
+        break;
+      case 5:
+        formattedMonthEnd = 'May';
+        break;
+      case 6:
+        formattedMonthEnd = 'Jun';
+        break;
+      case 7:
+        formattedMonthEnd = 'Jul';
+        break;
+      case 8:
+        formattedMonthEnd = 'Aug';
+        break;
+      case 9:
+        formattedMonthEnd = 'Sep';
+        break;
+      case 10:
+        formattedMonthEnd = 'Oct';
+        break;
+      case 11:
+        formattedMonthEnd = 'Nov';
+        break;
+      case 12:
+        formattedMonthEnd = 'Dec';
+        break;
+      default:
+        formattedMonthEnd = '';
+        break;
+    }
+
+    String formattedTimestamp = '';
+
+    int durationInHours = parsedDateTimeEnd.difference(parsedDateTimeStart).inHours;
+
+    if (durationInHours < 24) {
+      formattedTimestamp = '$formattedMonthStart $formattedDateStart ${parsedDateTimeStart.year}, $formattedTimeStart - $formattedTimeEnd';
+    } else {
+      formattedTimestamp = '$formattedMonthStart $formattedDateStart ${parsedDateTimeStart.year}, $formattedTimeStart\n$formattedMonthEnd $formattedDateEnd ${parsedDateTimeEnd.year}, $formattedTimeEnd';
+    }
+    return formattedTimestamp;
   }
-
-  String formattedTimestamp = '$formattedMonth $formattedDate ${parsedDateTime.year}, $formattedTime';
-  return formattedTimestamp;
 }
 
 String convertToKilometersOrMeters(int meters) {
@@ -106,4 +165,19 @@ bool checkIfExpired(String timestamp) {
   } else {
     return false;
   }
+}
+
+String convertToUtc(DateTime dateTime) {
+  final utcDateTime = dateTime.toUtc();
+
+  final formattedUtcTimestamp =
+      "${utcDateTime.year}-${_twoDigits(utcDateTime.month)}-${_twoDigits(utcDateTime.day)}T${_twoDigits(utcDateTime.hour)}:${_twoDigits(utcDateTime.minute)}";
+  return formattedUtcTimestamp;
+}
+
+String _twoDigits(int n) {
+  if (n >= 10) {
+    return "$n";
+  }
+  return "0$n";
 }
