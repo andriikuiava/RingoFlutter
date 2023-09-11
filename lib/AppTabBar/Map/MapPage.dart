@@ -150,7 +150,7 @@ class _MapPageState extends State<MapPage> {
     final TextPainter textPainter = TextPainter(
       text: TextSpan(
         text: count.toString(),
-        style: TextStyle(color: currentTheme.colorScheme.background, fontWeight: FontWeight.bold, fontSize: 70)
+        style: TextStyle(color: currentTheme.scaffoldBackgroundColor, fontWeight: FontWeight.bold, fontSize: 70)
       ),
       textDirection: TextDirection.ltr,
     );
