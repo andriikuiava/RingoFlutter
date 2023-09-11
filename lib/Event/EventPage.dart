@@ -375,7 +375,7 @@ class _EventPageState extends State<EventPage>
                                           child: Align(
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              (event.price == 0.0 ? "Register" : "Buy Ticket"),
+                                              (event.ticketTypes == null || event.ticketTypes == [] ? "Get Ticket" : ""),
                                               style: TextStyle(
                                                 color: currentTheme.scaffoldBackgroundColor,
                                                 fontWeight: FontWeight.bold,
@@ -384,19 +384,19 @@ class _EventPageState extends State<EventPage>
                                             ),
                                           ),
                                         ),
-                                        Expanded(
-                                          child: Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Text(
-                                              (event.price == 0.0 ? "Free" : "${event.currency!.symbol}${event.price!.toStringAsFixed(2)}"),
-                                              style: TextStyle(
-                                                color: currentTheme.scaffoldBackgroundColor,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
+                                        // Expanded(
+                                        //   child: Align(
+                                        //     alignment: Alignment.centerRight,
+                                        //     child: Text(
+                                        //       (event.price == 0.0 ? "Free" : "${event.currency!.symbol}${event.price!.toStringAsFixed(2)}"),
+                                        //       style: TextStyle(
+                                        //         color: currentTheme.scaffoldBackgroundColor,
+                                        //         fontWeight: FontWeight.bold,
+                                        //         fontSize: 16,
+                                        //       ),
+                                        //     ),
+                                        //   ),
+                                        // ),
                                       ],
                                     )
                                         : Row(
@@ -780,7 +780,10 @@ class _EventPageState extends State<EventPage>
                                       color: currentTheme.colorScheme.primary,
                                     ),
                                     const SizedBox(width: 4,),
-                                    Text(("People going: ${event.peopleCount}/${event.capacity}"),
+                                    Text((
+                                        (event.capacity != null)
+                                        ? "People going: ${event.peopleCount}/${event.capacity}"
+                                        : "People going: ${event.peopleCount}"),
                                       style: TextStyle(
                                         fontSize: 17,
                                         color: currentTheme.colorScheme.primary,

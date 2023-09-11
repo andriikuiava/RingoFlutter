@@ -166,12 +166,12 @@ class _TicketsScreenState extends State<TicketsScreen> {
                                   const Spacer(),
                                   Icon(
                                     CupertinoIcons.circle_fill,
-                                    color: ticket.isValidated ? Colors.red : Colors.green,
+                                    color: ticket.isValidated ? Colors.red : isTimestampInThePast(ticket.event.endTime!) ? Colors.yellow : Colors.green,
                                     size: 14,
                                   ),
                                   const SizedBox(width: 5,),
                                   Text(
-                                    ticket.isValidated ? 'Validated' : 'Valid',
+                                    ticket.isValidated ? 'Validated' : isTimestampInThePast(ticket.event.endTime!) ? 'Expired' : 'Valid',
                                     style: const TextStyle(
                                       color: Colors.grey,
                                       fontSize: 14,

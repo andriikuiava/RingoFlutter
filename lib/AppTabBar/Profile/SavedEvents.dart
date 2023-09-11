@@ -276,10 +276,10 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
                       right: 0,
                       bottom: 0,
                       child: Text(
-                        (event.price == 0 || event.price == null) ? 'Free' : '${event.currency!.symbol}${event.price!.toStringAsFixed(2)}',
+                        (event.price == 0 || event.price == null) ? 'Free' : 'from ${event.currency!.symbol}${event.price!.toStringAsFixed(2)}',
                         style: TextStyle(
                           color: currentTheme.colorScheme.primary,
-                          fontSize: 20,
+                          fontSize: 17,
                           decoration: TextDecoration.none,
                           fontWeight: FontWeight.w600,
                         ),

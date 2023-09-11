@@ -181,3 +181,16 @@ String _twoDigits(int n) {
   }
   return "0$n";
 }
+
+bool isTimestampInThePast(String timestamp) {
+  DateTime parsedDateTimeStart = DateTime.parse('${timestamp}Z').toLocal();
+  parsedDateTimeStart = parsedDateTimeStart.add(Duration(hours: 3));
+  DateTime now = DateTime.now();
+  DateTime today = DateTime.parse(timestamp);
+
+  if (now.isAfter(today)) {
+    return true;
+  } else {
+    return false;
+  }
+}

@@ -112,17 +112,22 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text(widget.ticket.event.name,
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                                color: currentTheme
-                                                    .scaffoldBackgroundColor,
-                                                decoration: TextDecoration.none,
-                                              )
+                                          Container(
+                                            width: MediaQuery.of(context).size.width * 0.6,
+                                            child: Text(widget.ticket.event.name,
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: currentTheme
+                                                      .scaffoldBackgroundColor,
+                                                  decoration: TextDecoration.none,
+                                                )
+                                            ),
                                           ),
-                                          const SizedBox(height: 2,),
-                                          Text(startTimeFromTimestamp(widget.ticket.event.startTime!, widget.ticket.event.endTime!),
+                                          const SizedBox(height: 4,),
+                                          Text(startTimeFromTimestamp(widget.ticket.event.startTime!, null),
                                               style: const TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.bold,
@@ -130,25 +135,40 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                                 decoration: TextDecoration.none,
                                               )
                                           ),
+                                          (widget.ticket.ticketType != null)
+                                          ? Column(
+                                            children: [
+                                              const SizedBox(height: 2,),
+                                              Text("Type: ",
+                                                  style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.grey,
+                                                    decoration: TextDecoration.none,
+                                                  )
+                                              ),
+                                            ],
+                                          )
+                                          : Container(),
                                           const SizedBox(height: 1,),
                                         ],
                                       ),
                                     ),
                                     const Spacer(),
-                                    (checkIfExpired(widget.ticket.expiryDate) || widget.ticket.event.price == 0)
+                                    (checkIfExpired(widget.ticket.expiryDate) || widget.ticket.event.price == 0 || isTimestampInThePast(widget.ticket.event.endTime!))
                                     ? CupertinoButton(
                                       onPressed: () {
                                         deleteTicket(context);
                                       },
                                       child: Icon(
                                         CupertinoIcons.delete,
-                                        color: currentTheme.colorScheme.background,
+                                        color: currentTheme.scaffoldBackgroundColor,
                                       ),
                                     )
                                     : CupertinoButton(
                                       child: Icon(
                                         CupertinoIcons.calendar_badge_plus,
-                                        color: currentTheme.colorScheme.background,
+                                        color: currentTheme.scaffoldBackgroundColor,
                                       ),
                                       onPressed: () {
                                         final Event event = Event(

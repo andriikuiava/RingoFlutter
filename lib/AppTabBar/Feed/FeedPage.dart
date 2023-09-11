@@ -664,9 +664,11 @@ Widget eventCard(context, EventInFeed event, bool isSelectedOnMap) {
                   right: 0,
                   bottom: 0,
                   child: Text(
-                    "${event.currency!.symbol}${event.price!.toStringAsFixed(2)}",
+                    (event.price == 0)
+                        ? "Free"
+                        : "from ${event.currency!.symbol}${event.price!.toStringAsFixed(2)}",
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 22,
                       fontWeight: FontWeight.w600,
                       color: currentTheme.colorScheme.primary,
                       decoration: TextDecoration.none,
