@@ -228,7 +228,8 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                         decoration: TextDecoration.none,
                                       )
                                   ),
-                                  Text("${widget.ticket.event.currency!.symbol}${widget.ticket.event.price!.toStringAsFixed(2)}",
+                                  // Text("${widget.ticket.ticketType!.currency.symbol}${widget.ticket.ticketType!.price.toStringAsFixed(2)}",
+                                  Text("${widget.ticket.ticketType!.currency.symbol}${widget.ticket.ticketType!.price.toStringAsFixed(2)}",
                                       style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,

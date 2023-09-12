@@ -343,21 +343,80 @@ class _EventPageState extends State<EventPage>
                                       ? ElevatedButton(
                                     onPressed: () async {
                                       if (!event.isRegistered) {
-                                        if (event.registrationForm == null) {
-                                          getTicketNoForm();
-                                        } else {
-                                          final wasBought = await Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => FormCompletion(
-                                                event: event,
-                                              ),
-                                            ),
+                                        if (event.ticketTypes != [] && event.ticketTypes != null) {
+                                          showModalBottomSheet<void>(
+                                            context: context,
+                                            elevation: 0,
+                                            builder: (context) =>
+                                                ListView.builder(
+                                                  shrinkWrap: true,
+                                                  itemCount: event.ticketTypes!.length,
+                                                  itemBuilder: (context, index) {
+                                                    return GestureDetector(
+                                                      onTap: () async {
+                                                        Navigator.pop(context);
+                                                        final wasBought = await Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) => FormCompletion(
+                                                              event: event,
+                                                              selectedTicketType: event.ticketTypes![index],
+                                                            ),
+                                                          ),
+                                                        );
+                                                        if (wasBought) {
+                                                          _refreshEvent();
+                                                        }
+                                                      },
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.all(10.0),
+                                                        child: SizedBox(
+                                                          width: MediaQuery.of(context).size.width * 0.9,
+                                                          child: Row(
+                                                            children: [
+                                                              const SizedBox(width: 10,),
+                                                              Text(
+                                                                event.ticketTypes![index].title,
+                                                                style: TextStyle(
+                                                                  color: currentTheme.colorScheme.primary,
+                                                                  fontWeight: FontWeight.bold,
+                                                                  fontSize: 16,
+                                                                ),
+                                                              ),
+                                                              const Spacer(),
+                                                              Text(
+                                                                "${event.ticketTypes![index].currency.symbol}${event.ticketTypes![index].price}",
+                                                                style: TextStyle(
+                                                                  color: currentTheme.colorScheme.primary,
+                                                                  fontWeight: FontWeight.bold,
+                                                                  fontSize: 16,
+                                                                ),
+                                                              ),
+                                                              const SizedBox(width: 10,),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
                                           );
-                                          if (wasBought) {
-                                            _refreshEvent();
-                                          }
                                         }
+                                        // if (event.registrationForm == null) {
+                                        //   getTicketNoForm();
+                                        // } else {
+                                        //   final wasBought = await Navigator.push(
+                                        //     context,
+                                        //     MaterialPageRoute(
+                                        //       builder: (context) => FormCompletion(
+                                        //         event: event,
+                                        //       ),
+                                        //     ),
+                                        //   );
+                                        //   if (wasBought) {
+                                        //     _refreshEvent();
+                                        //   }
+                                        // }
                                       } else {
                                         getBoughtTicket();
                                       }
@@ -384,19 +443,19 @@ class _EventPageState extends State<EventPage>
                                             ),
                                           ),
                                         ),
-                                        // Expanded(
-                                        //   child: Align(
-                                        //     alignment: Alignment.centerRight,
-                                        //     child: Text(
-                                        //       (event.price == 0.0 ? "Free" : "${event.currency!.symbol}${event.price!.toStringAsFixed(2)}"),
-                                        //       style: TextStyle(
-                                        //         color: currentTheme.scaffoldBackgroundColor,
-                                        //         fontWeight: FontWeight.bold,
-                                        //         fontSize: 16,
-                                        //       ),
-                                        //     ),
-                                        //   ),
-                                        // ),
+                                        Expanded(
+                                          child: Align(
+                                            alignment: Alignment.centerRight,
+                                            child: Text(
+                                              (event.ticketTypes == [] || event.ticketTypes == null ? "Free" : "from ${event.ticketTypes![0].currency.symbol}${event.ticketTypes![0].price}"),
+                                              style: TextStyle(
+                                                color: currentTheme.scaffoldBackgroundColor,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
                                       ],
                                     )
                                         : Row(

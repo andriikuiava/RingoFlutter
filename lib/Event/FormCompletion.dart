@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ringoflutter/Classes/EventClass.dart';
 import 'package:ringoflutter/Classes/RegistrationFormClass.dart';
 import 'package:ringoflutter/Classes/Answer.dart';
+import 'package:ringoflutter/Classes/TicketTypeClass.dart';
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 import 'package:http/http.dart' as http;
@@ -13,7 +14,8 @@ import 'dart:convert';
 
 class FormCompletion extends StatefulWidget {
   final EventFull event;
-  const FormCompletion({super.key, required this.event});
+  final TicketType selectedTicketType;
+  const FormCompletion({super.key, required this.event, required this.selectedTicketType});
 
 
   @override

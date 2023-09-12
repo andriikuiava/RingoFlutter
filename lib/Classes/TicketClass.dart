@@ -23,7 +23,7 @@ class Ticket {
     required this.expiryDate,
     required this.isValidated,
     required this.ticketCode,
-    required this.ticketType,
+    this.ticketType,
     this.registrationForm,
     this.registrationSubmission
   });
