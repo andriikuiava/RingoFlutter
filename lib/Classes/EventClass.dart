@@ -4,6 +4,7 @@ import 'package:ringoflutter/Classes/CurrencyClass.dart';
 import 'package:ringoflutter/Classes/OrganisationClass.dart';
 import 'package:ringoflutter/Classes/PhotoClasses.dart';
 import 'package:ringoflutter/Classes/RegistrationFormClass.dart';
+import 'package:ringoflutter/Classes/TicketTypeClass.dart';
 
 class EventInFeed {
   int? id;
@@ -22,7 +23,7 @@ class EventInFeed {
   List<CategoryClass>? categories;
   int? hostId;
   int peopleCount;
-  int capacity;
+  int? capacity;
 
   EventInFeed({
     this.id,
@@ -41,7 +42,7 @@ class EventInFeed {
     this.categories,
     this.hostId,
     required this.peopleCount,
-    required this.capacity,
+    this.capacity,
   });
 
   factory EventInFeed.fromJson(Map<String, dynamic> json) {
@@ -89,16 +90,15 @@ class EventFull {
   String? address;
   Coordinates? coordinates;
   bool isTicketNeeded;
-  double? price;
-  Currency? currency;
   String? startTime;
   String? endTime;
   List<CategoryClass>? categories;
   Organisation host;
   int peopleCount;
-  int capacity;
+  int? capacity;
   bool isSaved;
   bool isRegistered;
+  List<TicketType>? ticketTypes;
   RegistrationForm? registrationForm;
 
   EventFull({
@@ -111,16 +111,15 @@ class EventFull {
     this.address,
     this.coordinates,
     required this.isTicketNeeded,
-    this.price,
-    this.currency,
     this.startTime,
     this.endTime,
     this.categories,
     required this.host,
     required this.peopleCount,
-    required this.capacity,
+    this.capacity,
     required this.isSaved,
     required this.isRegistered,
+    this.ticketTypes,
     this.registrationForm,
   });
 
@@ -137,10 +136,6 @@ class EventFull {
           ? Coordinates.fromJson(json['coordinates'])
           : null,
       isTicketNeeded: json['isTicketNeeded'],
-      price: json['price'],
-      currency: json['currency'] != null
-          ? Currency.fromJson(json['currency'])
-          : null,
       startTime: json['startTime'],
       endTime: json['endTime'],
       categories: json['categories'] != null
@@ -152,6 +147,10 @@ class EventFull {
       capacity: json['capacity'],
       isSaved: json['isSaved'],
       isRegistered: json['isRegistered'],
+      ticketTypes: json['ticketTypes'] != null
+          ? List<TicketType>.from(
+          json['ticketTypes'].map((x) => TicketType.fromJson(x)))
+          : null,
       registrationForm: json['registrationForm'] != null
           ? RegistrationForm.fromJson(json['registrationForm'])
           : null,

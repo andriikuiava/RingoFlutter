@@ -27,119 +27,129 @@ class FeedPage extends StatelessWidget {
           color: currentTheme.colorScheme.primary,
         ),),
       ),
-      child: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  const SizedBox(width: 10),
-                  Text(
-                    'Nearby Adventures',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: currentTheme.colorScheme.primary,
-                      decoration: TextDecoration.none,
-                    ),
-                  ),
-                  const Spacer(),
-                  CupertinoButton(
-                    onPressed: () async {
-                      seeAll(context, "Nearby Adventures", "sort=distance&dir=ASC");
-                    },
-                    child: Text(
-                      "See all",
+      child: RefreshIndicator(
+        onRefresh: () async {
+          checkTimestamp();
+          getFindGo();
+          getPopularEvents();
+          getCloseEvents();
+          getCategories();
+        },
+        color: currentTheme.colorScheme.primary,
+        child: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const SizedBox(width: 10),
+                    Text(
+                      'Nearby Adventures',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
                         color: currentTheme.colorScheme.primary,
                         decoration: TextDecoration.none,
                       ),
                     ),
-                  ),
-                ],
-              ),
-              nearbyAdventures(context),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  const SizedBox(width: 10),
-                  Text(
-                    'Explore Categories',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: currentTheme.colorScheme.primary,
-                      decoration: TextDecoration.none,
+                    const Spacer(),
+                    CupertinoButton(
+                      onPressed: () async {
+                        seeAll(context, "Nearby Adventures", "sort=distance&dir=ASC");
+                      },
+                      child: Text(
+                        "See all",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: currentTheme.colorScheme.primary,
+                          decoration: TextDecoration.none,
+                        ),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              exploreCategories(context),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  const SizedBox(width: 10),
-                  Text(
-                    'Crowd Favorites',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: currentTheme.colorScheme.primary,
-                      decoration: TextDecoration.none,
-                    ),
-                  ),
-                  const Spacer(),
-                  CupertinoButton(
-                    onPressed: () async {
-                      seeAll(context, "Crowd Favorites", "&sort=peopleCount&maxDistance=20000");
-                    },
-                    child: Text(
-                      "See all",
+                  ],
+                ),
+                nearbyAdventures(context),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    const SizedBox(width: 10),
+                    Text(
+                      'Explore Categories',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
                         color: currentTheme.colorScheme.primary,
                         decoration: TextDecoration.none,
                       ),
                     ),
-                  ),
-                ],
-              ),
-              crowdFavorites(context),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  const SizedBox(width: 10),
-                  Text(
-                    'Free Pass Events',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: currentTheme.colorScheme.primary,
-                      decoration: TextDecoration.none,
-                    ),
-                  ),
-                  const Spacer(),
-                  CupertinoButton(
-                    onPressed: () async {
-                      seeAll(context, "Free Pass Events", "limit=20&isTicketNeeded=false&priceMax=0&currencyId=1");
-                    },
-                    child: Text(
-                      "See all",
+                  ],
+                ),
+                const SizedBox(height: 10),
+                exploreCategories(context),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    const SizedBox(width: 10),
+                    Text(
+                      'Crowd Favorites',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
                         color: currentTheme.colorScheme.primary,
                         decoration: TextDecoration.none,
                       ),
                     ),
-                  ),
-                ],
-              ),
-              findGo(context),
-              const SizedBox(height: 100),
-            ],
+                    const Spacer(),
+                    CupertinoButton(
+                      onPressed: () async {
+                        seeAll(context, "Crowd Favorites", "&sort=peopleCount&maxDistance=20000");
+                      },
+                      child: Text(
+                        "See all",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: currentTheme.colorScheme.primary,
+                          decoration: TextDecoration.none,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                crowdFavorites(context),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    const SizedBox(width: 10),
+                    Text(
+                      'Free Pass Events',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: currentTheme.colorScheme.primary,
+                        decoration: TextDecoration.none,
+                      ),
+                    ),
+                    const Spacer(),
+                    CupertinoButton(
+                      onPressed: () async {
+                        seeAll(context, "Free Pass Events", "limit=20&isTicketNeeded=false&priceMax=0&currencyId=1");
+                      },
+                      child: Text(
+                        "See all",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: currentTheme.colorScheme.primary,
+                          decoration: TextDecoration.none,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                findGo(context),
+                const SizedBox(height: 100),
+              ],
+            ),
           ),
         ),
       ),
@@ -664,9 +674,11 @@ Widget eventCard(context, EventInFeed event, bool isSelectedOnMap) {
                   right: 0,
                   bottom: 0,
                   child: Text(
-                    "${event.currency!.symbol}${event.price!.toStringAsFixed(2)}",
+                    (event.price == 0)
+                        ? "Free"
+                        : "from ${event.currency!.symbol}${event.price!.toStringAsFixed(2)}",
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 22,
                       fontWeight: FontWeight.w600,
                       color: currentTheme.colorScheme.primary,
                       decoration: TextDecoration.none,

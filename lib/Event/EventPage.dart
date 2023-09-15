@@ -339,18 +339,105 @@ class _EventPageState extends State<EventPage>
                                 ),
                                 SizedBox(
                                   width: MediaQuery.of(context).size.width * 0.9,
-                                  child: (event.isTicketNeeded)
+                                  child: (event.isTicketNeeded && !isTimestampInThePast(event.endTime!))
                                       ? ElevatedButton(
                                     onPressed: () async {
                                       if (!event.isRegistered) {
-                                        if (event.registrationForm == null) {
-                                          getTicketNoForm();
+                                        if (event.ticketTypes != [] && event.ticketTypes != null) {
+                                          showModalBottomSheet<void>(
+                                            context: context,
+                                            elevation: 0,
+                                            builder: (context) =>
+                                                ListView.builder(
+                                                  shrinkWrap: true,
+                                                  itemCount: event.ticketTypes!.length,
+                                                  itemBuilder: (context, index) {
+                                                    return GestureDetector(
+                                                      onTap: () async {
+                                                        if (!isSoldOut(event.ticketTypes![index])) {
+                                                          Navigator.pop(context);
+                                                          final wasBought = await Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) => FormCompletion(
+                                                                event: event,
+                                                                selectedTicketType: event.ticketTypes![index].id,
+                                                              ),
+                                                            ),
+                                                          );
+                                                          if (wasBought) {
+                                                            _refreshEvent();
+                                                          }
+                                                        }
+                                                      },
+                                                      child: Column(
+                                                        children: [
+                                                          const SizedBox(height: 10,),
+                                                          ListTile(
+                                                            title: Text(
+                                                              "${event.ticketTypes![index].title}",
+                                                              style: TextStyle(
+                                                                color: currentTheme.colorScheme.primary,
+                                                                fontWeight: FontWeight.bold,
+                                                                fontSize: 16,
+                                                              ),
+                                                            ),
+                                                            subtitle: Text(
+                                                              constructDescription(event.ticketTypes![index]),
+                                                              style: TextStyle(
+                                                                color: currentTheme.colorScheme.primary,
+                                                                fontWeight: FontWeight.normal,
+                                                                fontSize: 16,
+                                                              ),
+                                                            ),
+                                                            trailing: ClipRRect(
+                                                              borderRadius: BorderRadius.circular(12),
+                                                              child: Container(
+                                                                color: isSoldOut(event.ticketTypes![index])
+                                                                    ? Colors.grey
+                                                                    : currentTheme.colorScheme.primary,
+                                                                width: 70,
+                                                                height: 50,
+                                                                child: Center(
+                                                                  child: FittedBox(
+                                                                    fit: BoxFit.scaleDown,
+                                                                    alignment: Alignment.center,
+                                                                    child: Text(
+                                                                      (isSoldOut(event.ticketTypes![index]))
+                                                                          ? " Sold out! "
+                                                                          : ((event.ticketTypes![index].price == 0))
+                                                                    ? "Free"
+                                                                    : "${event.ticketTypes![index].currency.symbol}${event.ticketTypes![index].price.toStringAsFixed(2)}",
+                                                                      style: TextStyle(
+                                                                        color: currentTheme.scaffoldBackgroundColor,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        fontSize: 16,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          const SizedBox(height: 10,),
+                                                          const Divider(
+                                                            color: Colors.grey,
+                                                            height: 0,
+                                                            thickness: 0.5,
+                                                          ),
+                                                        ],
+                                                      )
+                                                    );
+                                                  },
+                                                ),
+                                          );
                                         } else {
                                           final wasBought = await Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) => FormCompletion(
                                                 event: event,
+                                                selectedTicketType: 0,
                                               ),
                                             ),
                                           );
@@ -375,7 +462,7 @@ class _EventPageState extends State<EventPage>
                                           child: Align(
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              (event.price == 0.0 ? "Register" : "Buy Ticket"),
+                                              (event.ticketTypes == null || event.ticketTypes == [] ? "Get Ticket" : "Buy ticket"),
                                               style: TextStyle(
                                                 color: currentTheme.scaffoldBackgroundColor,
                                                 fontWeight: FontWeight.bold,
@@ -388,7 +475,7 @@ class _EventPageState extends State<EventPage>
                                           child: Align(
                                             alignment: Alignment.centerRight,
                                             child: Text(
-                                              (event.price == 0.0 ? "Free" : "${event.currency!.symbol}${event.price!.toStringAsFixed(2)}"),
+                                             constructPrice(event),
                                               style: TextStyle(
                                                 color: currentTheme.scaffoldBackgroundColor,
                                                 fontWeight: FontWeight.bold,
@@ -780,7 +867,10 @@ class _EventPageState extends State<EventPage>
                                       color: currentTheme.colorScheme.primary,
                                     ),
                                     const SizedBox(width: 4,),
-                                    Text(("People going: ${event.peopleCount}/${event.capacity}"),
+                                    Text((
+                                        (event.capacity != null)
+                                        ? "People going: ${event.peopleCount}/${event.capacity}"
+                                        : "People going: ${event.peopleCount}"),
                                       style: TextStyle(
                                         fontSize: 17,
                                         color: currentTheme.colorScheme.primary,
@@ -864,8 +954,14 @@ class _EventPageState extends State<EventPage>
             ),
           );
         } else if (snapshot.hasError) {
-          return const Center(
-            child: Text('Failed to load event'),
+          return Center(
+            child: Text(
+              "Error loading event",
+              style: TextStyle(
+                fontSize: 24,
+                color: currentTheme.colorScheme.primary
+              ),
+            ),
           );
         }
         return Center(

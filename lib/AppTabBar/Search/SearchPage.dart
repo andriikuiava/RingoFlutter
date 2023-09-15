@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -16,6 +17,7 @@ import 'package:ringoflutter/UI/Functions/Formats.dart';
 import 'package:ringoflutter/UI/Themes.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class CirclePainter extends CustomPainter {
   final Offset center;
@@ -76,6 +78,12 @@ class _SearchPageState extends State<SearchPage> {
   double? mapCenterLat;
   double? mapCenterLong;
   int? radius;
+
+  GoogleMapController? mapController;
+  String? _mapStyle;
+  String? _mapStyleDark;
+  String? _mapStyleIos;
+  String? _mapStyleIosDark;
     
   GoogleMapController? _mapController;
   var sortBy = "price";
@@ -102,6 +110,21 @@ class _SearchPageState extends State<SearchPage> {
     super.initState();
     fetchEvents();
     getCurrencies();
+    rootBundle.loadString('assets/map/light.txt').then((string) {
+      _mapStyle = string;
+    });
+
+    rootBundle.loadString('assets/map/dark.txt').then((string) {
+      _mapStyleDark = string;
+    });
+
+    rootBundle.loadString('assets/map/light.json').then((string) {
+      _mapStyleIos = string;
+    });
+
+    rootBundle.loadString('assets/map/dark.json').then((string) {
+      _mapStyleIosDark = string;
+    });
   }
 
   Future<String> buildRequest() async {
@@ -257,7 +280,8 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     final currentTheme = Theme.of(context);
-
+    var previousValue = "";
+    Timer? timer;
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -301,10 +325,25 @@ class _SearchPageState extends State<SearchPage> {
                         padding: const EdgeInsets.only(left: 10),
                         child: Icon(
                           CupertinoIcons.search,
-                          color: currentTheme.colorScheme.primary,
+                          color: Colors.grey,
                           size: 18,
                         ),
                       ),
+                      onChanged: (value) {
+                        var currentValue = value;
+                        timer?.cancel();
+
+                        timer = Timer(Duration(milliseconds: 500), () {
+                          setState(() {
+                            if (currentValue != previousValue) {
+                              events = [];
+                              currentPage = 0;
+                              fetchEvents();
+                            }
+                            previousValue = currentValue;
+                          });
+                        });
+                      },
                     ),
                   ),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.01),
@@ -316,13 +355,29 @@ class _SearchPageState extends State<SearchPage> {
                       child: CupertinoButton(
                         padding: const EdgeInsets.all(10),
                         child: Text(
-                          'Search',
+                          'Clear',
                           style: TextStyle(
                             color: currentTheme.colorScheme.primary,
                           ),
                         ),
                         onPressed: () {
                           setState(() {
+                            _SearchedString.text = "";
+                            mapCenterLat = null;
+                            mapCenterLong = null;
+                            radius = null;
+                            startTime = null;
+                            endTime = null;
+                            selectedCategoryList = [];
+                            selectedCategoryListIds = [];
+                            isCategorySelected = false;
+                            _TextFieldPriceFrom.text = "";
+                            _TextFieldPriceTo.text = "";
+                            selectedCurrency = "USD";
+                            selectedCurrencySymbol = "\$";
+                            selectedCurrencyId = 1;
+                            sortBy = "price";
+                            sortDirection = "ASC";
                             events = [];
                             currentPage = 0;
                             fetchEvents();
@@ -934,6 +989,13 @@ class _SearchPageState extends State<SearchPage> {
                             GoogleMap(
                               onMapCreated: (controller) {
                                 _mapController = controller;
+                                (Platform.isAndroid)
+                                    ? (currentTheme.brightness == Brightness.light)
+                                    ? _mapController?.setMapStyle(_mapStyle!)
+                                    : _mapController?.setMapStyle(_mapStyleDark!)
+                                    : (currentTheme.brightness == Brightness.light)
+                                    ? _mapController?.setMapStyle(_mapStyleIos!)
+                                    : _mapController?.setMapStyle(_mapStyleIosDark!);
                               },
                               initialCameraPosition: const CameraPosition(
                                 target: LatLng(59.47644736286131, 24.781226109442517),

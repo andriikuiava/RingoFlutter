@@ -167,7 +167,7 @@ class _RateHostState extends State<RateHost> {
                           const SizedBox(width: 10,)
                         ],
                       ),
-                      const SizedBox(height: 6),
+                      const SizedBox(height: 10),
                       SizedBox(
                         height: 200,
                         width: MediaQuery.of(context).size.width * 0.9,
@@ -191,7 +191,7 @@ class _RateHostState extends State<RateHost> {
                           },
                         ),
                       ),
-                      const SizedBox(height: 6),
+                      const SizedBox(height: 10),
                       ClipRRect(
                         borderRadius: defaultWidgetCornerRadius,
                         child: Container(
@@ -204,7 +204,7 @@ class _RateHostState extends State<RateHost> {
                                 'Submit',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: currentTheme.colorScheme.background,
+                                  color: currentTheme.scaffoldBackgroundColor,
                                 ),
                               ),
                             )

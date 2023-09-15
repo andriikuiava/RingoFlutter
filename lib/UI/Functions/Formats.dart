@@ -1,4 +1,9 @@
+import 'dart:math';
+
+import 'package:add_2_calendar/add_2_calendar.dart';
 import 'package:intl/intl.dart';
+import 'package:ringoflutter/Classes/EventClass.dart';
+import 'package:ringoflutter/Classes/TicketTypeClass.dart';
 
 String convertTimestampToBigDate(String timestamp) {
   DateTime dateTime = DateTime.parse(timestamp);
@@ -180,4 +185,69 @@ String _twoDigits(int n) {
     return "$n";
   }
   return "0$n";
+}
+
+bool isTimestampInThePast(String timestamp) {
+  if (timestamp == '') {
+    return false;
+  }
+  DateTime parsedDateTimeStart = DateTime.parse('${timestamp}Z').toLocal();
+  DateTime now = DateTime.now();
+
+  if (now.isAfter(parsedDateTimeStart)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+
+String constructDescription(TicketType ticket) {
+  String description = '';
+
+  if (ticket.description != null || ticket.description != '') {
+    description = '${ticket.description}';
+  }
+  if (ticket.maxTickets != null) {
+    if (ticket.peopleCount >= ticket.maxTickets!) {
+      description = '$description\nNo tickets available';
+    } else {
+      description = '${description}\n${ticket.maxTickets! - ticket.peopleCount} tickets left';
+    }
+  }
+  if (ticket.salesStopTime != null || ticket.salesStopTime != '') {
+    description = '${description}\nSales stop ${startTimeFromTimestamp(ticket.salesStopTime!, null)}';
+  }
+
+  return description;
+}
+
+bool isSoldOut(TicketType ticket) {
+  bool result = false;
+  if (ticket.maxTickets != null) {
+    if (ticket.peopleCount >= ticket.maxTickets!) {
+      result = true;
+    }
+    if (ticket.salesStopTime != null) {
+      if (isTimestampInThePast(ticket.salesStopTime!)) {
+        result = true;
+      }
+    }
+  }
+  return result;
+}
+
+String constructPrice(EventFull event) {
+  String price = '';
+  double minPrice = event.ticketTypes!.map((e) => e.price).reduce(min);
+  double maxPrice = event.ticketTypes!.map((e) => e.price).reduce(max);
+
+  if (minPrice == 0.0 && maxPrice == 0.0) {
+    price = 'Free';
+  } else if (minPrice == maxPrice) {
+    price = '${event.ticketTypes![0].currency.symbol}${minPrice.toStringAsFixed(2)}';
+  } else {
+    price = '${event.ticketTypes![0].currency.symbol}${minPrice.toStringAsFixed(2)} - ${event.ticketTypes![0].currency.symbol}${maxPrice.toStringAsFixed(2)}';
+  }
+  return price;
 }

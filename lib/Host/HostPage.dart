@@ -731,7 +731,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
     await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
-    Uri url = Uri.parse('${ApiEndpoints.SEARCH}?hostId=${widget.hostId}&startTimeMin=${DateTime.now().toUtc().toIso8601String()}');
+    Uri url = Uri.parse('${ApiEndpoints.SEARCH}?hostId=${widget.hostId}&startTimeMin=${convertToUtc(DateTime.now())}');
     print(url);
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
@@ -790,14 +790,14 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                           children: [
                             const SizedBox(width: 10),
                             SizedBox(
-                              width: 100,
-                              height: 100,
+                              width: 80,
+                              height: 80,
                               child: ClipRRect(
                                 borderRadius: defaultWidgetCornerRadius,
                                 child: Image.network(
                                   '${ApiEndpoints.GET_PHOTO}/${event.mainPhotoId}',
-                                  width: 100,
-                                  height: 100,
+                                  width: 80,
+                                  height: 80,
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -897,7 +897,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
     await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
-    Uri url = Uri.parse('${ApiEndpoints.SEARCH}?hostId=${widget.hostId}&startTimeMax=${DateTime.now().toIso8601String()}');
+    Uri url = Uri.parse('${ApiEndpoints.SEARCH}?hostId=${widget.hostId}&startTimeMax=${convertToUtc(DateTime.now())}');
     print(url);
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
