@@ -85,6 +85,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                 Center(
                   child: Column(
                     children: [
+                      const SizedBox(height: 10,),
                         FractionallySizedBox(
                           widthFactor: 0.9,
                           child: ClipRRect(
@@ -139,13 +140,16 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                           ? Column(
                                             children: [
                                               const SizedBox(height: 2,),
-                                              Text("Type: ",
-                                                  style: const TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.grey,
-                                                    decoration: TextDecoration.none,
-                                                  )
+                                              Container(
+                                                width: MediaQuery.of(context).size.width * 0.6,
+                                                child: Text("Type: ${widget.ticket.ticketType!.title}",
+                                                    style: const TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.grey,
+                                                      decoration: TextDecoration.none,
+                                                    )
+                                                ),
                                               ),
                                             ],
                                           )
@@ -155,7 +159,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                       ),
                                     ),
                                     const Spacer(),
-                                    (checkIfExpired(widget.ticket.expiryDate) || widget.ticket.event.price == 0 || isTimestampInThePast(widget.ticket.event.endTime!))
+                                    (checkIfExpired(widget.ticket.expiryDate) || isTimestampInThePast(widget.ticket.event.endTime!) || widget.ticket.isValidated)
                                     ? CupertinoButton(
                                       onPressed: () {
                                         deleteTicket(context);
@@ -220,7 +224,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                       )
                                   ),
                                   const SizedBox(height: 7,),
-                                  const Text("COST",
+                                  const Text("PRICE",
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.normal,
@@ -228,7 +232,6 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                         decoration: TextDecoration.none,
                                       )
                                   ),
-                                  // Text("${widget.ticket.ticketType!.currency.symbol}${widget.ticket.ticketType!.price.toStringAsFixed(2)}",
                                   Text("${widget.ticket.ticketType!.currency.symbol}${widget.ticket.ticketType!.price.toStringAsFixed(2)}",
                                       style: TextStyle(
                                         fontSize: 18,
@@ -289,17 +292,101 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                       )
                                   ),
                                   const SizedBox(height: 10,),
-                                  Center(
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: QrImageView(
-                                        data: widget.ticket.ticketCode,
-                                        backgroundColor: Colors.white,
-                                        size: MediaQuery.of(context).size.width * 0.7,
-                                        version: QrVersions.auto,
+                                  GestureDetector(
+                                    onTap: () async {
+                                      await Navigator.of(context, rootNavigator:true).push( // ensures fullscreen
+                                          CupertinoPageRoute(
+                                              builder: (BuildContext context) {
+                                                return CupertinoPageScaffold(
+                                                  child: Center(
+                                                    child: Container(
+                                                      height: MediaQuery.of(context).size.height * 0.9,
+                                                      child: Column(
+                                                        children: [
+                                                          Spacer(),
+                                                          ClipRRect(
+                                                            borderRadius: BorderRadius.circular(9),
+                                                            child: QrImageView(
+                                                              data: widget.ticket.ticketCode,
+                                                              backgroundColor: Colors.white,
+                                                              dataModuleStyle: QrDataModuleStyle(
+                                                                dataModuleShape: QrDataModuleShape.square,
+                                                                color: (widget.ticket.isValidated) ? Colors.grey : Colors.black,
+                                                              ),
+                                                              eyeStyle: QrEyeStyle(
+                                                                eyeShape: QrEyeShape.square,
+                                                                color: (widget.ticket.isValidated) ? Colors.grey : Colors.black,
+                                                              ),
+                                                              size: MediaQuery.of(context).size.width * 0.95,
+                                                              version: QrVersions.auto,
+                                                            ),
+                                                          ),
+                                                          const SizedBox(height: 20,),
+                                                          Container(
+                                                            width: MediaQuery.of(context).size.width * 0.7,
+                                                            child: CupertinoButton(
+                                                              color: currentTheme.colorScheme.background,
+                                                              onPressed: () {
+                                                                Navigator.pop(context);
+                                                              },
+                                                              child: Text(
+                                                                "Close",
+                                                                style: TextStyle(
+                                                                  fontSize: 18,
+                                                                  fontWeight: FontWeight.normal,
+                                                                  color: currentTheme.colorScheme.primary,
+                                                                  decoration: TextDecoration.none,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Spacer(),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              }
+                                          ) );
+                                    },
+                                    child: Center(
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: QrImageView(
+                                          data: widget.ticket.ticketCode,
+                                          backgroundColor: Colors.white,
+                                          dataModuleStyle: QrDataModuleStyle(
+                                            dataModuleShape: QrDataModuleShape.square,
+                                            color: (widget.ticket.isValidated) ? Colors.grey : Colors.black,
+                                          ),
+                                          eyeStyle: QrEyeStyle(
+                                            eyeShape: QrEyeShape.square,
+                                            color: (widget.ticket.isValidated) ? Colors.grey : Colors.black,
+                                          ),
+                                          size: MediaQuery.of(context).size.width * 0.7,
+                                          version: QrVersions.auto,
+                                        ),
                                       ),
                                     ),
                                   ),
+                                  (widget.ticket.isValidated)
+                                  ? Column(
+                                    children: [
+                                      const SizedBox(height: 10,),
+                                      Center(
+                                        child: Text(
+                                          "This ticket has been validated",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.grey,
+                                            decoration: TextDecoration.none,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                  : Container(),
                                   const SizedBox(height: 8,),
                                 ],
                               ),

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'Feed/FeedPage.dart';
 import 'Map/MapPage.dart';
 import 'Profile/Profile.dart';

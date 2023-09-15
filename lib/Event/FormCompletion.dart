@@ -14,7 +14,7 @@ import 'dart:convert';
 
 class FormCompletion extends StatefulWidget {
   final EventFull event;
-  final TicketType selectedTicketType;
+  final int selectedTicketType;
   const FormCompletion({super.key, required this.event, required this.selectedTicketType});
 
 
@@ -75,7 +75,8 @@ for (var question in widget.event.registrationForm!.questions) {
   void getTicket() async {
     await checkTimestamp();
     var token = await storage.read(key: 'access_token');
-    var url = Uri.parse('${ApiEndpoints.SEARCH}/${widget.event.id}/${ApiEndpoints.JOIN}');
+    var url = Uri.parse('${ApiEndpoints.SEARCH}/${widget.event.id}/${ApiEndpoints.JOIN}/ticket-types/${widget.selectedTicketType}');
+    print(url);
     var headers = {
       'Authorization': 'Bearer $token',
       'Content-Type': 'application/json'

@@ -280,7 +280,8 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     final currentTheme = Theme.of(context);
-
+    var previousValue = "";
+    Timer? timer;
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -324,10 +325,25 @@ class _SearchPageState extends State<SearchPage> {
                         padding: const EdgeInsets.only(left: 10),
                         child: Icon(
                           CupertinoIcons.search,
-                          color: currentTheme.colorScheme.primary,
+                          color: Colors.grey,
                           size: 18,
                         ),
                       ),
+                      onChanged: (value) {
+                        var currentValue = value;
+                        timer?.cancel();
+
+                        timer = Timer(Duration(milliseconds: 500), () {
+                          setState(() {
+                            if (currentValue != previousValue) {
+                              events = [];
+                              currentPage = 0;
+                              fetchEvents();
+                            }
+                            previousValue = currentValue;
+                          });
+                        });
+                      },
                     ),
                   ),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.01),
@@ -339,13 +355,29 @@ class _SearchPageState extends State<SearchPage> {
                       child: CupertinoButton(
                         padding: const EdgeInsets.all(10),
                         child: Text(
-                          'Search',
+                          'Clear',
                           style: TextStyle(
                             color: currentTheme.colorScheme.primary,
                           ),
                         ),
                         onPressed: () {
                           setState(() {
+                            _SearchedString.text = "";
+                            mapCenterLat = null;
+                            mapCenterLong = null;
+                            radius = null;
+                            startTime = null;
+                            endTime = null;
+                            selectedCategoryList = [];
+                            selectedCategoryListIds = [];
+                            isCategorySelected = false;
+                            _TextFieldPriceFrom.text = "";
+                            _TextFieldPriceTo.text = "";
+                            selectedCurrency = "USD";
+                            selectedCurrencySymbol = "\$";
+                            selectedCurrencyId = 1;
+                            sortBy = "price";
+                            sortDirection = "ASC";
                             events = [];
                             currentPage = 0;
                             fetchEvents();

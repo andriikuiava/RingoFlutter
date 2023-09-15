@@ -32,6 +32,8 @@ class _EditProfileState extends State<EditProfile> {
   bool isUsernameValid = true;
   bool isFormValid = true;
 
+  bool isLoading = false;
+
   void validateFields() {
     setState(() {
       if (RegExp(r"^.{3,49}$").hasMatch(_fullNameController.text)) {
@@ -74,7 +76,7 @@ class _EditProfileState extends State<EditProfile> {
     _dateController = ValueNotifier<DateTime>(DateTime.parse(widget.beforeEdit.dateOfBirth!));
   }
 
-  void updateUser(File? image, int genderId, String dateOfBirth) async {
+  Future<void> updateUser(File? image, int genderId, String dateOfBirth) async {
     await checkTimestamp();
     var selectedGender = "";
     if (genderId == 0) {
@@ -101,10 +103,9 @@ class _EditProfileState extends State<EditProfile> {
     });
     var response = await http.put(url, headers: headers, body: body);
     if (response.statusCode == 200) {
-      showSuccessAlert("Success", "Profile modified", context);
       print("Uploaded!");
       if (image != null) {
-        sendPhoto(image);
+        await sendPhoto(image);
       }
     } else {
       print("Error during connection to the server.");
@@ -394,42 +395,51 @@ class _EditProfileState extends State<EditProfile> {
                     ),
                   ),
                   const SizedBox(height: 4.0),
-                  CupertinoSlidingSegmentedControl<int>(
-                    groupValue: selectedGender,
-                    onValueChanged: (value) {
-                      setState(() {
-                        selectedGender = value!;
-                      });
-                    },
-                    children: {
-                      0: Text(
-                        'Male',
-                        style: TextStyle(
-                          color: currentTheme.colorScheme.primary,
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal,
-                          decoration: TextDecoration.none,
+                  Row(
+                    children: [
+                      const SizedBox(width: 20.0),
+                      Container(
+                        width: MediaQuery.of(context).size.width - 40,
+                        child: CupertinoSlidingSegmentedControl<int>(
+                          groupValue: selectedGender,
+                          onValueChanged: (value) {
+                            setState(() {
+                              selectedGender = value!;
+                            });
+                          },
+                          children: {
+                            0: Text(
+                              'Male',
+                              style: TextStyle(
+                                color: currentTheme.colorScheme.primary,
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
+                                decoration: TextDecoration.none,
+                              ),
+                            ),
+                            1: Text(
+                              'Female',
+                              style: TextStyle(
+                                color: currentTheme.colorScheme.primary,
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
+                                decoration: TextDecoration.none,
+                              ),
+                            ),
+                            2: Text(
+                              'Other',
+                              style: TextStyle(
+                                color: currentTheme.colorScheme.primary,
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
+                                decoration: TextDecoration.none,
+                              ),
+                            ),
+                          },
                         ),
                       ),
-                      1: Text(
-                        'Female',
-                        style: TextStyle(
-                          color: currentTheme.colorScheme.primary,
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal,
-                          decoration: TextDecoration.none,
-                        ),
-                      ),
-                      2: Text(
-                        'Other',
-                        style: TextStyle(
-                          color: currentTheme.colorScheme.primary,
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal,
-                          decoration: TextDecoration.none,
-                        ),
-                      ),
-                    },
+                      const SizedBox(width: 20.0),
+                    ],
                   ),
                   const SizedBox(height: 20.0),
                   Row(
@@ -442,24 +452,34 @@ class _EditProfileState extends State<EditProfile> {
                               ? currentTheme.colorScheme.primary
                               : currentTheme.colorScheme.background,
                           onPressed: () async {
+                            setState(() {
+                              isLoading = true;
+                            });
                             validateFields();
                             if (isFormValid) {
                               DateFormat dateFormat = DateFormat('yyyy-MM-dd');
                               String formattedTimestamp = dateFormat.format(_dateController.value);
-                              updateUser(image, selectedGender, formattedTimestamp);
+                              await updateUser(image, selectedGender, formattedTimestamp);
+                              showSuccessAlert("Success", "Profile modified", context);
                               Navigator.pop(context, true);
                             } else {
                               null;
                             }
                           },
-                          child: Text(
-                            'Save',
+                          child: (isLoading)
+                              ? SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CupertinoActivityIndicator(
+                              color: currentTheme.scaffoldBackgroundColor,
+                            ),
+                          )
+                              : Text(
+                            "Save",
                             style: TextStyle(
                               color: (isFormValid)
                                   ? currentTheme.colorScheme.background
                                   : currentTheme.colorScheme.primary,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
                             ),
                           ),
                         ),

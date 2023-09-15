@@ -28,7 +28,7 @@ Future<XFile?> takeImage() async {
   }
 }
 
-void sendPhoto(File image) async {
+Future<void> sendPhoto(File image) async {
   await checkTimestamp();
 
   Uri url = Uri.parse(ApiEndpoints.SET_PROFILE_PICTURE);

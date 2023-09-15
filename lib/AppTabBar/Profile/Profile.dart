@@ -231,7 +231,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               ),
                                             );
                                             if (wasEdited) {
-                                              await Future.delayed(const Duration(seconds: 1));
                                               setState(() {
                                                 userInfoFuture = getUserInfo();
                                               });

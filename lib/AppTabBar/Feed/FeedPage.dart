@@ -29,11 +29,11 @@ class FeedPage extends StatelessWidget {
       ),
       child: RefreshIndicator(
         onRefresh: () async {
-          await checkTimestamp();
-          await getFindGo();
-          await getPopularEvents();
-          await getCloseEvents();
-          await getCategories();
+          checkTimestamp();
+          getFindGo();
+          getPopularEvents();
+          getCloseEvents();
+          getCategories();
         },
         color: currentTheme.colorScheme.primary,
         child: SingleChildScrollView(

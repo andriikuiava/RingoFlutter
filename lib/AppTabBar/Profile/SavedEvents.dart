@@ -197,13 +197,20 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
         ),
         child: Row(
           children: [
-            ClipRRect(
-              borderRadius: defaultWidgetCornerRadius,
-              child: Image.network(
-                '${ApiEndpoints.GET_PHOTO}/${event.mainPhotoId}',
-                width: 100,
-                height: 100,
-                fit: BoxFit.cover,
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 10,
+                top: 10,
+                bottom: 10,
+              ),
+              child: ClipRRect(
+                borderRadius: defaultWidgetCornerRadius,
+                child: Image.network(
+                  '${ApiEndpoints.GET_PHOTO}/${event.mainPhotoId}',
+                  width: 80,
+                  height: 80,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             Expanded(
@@ -229,7 +236,7 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
                         Row(
                           children: [
                             Icon(
-                              CupertinoIcons.location_fill,
+                              CupertinoIcons.location,
                               color: currentTheme.colorScheme.primary,
                               size: 14,
                             ),
@@ -252,7 +259,7 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
                         Row(
                           children: [
                             Icon(
-                              CupertinoIcons.calendar,
+                              CupertinoIcons.calendar_today,
                               color: currentTheme.colorScheme.primary,
                               size: 14,
                             ),
