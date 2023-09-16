@@ -197,7 +197,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                                   ),
                                   const Spacer(),
                                   Text(
-                                    '${ticket.event.currency!.symbol}${ticket.event.price!.toStringAsFixed(2)}',
+                                    '${ticket.ticketType!.currency.symbol}${ticket.ticketType!.price.toStringAsFixed(2)}',
                                     style: const TextStyle(
                                       color: Colors.grey,
                                       fontSize: 14,
