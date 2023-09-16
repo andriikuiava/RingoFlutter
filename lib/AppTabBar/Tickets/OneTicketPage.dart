@@ -159,7 +159,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                                       ),
                                     ),
                                     const Spacer(),
-                                    (checkIfExpired(widget.ticket.expiryDate) || isTimestampInThePast(widget.ticket.event.endTime!) || widget.ticket.isValidated)
+                                    (isTimestampInThePast(widget.ticket.expiryDate) || isTimestampInThePast(widget.ticket.event.endTime!) || widget.ticket.isValidated)
                                     ? CupertinoButton(
                                       onPressed: () {
                                         deleteTicket(context);

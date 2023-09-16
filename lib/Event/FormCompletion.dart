@@ -26,6 +26,7 @@ class _FormCompletionState extends State<FormCompletion> {
   final storage = const FlutterSecureStorage();
   List<Answer> answers = [];
   bool isFormCompleted = false;
+  bool isLoading = false;
 
   void prepareFieldsForAnswers() {
 for (var question in widget.event.registrationForm!.questions) {
@@ -73,6 +74,9 @@ for (var question in widget.event.registrationForm!.questions) {
   }
 
   void getTicket() async {
+    setState(() {
+      isLoading = true;
+    });
     await checkTimestamp();
     var token = await storage.read(key: 'access_token');
     var url = Uri.parse('${ApiEndpoints.SEARCH}/${widget.event.id}/${ApiEndpoints.JOIN}/ticket-types/${widget.selectedTicketType}');
@@ -94,6 +98,9 @@ for (var question in widget.event.registrationForm!.questions) {
       showSuccessAlert("Success", "You have successfully joined the event", context);
       Navigator.pop(context, true);
     } else {
+      setState(() {
+        isLoading = false;
+      });
       print(response.statusCode);
       print(response.body);
       showErrorAlert("Error", "Something went wrong", context);
@@ -170,7 +177,11 @@ for (var question in widget.event.registrationForm!.questions) {
                                 : currentTheme.colorScheme.primary.withOpacity(0.2),
                             width: MediaQuery.of(context).size.width * 0.8,
                             child: CupertinoButton(
-                              child: Text(
+                              child: (isLoading)
+                              ? CupertinoActivityIndicator(
+                                color: currentTheme.colorScheme.primary,
+                              )
+                                  : Text(
                                 isFormCompleted ? 'Submit' : 'Please complete the form',
                                 style: TextStyle(
                                   color: isFormCompleted

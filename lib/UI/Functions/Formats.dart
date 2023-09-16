@@ -160,18 +160,6 @@ String convertDateTimeToTimestamp(DateTime dateTime) {
   return '$year-$month-${day}T$hour:$minute';
 }
 
-bool checkIfExpired(String timestamp) {
-  DateTime now = DateTime.now();
-
-  DateTime targetDate = DateTime.parse(timestamp);
-
-  if (now.isAfter(targetDate)) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
 String convertToUtc(DateTime dateTime) {
   final utcDateTime = dateTime.toUtc();
 
