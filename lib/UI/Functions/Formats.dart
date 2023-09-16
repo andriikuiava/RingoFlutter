@@ -192,21 +192,26 @@ bool isTimestampInThePast(String timestamp) {
 
 String constructDescription(TicketType ticket) {
   String description = '';
+  bool isSoldOut = false;
+  if (isTimestampInThePast(ticket.salesStopTime!)) {
+    isSoldOut = true;
+  }
+  if (ticket.maxTickets != null && ticket.peopleCount >= ticket.maxTickets!) {
+      isSoldOut = true;
+  }
 
-  if (ticket.description != null || ticket.description != '') {
+  if (ticket.description != null || ticket.description!.isNotEmpty) {
     description = '${ticket.description}';
   }
-  if (ticket.maxTickets != null) {
-    if (ticket.peopleCount >= ticket.maxTickets!) {
-      description = '$description\nNo tickets available';
-    } else {
+
+  if(!isSoldOut) {
+    if (ticket.maxTickets != null && ticket.peopleCount < ticket.maxTickets!) {
       description = '${description}\n${ticket.maxTickets! - ticket.peopleCount} tickets left';
     }
+    if ((ticket.salesStopTime != null || ticket.salesStopTime!.isNotEmpty)) {
+      description = '${description}\nSales stop ${startTimeFromTimestamp(ticket.salesStopTime!, null)}';
+    }
   }
-  if (ticket.salesStopTime != null || ticket.salesStopTime != '') {
-    description = '${description}\nSales stop ${startTimeFromTimestamp(ticket.salesStopTime!, null)}';
-  }
-
   return description;
 }
 

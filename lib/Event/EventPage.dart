@@ -41,6 +41,7 @@ class _EventPageState extends State<EventPage>
   String? _mapStyleIos;
   String? _mapStyleDark;
   String? _mapStyleIosDark;
+  bool isSaveLoading = false;
 
   bool isDescriptionExpanded = false;
 
@@ -97,6 +98,9 @@ class _EventPageState extends State<EventPage>
 
 
   Future<EventFull> saveEvent(bool isSaved) async {
+    setState(() {
+      isSaveLoading = true;
+    });
     await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
@@ -112,8 +116,14 @@ class _EventPageState extends State<EventPage>
       _refreshEvent();
       var jsonResponse = customJsonDecode(response.body);
       EventFull event = EventFull.fromJson(jsonResponse);
+      setState(() {
+        isSaveLoading = false;
+      });
       return event;
     } else {
+      setState(() {
+        isSaveLoading = false;
+      });
       throw Exception('Failed to get event');
     }
   }
@@ -339,7 +349,7 @@ class _EventPageState extends State<EventPage>
                                 ),
                                 SizedBox(
                                   width: MediaQuery.of(context).size.width * 0.9,
-                                  child: (event.isTicketNeeded && !isTimestampInThePast(event.endTime!))
+                                  child: (event.isTicketNeeded && !isTimestampInThePast(event.endTime!) && event.isTicketNeeded)
                                       ? ElevatedButton(
                                     onPressed: () async {
                                       if (!event.isRegistered) {
@@ -519,7 +529,8 @@ class _EventPageState extends State<EventPage>
                                               foregroundColor: currentTheme.colorScheme.primary,
                                               backgroundColor: currentTheme.scaffoldBackgroundColor,
                                             ),
-                                            child: Row(
+                                            child: (!isSaveLoading)
+                                              ? Row(
                                               children: [
                                                 const Spacer(),
                                                 Icon(
@@ -538,6 +549,14 @@ class _EventPageState extends State<EventPage>
                                                 ),
                                                 const Spacer(),
                                               ],
+                                            )
+                                            : SizedBox(
+                                              height: 16,
+                                              width: 16,
+                                              child: CupertinoActivityIndicator(
+                                                radius: 8,
+                                                color: currentTheme.colorScheme.primary,
+                                              ),
                                             ),
                                             onPressed: () {
                                               saveEvent(event.isSaved);
@@ -878,6 +897,30 @@ class _EventPageState extends State<EventPage>
                                     ),
                                   ],
                                 ),
+                                (event.price != null)
+                                ? Column(
+                                  children: [
+                                    const SizedBox(height: 6,),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          CupertinoIcons.money_dollar,
+                                          size: 17,
+                                          color: currentTheme.colorScheme.primary,
+                                        ),
+                                        const SizedBox(width: 4,),
+                                        Text((
+                                            "Cost: ${event.currency!.symbol}${event.price!.toStringAsFixed(2)}"),
+                                          style: TextStyle(
+                                            fontSize: 17,
+                                            color: currentTheme.colorScheme.primary,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                )
+                                : SizedBox(),
                                 if (event.categories != null)
                                   Column(
                                     children: [

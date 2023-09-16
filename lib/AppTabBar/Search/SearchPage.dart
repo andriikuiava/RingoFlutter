@@ -86,7 +86,7 @@ class _SearchPageState extends State<SearchPage> {
   String? _mapStyleIosDark;
     
   GoogleMapController? _mapController;
-  var sortBy = "price";
+  var sortBy = "distance";
   var sortDirection = "ASC";
 
   final TextEditingController _TextFieldPriceTo = TextEditingController();
@@ -136,68 +136,68 @@ class _SearchPageState extends State<SearchPage> {
     var result = "";
 
     if (sortDirection == "ASC") {
-      result = "$result&sortDirection=ASC&";
+      result = "$result&dir=ASC";
     }
     else if (sortDirection == "DESC") {
-      result = "$result&sortDirection=DESC&";
+      result = "$result&dir=DESC";
     }
 
     if (sortBy == "distance") {
-      result = "$result&sort=distance&";
+      result = "$result&sort=distance";
     }
     else if (sortBy == "price") {
-      result = "$result&sort=price&";
+      result = "$result&sort=price";
     }
     else if (sortBy == "date") {
-      result = "$result&sort=startTime&";
+      result = "$result&sort=startTime";
     }
     else if (sortBy == "popularity") {
-      result = "$result&sort=peopleCount&";
+      result = "$result&sort=peopleCount";
     }
 
     //location
     if (mapCenterLat != null) {
-      result = "$result&latitude=$mapCenterLat&longitude=$mapCenterLong&maxDistance=$radius&";
+      result = "$result&latitude=$mapCenterLat&longitude=$mapCenterLong&maxDistance=$radius";
     } else {
       result = "$result&latitude=${location.latitude}&longitude=${location.longitude}";
     }
 
     //date
     if (startTime != null) {
-      result = "$result&startTimeMin=${convertToUtc(startTime!)}&";
+      result = "$result&startTimeMin=${convertToUtc(startTime!)}";
       setState(() {
         isStartTimeSelected = true;
       });
     }
 
     if (endTime != null) {
-      result = "$result&endTimeMax=${convertToUtc(endTime!)}&";
+      result = "$result&endTimeMax=${convertToUtc(endTime!)}";
       setState(() {
         isEndTimeSelected = true;
       });
     }
 
     else if (startTime == null && endTime == null) {
-      result = "$result&startTimeMin=${convertToUtc(DateTime.now())}&";
+      result = "$result&startTimeMin=${convertToUtc(DateTime.now())}";
     }
 
 
     //category
     if (selectedCategoryListIds.isNotEmpty) {
-      result = "$result&categoryIds=${selectedCategoryListIds.join(",")}&";
+      result = "$result&categoryIds=${selectedCategoryListIds.join(",")}";
     }
 
     //searchString
     if (_SearchedString.text != "") {
-      result = "$result&search=${_SearchedString.text}&";
+      result = "$result&search=${_SearchedString.text}";
     }
 
     //price
     if (_TextFieldPriceFrom.text != "") {
-      result = "$result&priceMin=${_TextFieldPriceFrom.text}&currencyId=$selectedCurrencyId&";
+      result = "$result&priceMin=${_TextFieldPriceFrom.text}&currencyId=$selectedCurrencyId";
     }
     if (_TextFieldPriceTo.text != "") {
-      result = "$result&priceMax=${_TextFieldPriceTo.text}&currencyId=$selectedCurrencyId&";
+      result = "$result&priceMax=${_TextFieldPriceTo.text}&currencyId=$selectedCurrencyId";
     }
 
     return result;
@@ -403,15 +403,15 @@ class _SearchPageState extends State<SearchPage> {
                               color: currentTheme.colorScheme.primary,
                               child: Icon(
                                 sortBy == "distance"
-                                    ? CupertinoIcons.location_fill
-                                    : sortBy == "price"
-                                    ? CupertinoIcons.money_dollar
-                                    : sortBy == "date"
-                                    ? CupertinoIcons.calendar_today
-                                    : sortBy == "popularity"
-                                    ? CupertinoIcons.person_2_fill
-                                    : CupertinoIcons.sort_down,
-                                color: currentTheme.colorScheme.background,
+                                ? CupertinoIcons.location_fill
+                                : sortBy == "price"
+                                ? CupertinoIcons.money_dollar
+                                : sortBy == "date"
+                                ? CupertinoIcons.calendar_today
+                                : sortBy == "popularity"
+                                ? CupertinoIcons.person_2_fill
+                                : CupertinoIcons.sort_down,
+                                color: currentTheme.scaffoldBackgroundColor,
                               ),
                             ),
                             title: sortDirection == "ASC"
@@ -422,7 +422,7 @@ class _SearchPageState extends State<SearchPage> {
                                 : sortBy == "date"
                                 ? "Newest"
                                 : sortBy == "popularity"
-                                ? "Most popular"
+                                ? "Least popular"
                                 : "Sort by"
                                 : sortBy == "distance"
                                 ? "Furthest"
@@ -431,7 +431,7 @@ class _SearchPageState extends State<SearchPage> {
                                 : sortBy == "date"
                                 ? "Oldest"
                                 : sortBy == "popularity"
-                                ? "Least popular"
+                                ? "Most popular"
                                 : "Sort by",
                             subtitle: 'Sorted by $sortBy',
                           ),
@@ -505,7 +505,7 @@ class _SearchPageState extends State<SearchPage> {
                                     : sortBy == "date"
                                     ? "Newest"
                                     : sortBy == "popularity"
-                                    ? "Most popular"
+                                    ? "Least popular"
                                     : "",
                                 icon: CupertinoIcons.arrow_up,
                               ),
@@ -525,7 +525,7 @@ class _SearchPageState extends State<SearchPage> {
                                     : sortBy == "date"
                                     ? "Oldest"
                                     : sortBy == "popularity"
-                                    ? "Least popular"
+                                    ? "Most popular"
                                     : "",
                                 icon: CupertinoIcons.arrow_down,
                               ),

@@ -133,7 +133,7 @@ class FeedPage extends StatelessWidget {
                     const Spacer(),
                     CupertinoButton(
                       onPressed: () async {
-                        seeAll(context, "Free Pass Events", "limit=20&isTicketNeeded=false&priceMax=0&currencyId=1");
+                        seeAll(context, "Free Pass Events", "limit=20&isTicketNeeded=false");
                       },
                       child: Text(
                         "See all",
@@ -307,11 +307,12 @@ class FeedPage extends StatelessWidget {
   }
 
   Future<List<EventInFeed>> getFindGo() async {
+    var location = await getUserLocation();
     await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     Uri url = Uri.parse(
-        '${ApiEndpoints.SEARCH}?endTimeMin=${convertToUtc(DateTime.now())}&limit=20&isTicketNeeded=false&priceMax=0&currencyId=1');
+        '${ApiEndpoints.SEARCH}?endTimeMin=${convertToUtc(DateTime.now())}&limit=20&isTicketNeeded=false&latitude=${location.latitude}&longitude=${location.longitude}&sort=distance');
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {

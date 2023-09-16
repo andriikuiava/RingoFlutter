@@ -478,7 +478,7 @@ class _EditProfileState extends State<EditProfile> {
                             "Save",
                             style: TextStyle(
                               color: (isFormValid)
-                                  ? currentTheme.colorScheme.background
+                                  ? currentTheme.scaffoldBackgroundColor
                                   : currentTheme.colorScheme.primary,
                             ),
                           ),

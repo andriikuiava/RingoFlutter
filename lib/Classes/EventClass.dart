@@ -100,6 +100,8 @@ class EventFull {
   bool isRegistered;
   List<TicketType>? ticketTypes;
   RegistrationForm? registrationForm;
+  double? price;
+  Currency? currency;
 
   EventFull({
     required this.id,
@@ -121,6 +123,8 @@ class EventFull {
     required this.isRegistered,
     this.ticketTypes,
     this.registrationForm,
+    this.price,
+    this.currency,
   });
 
   factory EventFull.fromJson(Map<String, dynamic> json) {
@@ -153,6 +157,10 @@ class EventFull {
           : null,
       registrationForm: json['registrationForm'] != null
           ? RegistrationForm.fromJson(json['registrationForm'])
+          : null,
+      price: json['price'],
+      currency: json['currency'] != null
+          ? Currency.fromJson(json['currency'])
           : null,
     );
   }
