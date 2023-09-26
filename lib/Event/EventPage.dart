@@ -936,6 +936,31 @@ class _EventPageState extends State<EventPage>
                                     ),
                                   ],
                                 ),
+                                if (event.price != null)
+                                  Column(
+                                    children: [
+                                      const SizedBox(height: 6,),
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            CupertinoIcons.money_dollar_circle_fill,
+                                            size: 17,
+                                            color: currentTheme.colorScheme.primary,
+                                          ),
+                                          const SizedBox(width: 4,),
+                                          Text(
+                                            (event.price! != 0.0)
+                                                ? "${event.currency!.symbol}${event.price!.toStringAsFixed(2)}"
+                                                : "Free",
+                                            style: TextStyle(
+                                              fontSize: 17,
+                                              color: currentTheme.colorScheme.primary,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 if (event.categories != null)
                                   Column(
                                     children: [
