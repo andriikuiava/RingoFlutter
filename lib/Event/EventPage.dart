@@ -394,6 +394,7 @@ class _EventPageState extends State<EventPage>
                                 const SizedBox(
                                   height: 12,
                                 ),
+                                //big button
                                 SizedBox(
                                   width: MediaQuery.of(context).size.width * 0.9,
                                   child: (event.isTicketNeeded && !isTimestampInThePast(event.endTime!))
