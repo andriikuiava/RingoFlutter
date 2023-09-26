@@ -17,11 +17,16 @@ import 'package:ringoflutter/UI/Themes.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:social_share/social_share.dart';
+import 'package:pull_down_button/pull_down_button.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:ringoflutter/Event/StickerPageToShare.dart';
 import 'dart:io';
+import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:ringoflutter/AppTabBar/Feed/Builder.dart';
 import 'package:ringoflutter/AppTabBar/Map/GetLocation.dart';
-
+import 'package:image/image.dart' as img;
 
 class EventPage extends StatefulWidget {
   final int eventId;
@@ -200,10 +205,62 @@ class _EventPageState extends State<EventPage>
                   ),
                 ),
                 trailing: GestureDetector(
-                  onTap: () {
-                    Share.share(
-                      subject: event.name,
-                      'Find more info here: https://ringo-events.com/events/${event.id}',
+                  onTap: () async {
+                    String facebookAppId = "1020391179152310";
+                    var availableApps = await SocialShare.checkInstalledAppsForShare();
+                    var file = await DefaultCacheManager().getSingleFile("${ApiEndpoints.GET_PHOTO}/${event.mainPhoto.mediumQualityId}");
+                    print(availableApps);
+                    await showPullDownMenu(
+                      context: context,
+                      items: [
+                        if (availableApps!["instagram"] == true)
+                          PullDownMenuItem(
+                            title: 'Add to Instagram Story',
+                            onTap: () async {
+                              await SocialShare.shareInstagramStory(
+                                appId: facebookAppId,
+                                imagePath: file.path,
+                                backgroundTopColor: "#ffffff",
+                                backgroundBottomColor: "#000000",
+                                backgroundResourcePath: "assets/images/Ringo-Black.png",
+                                attributionURL: "https://ringo-events.com/event/${event.id}",
+                              ).then((data) {
+                                print(data);
+                              });
+                            },
+                          ),
+                        if (availableApps["facebook"] == true)
+                          PullDownMenuItem(
+                            title: 'Add to Facebook Story',
+                            onTap: () async {
+                              await SocialShare.shareFacebookStory(
+                                appId: facebookAppId,
+                                attributionURL: "https://ringo-events.com/event/${event.id}",
+                                imagePath: file.path,
+                                backgroundTopColor: "#ffffff",
+                                backgroundBottomColor: "#000000",
+                              ).then((data) {
+                                print(data);
+                              });
+                            },
+                          ),
+                        PullDownMenuItem(
+                          title: 'Other options',
+                          onTap: () async {
+                            final result = await Share.shareXFiles(
+                              [
+                                XFile(file.path,),
+                              ],
+                              text: "Check out ${event.name} by ${event.host.name} on Ringo!\nhttps://ringo-events.com/event/${event.id}",
+                            );
+                          },
+                        ),
+                      ],
+                        position: Rect.fromCenter(
+                          center: Offset(MediaQuery.of(context).size.width - 50, 50),
+                          width: 0,
+                          height: 0,
+                        ),
                     );
                   },
                   child: Icon(
@@ -306,7 +363,7 @@ class _EventPageState extends State<EventPage>
                                           CrossAxisAlignment.start,
                                           children: [
                                             SizedBox(
-                                              width: MediaQuery.of(context).size.width * 0.7,
+                                              width: MediaQuery.of(context).size.width * 0.69,
                                               child: Text(
                                                 event.host.name,
                                                 style: TextStyle(
@@ -337,175 +394,175 @@ class _EventPageState extends State<EventPage>
                                 const SizedBox(
                                   height: 12,
                                 ),
-                                SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.9,
-                                  child: (event.isTicketNeeded && !isTimestampInThePast(event.endTime!))
-                                      ? ElevatedButton(
-                                    onPressed: () async {
-                                      if (!event.isRegistered) {
-                                        if (event.ticketTypes != [] && event.ticketTypes != null) {
-                                          showModalBottomSheet<void>(
-                                            context: context,
-                                            elevation: 0,
-                                            builder: (context) =>
-                                                ListView.builder(
-                                                  shrinkWrap: true,
-                                                  itemCount: event.ticketTypes!.length,
-                                                  itemBuilder: (context, index) {
-                                                    return GestureDetector(
-                                                      onTap: () async {
-                                                        if (!isSoldOut(event.ticketTypes![index])) {
-                                                          Navigator.pop(context);
-                                                          final wasBought = await Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) => FormCompletion(
-                                                                event: event,
-                                                                selectedTicketType: event.ticketTypes![index].id,
-                                                              ),
-                                                            ),
-                                                          );
-                                                          if (wasBought) {
-                                                            _refreshEvent();
-                                                          }
-                                                        }
-                                                      },
-                                                      child: Column(
-                                                        children: [
-                                                          const SizedBox(height: 10,),
-                                                          ListTile(
-                                                            title: Text(
-                                                              "${event.ticketTypes![index].title}",
-                                                              style: TextStyle(
-                                                                color: currentTheme.colorScheme.primary,
-                                                                fontWeight: FontWeight.bold,
-                                                                fontSize: 16,
-                                                              ),
-                                                            ),
-                                                            subtitle: Text(
-                                                              constructDescription(event.ticketTypes![index]),
-                                                              style: TextStyle(
-                                                                color: currentTheme.colorScheme.primary,
-                                                                fontWeight: FontWeight.normal,
-                                                                fontSize: 16,
-                                                              ),
-                                                            ),
-                                                            trailing: ClipRRect(
-                                                              borderRadius: BorderRadius.circular(12),
-                                                              child: Container(
-                                                                color: isSoldOut(event.ticketTypes![index])
-                                                                    ? Colors.grey
-                                                                    : currentTheme.colorScheme.primary,
-                                                                width: 70,
-                                                                height: 50,
-                                                                child: Center(
-                                                                  child: FittedBox(
-                                                                    fit: BoxFit.scaleDown,
-                                                                    alignment: Alignment.center,
-                                                                    child: Text(
-                                                                      (isSoldOut(event.ticketTypes![index]))
-                                                                          ? " Sold out! "
-                                                                          : ((event.ticketTypes![index].price == 0))
-                                                                    ? "Free"
-                                                                    : "${event.ticketTypes![index].currency.symbol}${event.ticketTypes![index].price.toStringAsFixed(2)}",
-                                                                      style: TextStyle(
-                                                                        color: currentTheme.scaffoldBackgroundColor,
-                                                                        fontWeight: FontWeight.bold,
-                                                                        fontSize: 16,
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          const SizedBox(height: 10,),
-                                                          const Divider(
-                                                            color: Colors.grey,
-                                                            height: 0,
-                                                            thickness: 0.5,
-                                                          ),
-                                                        ],
-                                                      )
-                                                    );
-                                                  },
-                                                ),
-                                          );
-                                        } else {
-                                          final wasBought = await Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => FormCompletion(
-                                                event: event,
-                                                selectedTicketType: 0,
-                                              ),
-                                            ),
-                                          );
-                                          if (wasBought) {
-                                            _refreshEvent();
-                                          }
-                                        }
-                                      } else {
-                                        getBoughtTicket();
-                                      }
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      elevation: 0,
-                                      foregroundColor: currentTheme.colorScheme.primary,
-                                      backgroundColor: currentTheme.colorScheme.primary,
-                                    ),
-                                    child: !event.isRegistered
-                                        ? Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          child: Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              (event.ticketTypes == null || event.ticketTypes == [] ? "Get Ticket" : "Buy ticket"),
-                                              style: TextStyle(
-                                                color: currentTheme.scaffoldBackgroundColor,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Text(
-                                             constructPrice(event),
-                                              style: TextStyle(
-                                                color: currentTheme.scaffoldBackgroundColor,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                        : Row(
-                                      children: [
-                                        Expanded(
-                                          child: Align(
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              ("Open Ticket"),
-                                              style: TextStyle(
-                                                color: currentTheme.scaffoldBackgroundColor,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                      : SizedBox(),
-                                ),
+                                // SizedBox(
+                                //   width: MediaQuery.of(context).size.width * 0.9,
+                                //   child: (event.isTicketNeeded && !isTimestampInThePast(event.endTime!))
+                                //       ? ElevatedButton(
+                                //     onPressed: () async {
+                                //       if (!event.isRegistered) {
+                                //         if (event.ticketTypes != [] && event.ticketTypes != null) {
+                                //           showModalBottomSheet<void>(
+                                //             context: context,
+                                //             elevation: 0,
+                                //             builder: (context) =>
+                                //                 ListView.builder(
+                                //                   shrinkWrap: true,
+                                //                   itemCount: event.ticketTypes!.length,
+                                //                   itemBuilder: (context, index) {
+                                //                     return GestureDetector(
+                                //                       onTap: () async {
+                                //                         if (!isSoldOut(event.ticketTypes![index])) {
+                                //                           Navigator.pop(context);
+                                //                           final wasBought = await Navigator.push(
+                                //                             context,
+                                //                             MaterialPageRoute(
+                                //                               builder: (context) => FormCompletion(
+                                //                                 event: event,
+                                //                                 selectedTicketType: event.ticketTypes![index].id,
+                                //                               ),
+                                //                             ),
+                                //                           );
+                                //                           if (wasBought) {
+                                //                             _refreshEvent();
+                                //                           }
+                                //                         }
+                                //                       },
+                                //                       child: Column(
+                                //                         children: [
+                                //                           const SizedBox(height: 10,),
+                                //                           ListTile(
+                                //                             title: Text(
+                                //                               "${event.ticketTypes![index].title}",
+                                //                               style: TextStyle(
+                                //                                 color: currentTheme.colorScheme.primary,
+                                //                                 fontWeight: FontWeight.bold,
+                                //                                 fontSize: 16,
+                                //                               ),
+                                //                             ),
+                                //                             subtitle: Text(
+                                //                               constructDescription(event.ticketTypes![index]),
+                                //                               style: TextStyle(
+                                //                                 color: currentTheme.colorScheme.primary,
+                                //                                 fontWeight: FontWeight.normal,
+                                //                                 fontSize: 16,
+                                //                               ),
+                                //                             ),
+                                //                             trailing: ClipRRect(
+                                //                               borderRadius: BorderRadius.circular(12),
+                                //                               child: Container(
+                                //                                 color: isSoldOut(event.ticketTypes![index])
+                                //                                     ? Colors.grey
+                                //                                     : currentTheme.colorScheme.primary,
+                                //                                 width: 70,
+                                //                                 height: 50,
+                                //                                 child: Center(
+                                //                                   child: FittedBox(
+                                //                                     fit: BoxFit.scaleDown,
+                                //                                     alignment: Alignment.center,
+                                //                                     child: Text(
+                                //                                       (isSoldOut(event.ticketTypes![index]))
+                                //                                           ? " Sold out! "
+                                //                                           : ((event.ticketTypes![index].price == 0))
+                                //                                     ? "Free"
+                                //                                     : "${event.ticketTypes![index].currency.symbol}${event.ticketTypes![index].price.toStringAsFixed(2)}",
+                                //                                       style: TextStyle(
+                                //                                         color: currentTheme.scaffoldBackgroundColor,
+                                //                                         fontWeight: FontWeight.bold,
+                                //                                         fontSize: 16,
+                                //                                       ),
+                                //                                     ),
+                                //                                   ),
+                                //                                 ),
+                                //                               ),
+                                //                             ),
+                                //                           ),
+                                //                           const SizedBox(height: 10,),
+                                //                           const Divider(
+                                //                             color: Colors.grey,
+                                //                             height: 0,
+                                //                             thickness: 0.5,
+                                //                           ),
+                                //                         ],
+                                //                       )
+                                //                     );
+                                //                   },
+                                //                 ),
+                                //           );
+                                //         } else {
+                                //           final wasBought = await Navigator.push(
+                                //             context,
+                                //             MaterialPageRoute(
+                                //               builder: (context) => FormCompletion(
+                                //                 event: event,
+                                //                 selectedTicketType: 0,
+                                //               ),
+                                //             ),
+                                //           );
+                                //           if (wasBought) {
+                                //             _refreshEvent();
+                                //           }
+                                //         }
+                                //       } else {
+                                //         getBoughtTicket();
+                                //       }
+                                //     },
+                                //     style: ElevatedButton.styleFrom(
+                                //       elevation: 0,
+                                //       foregroundColor: currentTheme.colorScheme.primary,
+                                //       backgroundColor: currentTheme.colorScheme.primary,
+                                //     ),
+                                //     child: !event.isRegistered
+                                //         ? Row(
+                                //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                //       children: [
+                                //         Expanded(
+                                //           child: Align(
+                                //             alignment: Alignment.centerLeft,
+                                //             child: Text(
+                                //               (event.ticketTypes == null || event.ticketTypes == [] ? "Get Ticket" : "Buy ticket"),
+                                //               style: TextStyle(
+                                //                 color: currentTheme.scaffoldBackgroundColor,
+                                //                 fontWeight: FontWeight.bold,
+                                //                 fontSize: 16,
+                                //               ),
+                                //             ),
+                                //           ),
+                                //         ),
+                                //         Expanded(
+                                //           child: Align(
+                                //             alignment: Alignment.centerRight,
+                                //             child: Text(
+                                //              constructPrice(event),
+                                //               style: TextStyle(
+                                //                 color: currentTheme.scaffoldBackgroundColor,
+                                //                 fontWeight: FontWeight.bold,
+                                //                 fontSize: 16,
+                                //               ),
+                                //             ),
+                                //           ),
+                                //         ),
+                                //       ],
+                                //     )
+                                //         : Row(
+                                //       children: [
+                                //         Expanded(
+                                //           child: Align(
+                                //             alignment: Alignment.center,
+                                //             child: Text(
+                                //               ("Open Ticket"),
+                                //               style: TextStyle(
+                                //                 color: currentTheme.scaffoldBackgroundColor,
+                                //                 fontWeight: FontWeight.bold,
+                                //                 fontSize: 16,
+                                //               ),
+                                //             ),
+                                //           ),
+                                //         ),
+                                //       ],
+                                //     ),
+                                //   )
+                                //       : SizedBox(),
+                                // ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [

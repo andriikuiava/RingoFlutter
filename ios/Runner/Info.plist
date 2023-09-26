@@ -58,6 +58,18 @@
 	<string>We need access to your photo library to use your photo as profile picture.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+	<string>instagram-stories</string>
+	<string>facebook-stories</string>
+	<string>facebook</string>
+	<string>instagram</string>
+	<string>twitter</string>
+	<string>whatsapp</string>
+	<string>tg</string>
+	</array>
+	<key>FacebookAppID</key>
+	<string>1020391179152310</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
