@@ -396,173 +396,173 @@ class _EventPageState extends State<EventPage>
                                 ),
                                 //big button
                                 SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.9,
-                                  child: (event.isTicketNeeded && !isTimestampInThePast(event.endTime!))
-                                      ? ElevatedButton(
-                                    onPressed: () async {
-                                      if (!event.isRegistered) {
-                                        if (event.ticketTypes != [] && event.ticketTypes != null) {
-                                          showModalBottomSheet<void>(
-                                            context: context,
-                                            elevation: 0,
-                                            builder: (context) =>
-                                                ListView.builder(
-                                                  shrinkWrap: true,
-                                                  itemCount: event.ticketTypes!.length,
-                                                  itemBuilder: (context, index) {
-                                                    return GestureDetector(
-                                                        onTap: () async {
-                                                          if (!isSoldOut(event.ticketTypes![index])) {
-                                                            Navigator.pop(context);
-                                                            final wasBought = await Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder: (context) => FormCompletion(
-                                                                  event: event,
-                                                                  selectedTicketType: event.ticketTypes![index].id,
+                                    width: MediaQuery.of(context).size.width * 0.9,
+                                    child: (event.ticketTypes != [] || event.ticketTypes != null || !isTimestampInThePast(event.endTime!))
+                                        ? SizedBox()
+                                        : ElevatedButton(
+                                      onPressed: () async {
+                                        if (!event.isRegistered) {
+                                          if (event.ticketTypes != [] && event.ticketTypes != null) {
+                                            showModalBottomSheet<void>(
+                                              context: context,
+                                              elevation: 0,
+                                              builder: (context) =>
+                                                  ListView.builder(
+                                                    shrinkWrap: true,
+                                                    itemCount: event.ticketTypes!.length,
+                                                    itemBuilder: (context, index) {
+                                                      return GestureDetector(
+                                                          onTap: () async {
+                                                            if (!isSoldOut(event.ticketTypes![index])) {
+                                                              Navigator.pop(context);
+                                                              final wasBought = await Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder: (context) => FormCompletion(
+                                                                    event: event,
+                                                                    selectedTicketType: event.ticketTypes![index].id,
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            );
-                                                            if (wasBought) {
-                                                              _refreshEvent();
+                                                              );
+                                                              if (wasBought) {
+                                                                _refreshEvent();
+                                                              }
                                                             }
-                                                          }
-                                                        },
-                                                        child: Column(
-                                                          children: [
-                                                            const SizedBox(height: 10,),
-                                                            ListTile(
-                                                              title: Text(
-                                                                "${event.ticketTypes![index].title}",
-                                                                style: TextStyle(
-                                                                  color: currentTheme.colorScheme.primary,
-                                                                  fontWeight: FontWeight.bold,
-                                                                  fontSize: 16,
+                                                          },
+                                                          child: Column(
+                                                            children: [
+                                                              const SizedBox(height: 10,),
+                                                              ListTile(
+                                                                title: Text(
+                                                                  "${event.ticketTypes![index].title}",
+                                                                  style: TextStyle(
+                                                                    color: currentTheme.colorScheme.primary,
+                                                                    fontWeight: FontWeight.bold,
+                                                                    fontSize: 16,
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                              subtitle: Text(
-                                                                constructDescription(event.ticketTypes![index]),
-                                                                style: TextStyle(
-                                                                  color: currentTheme.colorScheme.primary,
-                                                                  fontWeight: FontWeight.normal,
-                                                                  fontSize: 16,
+                                                                subtitle: Text(
+                                                                  constructDescription(event.ticketTypes![index]),
+                                                                  style: TextStyle(
+                                                                    color: currentTheme.colorScheme.primary,
+                                                                    fontWeight: FontWeight.normal,
+                                                                    fontSize: 16,
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                              trailing: ClipRRect(
-                                                                borderRadius: BorderRadius.circular(12),
-                                                                child: Container(
-                                                                  color: isSoldOut(event.ticketTypes![index])
-                                                                      ? Colors.grey
-                                                                      : currentTheme.colorScheme.primary,
-                                                                  width: 70,
-                                                                  height: 50,
-                                                                  child: Center(
-                                                                    child: FittedBox(
-                                                                      fit: BoxFit.scaleDown,
-                                                                      alignment: Alignment.center,
-                                                                      child: Text(
-                                                                        (isSoldOut(event.ticketTypes![index]))
-                                                                            ? " Sold out! "
-                                                                            : ((event.ticketTypes![index].price == 0))
-                                                                            ? "Free"
-                                                                            : "${event.ticketTypes![index].currency.symbol}${event.ticketTypes![index].price.toStringAsFixed(2)}",
-                                                                        style: TextStyle(
-                                                                          color: currentTheme.scaffoldBackgroundColor,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          fontSize: 16,
+                                                                trailing: ClipRRect(
+                                                                  borderRadius: BorderRadius.circular(12),
+                                                                  child: Container(
+                                                                    color: isSoldOut(event.ticketTypes![index])
+                                                                        ? Colors.grey
+                                                                        : currentTheme.colorScheme.primary,
+                                                                    width: 70,
+                                                                    height: 50,
+                                                                    child: Center(
+                                                                      child: FittedBox(
+                                                                        fit: BoxFit.scaleDown,
+                                                                        alignment: Alignment.center,
+                                                                        child: Text(
+                                                                          (isSoldOut(event.ticketTypes![index]))
+                                                                              ? " Sold out! "
+                                                                              : ((event.ticketTypes![index].price == 0))
+                                                                              ? "Free"
+                                                                              : "${event.ticketTypes![index].currency.symbol}${event.ticketTypes![index].price.toStringAsFixed(2)}",
+                                                                          style: TextStyle(
+                                                                            color: currentTheme.scaffoldBackgroundColor,
+                                                                            fontWeight: FontWeight.bold,
+                                                                            fontSize: 16,
+                                                                          ),
                                                                         ),
                                                                       ),
                                                                     ),
                                                                   ),
                                                                 ),
                                                               ),
-                                                            ),
-                                                            const SizedBox(height: 10,),
-                                                            const Divider(
-                                                              color: Colors.grey,
-                                                              height: 0,
-                                                              thickness: 0.5,
-                                                            ),
-                                                          ],
-                                                        )
-                                                    );
-                                                  },
+                                                              const SizedBox(height: 10,),
+                                                              const Divider(
+                                                                color: Colors.grey,
+                                                                height: 0,
+                                                                thickness: 0.5,
+                                                              ),
+                                                            ],
+                                                          )
+                                                      );
+                                                    },
+                                                  ),
+                                            );
+                                          } else {
+                                            final wasBought = await Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => FormCompletion(
+                                                  event: event,
+                                                  selectedTicketType: 0,
                                                 ),
-                                          );
-                                        } else {
-                                          final wasBought = await Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => FormCompletion(
-                                                event: event,
-                                                selectedTicketType: 0,
                                               ),
-                                            ),
-                                          );
-                                          if (wasBought) {
-                                            _refreshEvent();
+                                            );
+                                            if (wasBought) {
+                                              _refreshEvent();
+                                            }
                                           }
+                                        } else {
+                                          getBoughtTicket();
                                         }
-                                      } else {
-                                        getBoughtTicket();
-                                      }
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      elevation: 0,
-                                      foregroundColor: currentTheme.colorScheme.primary,
-                                      backgroundColor: currentTheme.colorScheme.primary,
-                                    ),
-                                    child: !event.isRegistered
-                                        ? Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          child: Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              (event.ticketTypes == null || event.ticketTypes == [] ? "Get Ticket" : "Buy ticket"),
-                                              style: TextStyle(
-                                                color: currentTheme.scaffoldBackgroundColor,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16,
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        elevation: 0,
+                                        foregroundColor: currentTheme.colorScheme.primary,
+                                        backgroundColor: currentTheme.colorScheme.primary,
+                                      ),
+                                      child: !event.isRegistered
+                                          ? Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            child: Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                (event.ticketTypes == null || event.ticketTypes == [] ? "Get Ticket" : "Buy ticket"),
+                                                style: TextStyle(
+                                                  color: currentTheme.scaffoldBackgroundColor,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        Expanded(
-                                          child: Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Text(
-                                              constructPrice(event),
-                                              style: TextStyle(
-                                                color: currentTheme.scaffoldBackgroundColor,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16,
+                                          Expanded(
+                                            child: Align(
+                                              alignment: Alignment.centerRight,
+                                              child: Text(
+                                                constructPrice(event),
+                                                style: TextStyle(
+                                                  color: currentTheme.scaffoldBackgroundColor,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      )
+                                          : Row(
+                                        children: [
+                                          Expanded(
+                                            child: Align(
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                ("Open Ticket"),
+                                                style: TextStyle(
+                                                  color: currentTheme.scaffoldBackgroundColor,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     )
-                                        : Row(
-                                      children: [
-                                        Expanded(
-                                          child: Align(
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              ("Open Ticket"),
-                                              style: TextStyle(
-                                                color: currentTheme.scaffoldBackgroundColor,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                      : SizedBox(),
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
