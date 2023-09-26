@@ -98,6 +98,8 @@ class EventFull {
   int? capacity;
   bool isSaved;
   bool isRegistered;
+  double? price;
+  Currency? currency;
   List<TicketType>? ticketTypes;
   RegistrationForm? registrationForm;
 
@@ -117,6 +119,8 @@ class EventFull {
     required this.host,
     required this.peopleCount,
     this.capacity,
+    this.price,
+    this.currency,
     required this.isSaved,
     required this.isRegistered,
     this.ticketTypes,
@@ -145,6 +149,10 @@ class EventFull {
       host: Organisation.fromJson(json['host']),
       peopleCount: json['peopleCount'],
       capacity: json['capacity'],
+      price: json['price'],
+      currency: json['currency'] != null
+          ? Currency.fromJson(json['currency'])
+          : null,
       isSaved: json['isSaved'],
       isRegistered: json['isRegistered'],
       ticketTypes: json['ticketTypes'] != null
