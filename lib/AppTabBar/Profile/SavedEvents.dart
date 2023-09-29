@@ -58,7 +58,8 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.only(left: 0.01 * MediaQuery.of(context).size.width),
+            padding:
+                EdgeInsets.only(left: 0.01 * MediaQuery.of(context).size.width),
             child: Row(
               children: [
                 Icon(
@@ -94,7 +95,8 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
                       Icon(
                         CupertinoIcons.bookmark,
                         color: Colors.grey,
-                        size: 40,),
+                        size: 40,
+                      ),
                       const SizedBox(width: 20),
                       Container(
                         width: 0.7 * MediaQuery.of(context).size.width,
@@ -146,7 +148,8 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
                             Row(
                               children: [
                                 Spacer(),
-                                Text('No events available',
+                                Text(
+                                  'No events available',
                                   style: TextStyle(
                                     color: Colors.grey,
                                     decoration: TextDecoration.none,
@@ -160,8 +163,7 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
                             SizedBox(height: 20)
                           ],
                         ),
-                      )
-                  ),
+                      )),
                 );
               } else {
                 return CircularProgressIndicator(
@@ -283,7 +285,9 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
                       right: 0,
                       bottom: 0,
                       child: Text(
-                        (event.price == 0 || event.price == null) ? 'Free' : 'from ${event.currency!.symbol}${event.price!.toStringAsFixed(2)}',
+                        (event.price == 0 || event.price == null)
+                            ? 'Free'
+                            : 'from ${event.currency!.symbol}${event.price!.toStringAsFixed(2)}',
                         style: TextStyle(
                           color: currentTheme.colorScheme.primary,
                           fontSize: 17,

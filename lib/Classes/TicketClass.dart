@@ -1,8 +1,8 @@
-import 'package:ringoflutter/Classes/EventClass.dart';
-import 'package:ringoflutter/Classes/UserClass.dart';
 import 'package:ringoflutter/Classes/Answer.dart';
+import 'package:ringoflutter/Classes/EventClass.dart';
 import 'package:ringoflutter/Classes/RegistrationFormClass.dart';
 import 'package:ringoflutter/Classes/TicketTypeClass.dart';
+import 'package:ringoflutter/Classes/UserClass.dart';
 
 class Ticket {
   User participant;
@@ -15,18 +15,16 @@ class Ticket {
   RegistrationForm? registrationForm;
   RegistrationSubmission? registrationSubmission;
 
-
-  Ticket({
-    required this.participant,
-    required this.event,
-    required this.timeOfSubmission,
-    required this.expiryDate,
-    required this.isValidated,
-    required this.ticketCode,
-    this.ticketType,
-    this.registrationForm,
-    this.registrationSubmission
-  });
+  Ticket(
+      {required this.participant,
+      required this.event,
+      required this.timeOfSubmission,
+      required this.expiryDate,
+      required this.isValidated,
+      required this.ticketCode,
+      this.ticketType,
+      this.registrationForm,
+      this.registrationSubmission});
 
   factory Ticket.fromJson(Map<String, dynamic> json) {
     return Ticket(
@@ -36,9 +34,15 @@ class Ticket {
       expiryDate: json['expiryDate'],
       isValidated: json['isValidated'],
       ticketCode: json['ticketCode'],
-      ticketType: json['ticketType'] != null ? TicketType.fromJson(json['ticketType']) : null,
-      registrationForm: json['registrationForm'] != null ? RegistrationForm.fromJson(json['registrationForm']) : null,
-      registrationSubmission: json['registrationSubmission'] != null ? RegistrationSubmission.fromJson(json['registrationSubmission']) : null,
+      ticketType: json['ticketType'] != null
+          ? TicketType.fromJson(json['ticketType'])
+          : null,
+      registrationForm: json['registrationForm'] != null
+          ? RegistrationForm.fromJson(json['registrationForm'])
+          : null,
+      registrationSubmission: json['registrationSubmission'] != null
+          ? RegistrationSubmission.fromJson(json['registrationSubmission'])
+          : null,
     );
   }
 }

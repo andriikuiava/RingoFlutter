@@ -8,9 +8,9 @@ final lightTheme = ThemeData(
   scaffoldBackgroundColor: Colors.grey.shade100,
   shadowColor: Colors.grey.withOpacity(0.5),
   colorScheme: const ColorScheme.light(
-      error: Colors.red,
-      background: Colors.white,
-      primary: Colors.black,
+    error: Colors.red,
+    background: Colors.white,
+    primary: Colors.black,
   ),
 );
 
@@ -20,8 +20,8 @@ final darkTheme = ThemeData(
   scaffoldBackgroundColor: Colors.black,
   shadowColor: Colors.grey.withOpacity(0.0),
   colorScheme: ColorScheme.dark(
-      error: Colors.red,
-      background: Colors.grey.shade900.withOpacity(0.5),
-      primary: Colors.white,
+    error: Colors.red,
+    background: Colors.grey.shade900.withOpacity(0.5),
+    primary: Colors.white,
   ),
 );

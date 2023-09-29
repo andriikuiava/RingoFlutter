@@ -40,8 +40,10 @@ Future<bool> refreshTokens(String refreshToken) async {
 
     if (response.statusCode == 200) {
       final jsonResponse = customJsonDecode(response.body);
-      await storage.write(key: "access_token", value: jsonResponse['accessToken']);
-      await storage.write(key: "refresh_token", value: jsonResponse['refreshToken']);
+      await storage.write(
+          key: "access_token", value: jsonResponse['accessToken']);
+      await storage.write(
+          key: "refresh_token", value: jsonResponse['refreshToken']);
 
       final DateTime currentTime = DateTime.now();
       final DateTime futureTime = currentTime.add(const Duration(seconds: 30));
@@ -52,15 +54,13 @@ Future<bool> refreshTokens(String refreshToken) async {
       logOut();
       throw Exception('Token refresh failed, unauthorized');
       return false;
-    }
-    else {
+    } else {
       return false;
     }
   } catch (e) {
     throw Exception('An error occurred while refreshing tokens: $e');
   }
 }
-
 
 class TokenRefreshFailedException implements Exception {
   final String message;

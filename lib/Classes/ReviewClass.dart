@@ -26,7 +26,6 @@ class Review {
   }
 }
 
-
 class CreateReview {
   int id;
   String comment;
@@ -39,8 +38,8 @@ class CreateReview {
   });
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "comment": comment,
-    "rate": rate,
-  };
+        "id": id,
+        "comment": comment,
+        "rate": rate,
+      };
 }

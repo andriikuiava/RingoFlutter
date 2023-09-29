@@ -1,4 +1,3 @@
-
 class Coordinates {
   double latitude;
   double longitude;

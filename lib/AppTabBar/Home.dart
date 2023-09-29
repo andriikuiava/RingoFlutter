@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'Feed/FeedPage.dart';
 import 'Map/MapPage.dart';
 import 'Profile/Profile.dart';
@@ -24,7 +25,7 @@ class _HomeState extends State<Home> {
   ];
 
   final List<GlobalKey<NavigatorState>> _navigatorKeys =
-  List.generate(5, (_) => GlobalKey<NavigatorState>());
+      List.generate(5, (_) => GlobalKey<NavigatorState>());
 
   void _onTabTapped(int index) {
     if (index == _selectedIndex) {
@@ -57,16 +58,18 @@ class _HomeState extends State<Home> {
             label: 'Map',
           ),
           const BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.search,
-                size: 26,),
+            icon: Icon(
+              CupertinoIcons.search,
+              size: 26,
+            ),
             label: 'Search',
           ),
           BottomNavigationBarItem(
             icon: Image.asset(
               _selectedIndex == 2
                   ? (currentTheme.brightness == Brightness.dark)
-                    ? 'assets/images/ringo-tab-white.png'
-                    : 'assets/images/ringo-tab-black.png'
+                      ? 'assets/images/ringo-tab-white.png'
+                      : 'assets/images/ringo-tab-black.png'
                   : 'assets/images/ringo-tab-grey.png',
               width: 26,
               height: 26,

@@ -73,7 +73,8 @@ class _EditProfileState extends State<EditProfile> {
     if (widget.beforeEdit.gender == "OTHER") {
       selectedGender = 2;
     }
-    _dateController = ValueNotifier<DateTime>(DateTime.parse(widget.beforeEdit.dateOfBirth!));
+    _dateController =
+        ValueNotifier<DateTime>(DateTime.parse(widget.beforeEdit.dateOfBirth!));
   }
 
   Future<void> updateUser(File? image, int genderId, String dateOfBirth) async {
@@ -118,8 +119,6 @@ class _EditProfileState extends State<EditProfile> {
     final screenWidth = MediaQuery.of(context).size.width;
     final leadingPadding = screenWidth * 0.05;
 
-
-
     return CupertinoPageScaffold(
       backgroundColor: currentTheme.scaffoldBackgroundColor,
       navigationBar: CupertinoNavigationBar(
@@ -157,20 +156,24 @@ class _EditProfileState extends State<EditProfile> {
                       children: [
                         (image == null)
                             ? (widget.beforeEdit.profilePictureId == null)
-                            ? Icon(
-                          CupertinoIcons.person_circle,
-                          color: currentTheme.colorScheme.primary,
-                          size: 120,
-                        )
+                                ? Icon(
+                                    CupertinoIcons.person_circle,
+                                    color: currentTheme.colorScheme.primary,
+                                    size: 120,
+                                  )
+                                : CircleAvatar(
+                                    backgroundColor:
+                                        currentTheme.colorScheme.primary,
+                                    radius: 45,
+                                    backgroundImage: NetworkImage(
+                                        "${ApiEndpoints.GET_PHOTO}/${widget.beforeEdit.profilePictureId}"),
+                                  )
                             : CircleAvatar(
-                          backgroundColor: currentTheme.colorScheme.primary,
-                          radius: 45,
-                          backgroundImage: NetworkImage("${ApiEndpoints.GET_PHOTO}/${widget.beforeEdit.profilePictureId}"),)
-                            : CircleAvatar(
-                          backgroundColor: currentTheme.colorScheme.primary,
-                          radius: 60,
-                          backgroundImage: FileImage(image!),
-                        ),
+                                backgroundColor:
+                                    currentTheme.colorScheme.primary,
+                                radius: 60,
+                                backgroundImage: FileImage(image!),
+                              ),
                         const SizedBox(width: 20),
                         Expanded(
                           child: Column(
@@ -188,11 +191,13 @@ class _EditProfileState extends State<EditProfile> {
                                     ),
                                     const SizedBox(width: 10),
                                     SizedBox(
-                                      width: MediaQuery.of(context).size.width * 0.35,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.35,
                                       child: Text(
                                         "Choose a photo",
                                         style: TextStyle(
-                                          color: currentTheme.colorScheme.primary,
+                                          color:
+                                              currentTheme.colorScheme.primary,
                                         ),
                                         overflow: TextOverflow.ellipsis,
                                       ),
@@ -458,9 +463,12 @@ class _EditProfileState extends State<EditProfile> {
                             validateFields();
                             if (isFormValid) {
                               DateFormat dateFormat = DateFormat('yyyy-MM-dd');
-                              String formattedTimestamp = dateFormat.format(_dateController.value);
-                              await updateUser(image, selectedGender, formattedTimestamp);
-                              showSuccessAlert("Success", "Profile modified", context);
+                              String formattedTimestamp =
+                                  dateFormat.format(_dateController.value);
+                              await updateUser(
+                                  image, selectedGender, formattedTimestamp);
+                              showSuccessAlert(
+                                  "Success", "Profile modified", context);
                               Navigator.pop(context, true);
                             } else {
                               null;
@@ -468,20 +476,20 @@ class _EditProfileState extends State<EditProfile> {
                           },
                           child: (isLoading)
                               ? SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CupertinoActivityIndicator(
-                              color: currentTheme.scaffoldBackgroundColor,
-                            ),
-                          )
+                                  height: 20,
+                                  width: 20,
+                                  child: CupertinoActivityIndicator(
+                                    color: currentTheme.scaffoldBackgroundColor,
+                                  ),
+                                )
                               : Text(
-                            "Save",
-                            style: TextStyle(
-                              color: (isFormValid)
-                                  ? currentTheme.colorScheme.background
-                                  : currentTheme.colorScheme.primary,
-                            ),
-                          ),
+                                  "Save",
+                                  style: TextStyle(
+                                    color: (isFormValid)
+                                        ? currentTheme.colorScheme.background
+                                        : currentTheme.colorScheme.primary,
+                                  ),
+                                ),
                         ),
                       ),
                       SizedBox(width: MediaQuery.of(context).size.width * 0.05),

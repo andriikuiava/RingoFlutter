@@ -29,7 +29,6 @@ class Question {
   int? maxCharacters;
   List<Option>? options;
 
-
   Question({
     required this.id,
     required this.content,

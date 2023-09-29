@@ -1,4 +1,3 @@
-
 class RegistrationCredentials {
   String name;
   String username;

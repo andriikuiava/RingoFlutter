@@ -1,4 +1,3 @@
-
 class MainPhoto {
   int highQualityId;
   int mediumQualityId;

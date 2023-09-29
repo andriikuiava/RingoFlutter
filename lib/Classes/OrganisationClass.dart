@@ -39,7 +39,9 @@ class Organisation {
       isActive: json['isActive'],
       description: json['description'],
       rating: json['rating'],
-      contacts: json['contacts'].map<ContactCard>((contact) => ContactCard.fromJson(contact)).toList(),
+      contacts: json['contacts']
+          .map<ContactCard>((contact) => ContactCard.fromJson(contact))
+          .toList(),
       pastEventsCount: json['pastEventsCount'],
       upcomingEventsCount: json['upcomingEventsCount'],
       emailVerified: json['emailVerified'],
