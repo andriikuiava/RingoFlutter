@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,6 +24,8 @@ import 'package:ringoflutter/api_endpoints.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:social_share/social_share.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'StickerPageToShare.dart';
 
 class EventPage extends StatefulWidget {
   final int eventId;
@@ -216,74 +217,81 @@ class _EventPageState extends State<EventPage>
                   ),
                 ),
                 trailing: GestureDetector(
-                  onTap: () async {
-                    isShareLoading = true;
-                    setState(() {});
-                    String facebookAppId = "1020391179152310";
-                    var availableApps =
-                        await SocialShare.checkInstalledAppsForShare();
-                    var file = await DefaultCacheManager().getSingleFile(
-                        "${ApiEndpoints.GET_PHOTO}/${event.mainPhoto.mediumQualityId}");
-                    print(availableApps);
-                    isShareLoading = false;
-                    setState(() {});
-                    await showPullDownMenu(
-                      context: context,
-                      items: [
-                        if (availableApps!["instagram"] == true)
-                          PullDownMenuItem(
-                            title: 'Add to Instagram Story',
-                            onTap: () async {
-                              await SocialShare.shareInstagramStory(
-                                appId: facebookAppId,
-                                imagePath: file.path,
-                                backgroundTopColor: "#ffffff",
-                                backgroundBottomColor: "#000000",
-                                backgroundResourcePath:
-                                    "assets/images/Ringo-Black.png",
-                                attributionURL:
-                                    "https://ringo-events.com/event/${event.id}",
-                              ).then((data) {
-                                print(data);
-                              });
-                            },
-                          ),
-                        if (availableApps["facebook"] == true)
-                          PullDownMenuItem(
-                            title: 'Add to Facebook Story',
-                            onTap: () async {
-                              await SocialShare.shareFacebookStory(
-                                appId: facebookAppId,
-                                attributionURL:
-                                    "https://ringo-events.com/event/${event.id}",
-                                imagePath: file.path,
-                                backgroundTopColor: "#ffffff",
-                                backgroundBottomColor: "#000000",
-                              ).then((data) {
-                                print(data);
-                              });
-                            },
-                          ),
-                        PullDownMenuItem(
-                          title: 'Other options',
-                          onTap: () async {
-                            final result = await Share.shareXFiles(
-                              [
-                                XFile(
-                                  file.path,
-                                ),
-                              ],
-                              text:
-                                  "Check out ${event.name} by ${event.host.name} on Ringo!\nhttps://ringo-events.com/event/${event.id}",
-                            );
-                          },
+                  // onTap: () async {
+                  //   isShareLoading = true;
+                  //   setState(() {});
+                  //   String facebookAppId = "1020391179152310";
+                  //   var availableApps =
+                  //       await SocialShare.checkInstalledAppsForShare();
+                  //   var file = await DefaultCacheManager().getSingleFile(
+                  //       "${ApiEndpoints.GET_PHOTO}/${event.mainPhoto.mediumQualityId}");
+                  //   isShareLoading = false;
+                  //   setState(() {});
+                  //   await showPullDownMenu(
+                  //     context: context,
+                  //     items: [
+                  //       if (availableApps!["instagram"] == true)
+                  //         PullDownMenuItem(
+                  //           title: 'Add to Instagram Story',
+                  //           onTap: () async {
+                  //             await SocialShare.shareInstagramStory(
+                  //               appId: facebookAppId,
+                  //               imagePath: file.path,
+                  //               backgroundTopColor: "#ffffff",
+                  //               backgroundBottomColor: "#000000",
+                  //               attributionURL:
+                  //                   "https://ringo-events.com/event/${event.id}",
+                  //             ).then((data) {
+                  //               print(data);
+                  //             });
+                  //           },
+                  //         ),
+                  //       if (availableApps["facebook"] == true)
+                  //         PullDownMenuItem(
+                  //           title: 'Add to Facebook Story',
+                  //           onTap: () async {
+                  //             await SocialShare.shareFacebookStory(
+                  //               appId: facebookAppId,
+                  //               attributionURL:
+                  //                   "https://ringo-events.com/event/${event.id}",
+                  //               imagePath: file.path,
+                  //               backgroundTopColor: "#ffffff",
+                  //               backgroundBottomColor: "#000000",
+                  //             ).then((data) {
+                  //               print(data);
+                  //             });
+                  //           },
+                  //         ),
+                  //       PullDownMenuItem(
+                  //         title: 'Other options',
+                  //         onTap: () async {
+                  //           final result = await Share.shareXFiles(
+                  //             [
+                  //               XFile(
+                  //                 file.path,
+                  //               ),
+                  //             ],
+                  //             text:
+                  //                 "Check out ${event.name} by ${event.host.name} on Ringo!\nhttps://ringo-events.com/event/${event.id}",
+                  //           );
+                  //         },
+                  //       ),
+                  //     ],
+                  //     position: Rect.fromCenter(
+                  //       center:
+                  //           Offset(MediaQuery.of(context).size.width - 50, 50),
+                  //       width: 0,
+                  //       height: 0,
+                  //     ),
+                  //   );
+                  // },
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => StickerPageToShare(
+                          event: event,
                         ),
-                      ],
-                      position: Rect.fromCenter(
-                        center:
-                            Offset(MediaQuery.of(context).size.width - 50, 50),
-                        width: 0,
-                        height: 0,
                       ),
                     );
                   },
