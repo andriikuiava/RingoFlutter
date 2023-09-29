@@ -14,18 +14,21 @@ import 'package:ringoflutter/api_endpoints.dart';
 
 import '../checkIsLoggedIn.dart';
 
-
-
 class ActivateAccountPage extends StatefulWidget {
   final String usersEmail;
   final String usersUsername;
   final String? usersName;
-  const ActivateAccountPage({Key? key, required this.usersEmail, required this.usersUsername, required this.usersName}) : super(key: key);
+
+  const ActivateAccountPage(
+      {Key? key,
+      required this.usersEmail,
+      required this.usersUsername,
+      required this.usersName})
+      : super(key: key);
 
   @override
   State<ActivateAccountPage> createState() => _ActivateAccountPageState();
 }
-
 
 late TextEditingController _usernameController;
 late TextEditingController _nameController;
@@ -135,10 +138,11 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
       backgroundColor: currentTheme.scaffoldBackgroundColor,
       navigationBar: CupertinoNavigationBar(
         backgroundColor: currentTheme.scaffoldBackgroundColor,
-        middle: Text('Activate Account',
-            style: TextStyle(
-                color: currentTheme.colorScheme.primary,
-            ),
+        middle: Text(
+          'Activate Account',
+          style: TextStyle(
+            color: currentTheme.colorScheme.primary,
+          ),
         ),
       ),
       child: GestureDetector(
@@ -159,14 +163,14 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                           children: [
                             (image == null)
                                 ? Icon(
-                              CupertinoIcons.person_circle,
-                              color: currentTheme.colorScheme.primary,
-                              size: 120,
-                            )
+                                    CupertinoIcons.person_circle,
+                                    color: currentTheme.colorScheme.primary,
+                                    size: 120,
+                                  )
                                 : CircleAvatar(
-                              radius: 60,
-                              backgroundImage: FileImage(image!),
-                            ),
+                                    radius: 60,
+                                    backgroundImage: FileImage(image!),
+                                  ),
                             const SizedBox(width: 20),
                             Expanded(
                               child: Column(
@@ -180,13 +184,15 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                                         const SizedBox(width: 15),
                                         Icon(
                                           CupertinoIcons.photo_fill,
-                                          color: currentTheme.colorScheme.primary,
+                                          color:
+                                              currentTheme.colorScheme.primary,
                                         ),
                                         const SizedBox(width: 10),
                                         Text(
                                           "Choose from photos",
                                           style: TextStyle(
-                                            color: currentTheme.colorScheme.primary,
+                                            color: currentTheme
+                                                .colorScheme.primary,
                                           ),
                                         ),
                                       ],
@@ -210,13 +216,15 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                                         const SizedBox(width: 15),
                                         Icon(
                                           CupertinoIcons.camera_fill,
-                                          color: currentTheme.colorScheme.primary,
+                                          color:
+                                              currentTheme.colorScheme.primary,
                                         ),
                                         const SizedBox(width: 10),
                                         Text(
                                           "Take a photo",
                                           style: TextStyle(
-                                            color: currentTheme.colorScheme.primary,
+                                            color: currentTheme
+                                                .colorScheme.primary,
                                           ),
                                         ),
                                       ],
@@ -238,7 +246,8 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    Text('Full Name',
+                    Text(
+                      'Full Name',
                       style: TextStyle(
                         color: currentTheme.colorScheme.primary,
                         fontSize: 16,
@@ -285,7 +294,8 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                         ],
                       ),
                     const SizedBox(height: 20),
-                    Text('Username',
+                    Text(
+                      'Username',
                       style: TextStyle(
                         color: currentTheme.colorScheme.primary,
                         fontSize: 16,
@@ -330,7 +340,8 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                         ],
                       ),
                     const SizedBox(height: 20),
-                    Text('Email',
+                    Text(
+                      'Email',
                       style: TextStyle(
                         color: currentTheme.colorScheme.primary,
                         fontSize: 16,
@@ -356,7 +367,8 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Text('Date of Birth',
+                    Text(
+                      'Date of Birth',
                       style: TextStyle(
                         color: currentTheme.colorScheme.primary,
                         fontSize: 16,
@@ -375,7 +387,8 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Text('Gender',
+                    Text(
+                      'Gender',
                       style: TextStyle(
                         color: currentTheme.colorScheme.primary,
                         fontSize: 16,
@@ -385,9 +398,11 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                     ),
                     const SizedBox(height: 10),
                     SizedBox(
-                      width: double.infinity, // Take up the full available width
+                      width: double.infinity,
+                      // Take up the full available width
                       child: SizedBox(
-                        width: 320, // Set the desired width for the gender picker
+                        width: 320,
+                        // Set the desired width for the gender picker
                         child: CupertinoSlidingSegmentedControl<int>(
                           groupValue: selectedGender,
                           onValueChanged: (value) {
@@ -410,7 +425,6 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                                 color: currentTheme.colorScheme.primary,
                                 fontSize: 16,
                                 decoration: TextDecoration.none,
-
                               ),
                             ),
                             2: Text(
@@ -441,7 +455,8 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                                   activateAccount();
                                 }
                               },
-                              child: Text('Finish Registration',
+                              child: Text(
+                                'Finish Registration',
                                 style: TextStyle(
                                   color: currentTheme.colorScheme.primary,
                                   fontSize: 16,

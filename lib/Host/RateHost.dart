@@ -15,7 +15,12 @@ class RateHost extends StatefulWidget {
   final bool createdReview;
   final int organisationId;
 
-  const RateHost({Key? key, this.review, required this.createdReview, required this.organisationId}) : super(key: key);
+  const RateHost(
+      {Key? key,
+      this.review,
+      required this.createdReview,
+      required this.organisationId})
+      : super(key: key);
 
   @override
   _RateHostState createState() => _RateHostState();
@@ -39,7 +44,8 @@ class _RateHostState extends State<RateHost> {
     await checkTimestamp();
     var storage = const FlutterSecureStorage();
     var token = await storage.read(key: "access_token");
-    var url = Uri.parse("${ApiEndpoints.GET_ORGANISATION}/${widget.organisationId}/${ApiEndpoints.REVIEWS}");
+    var url = Uri.parse(
+        "${ApiEndpoints.GET_ORGANISATION}/${widget.organisationId}/${ApiEndpoints.REVIEWS}");
     var headers = {
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token'
@@ -58,7 +64,8 @@ class _RateHostState extends State<RateHost> {
     await checkTimestamp();
     var storage = const FlutterSecureStorage();
     var token = await storage.read(key: "access_token");
-    var url = Uri.parse("${ApiEndpoints.GET_ORGANISATION}/${widget.organisationId}/${ApiEndpoints.REVIEWS}");
+    var url = Uri.parse(
+        "${ApiEndpoints.GET_ORGANISATION}/${widget.organisationId}/${ApiEndpoints.REVIEWS}");
     var headers = {
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token'
@@ -91,8 +98,6 @@ class _RateHostState extends State<RateHost> {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     final currentTheme = Theme.of(context);
@@ -101,9 +106,7 @@ class _RateHostState extends State<RateHost> {
       navigationBar: CupertinoNavigationBar(
         backgroundColor: currentTheme.scaffoldBackgroundColor,
         middle: Text(
-          widget.createdReview
-          ? 'Edit a review'
-          : 'Rate this host',
+          widget.createdReview ? 'Edit a review' : 'Rate this host',
           style: TextStyle(
             color: currentTheme.colorScheme.primary,
           ),
@@ -125,7 +128,9 @@ class _RateHostState extends State<RateHost> {
         child: Center(
           child: Column(
             children: [
-              const SizedBox(height: 10,),
+              const SizedBox(
+                height: 10,
+              ),
               ClipRRect(
                 borderRadius: defaultWidgetCornerRadius,
                 child: Container(
@@ -140,12 +145,14 @@ class _RateHostState extends State<RateHost> {
                           const SizedBox(width: 10),
                           RatingBar.builder(
                             itemSize: 24,
-                            initialRating: widget.review?.rate.toDouble() ?? 3.0,
+                            initialRating:
+                                widget.review?.rate.toDouble() ?? 3.0,
                             minRating: 1,
                             direction: Axis.horizontal,
                             allowHalfRating: false,
                             itemCount: 5,
-                            itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                            itemPadding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
                             itemBuilder: (context, _) => Icon(
                               CupertinoIcons.star_fill,
                               color: currentTheme.colorScheme.primary,
@@ -164,7 +171,9 @@ class _RateHostState extends State<RateHost> {
                                 color: currentTheme.colorScheme.primary,
                               ),
                             ),
-                          const SizedBox(width: 10,)
+                          const SizedBox(
+                            width: 10,
+                          )
                         ],
                       ),
                       const SizedBox(height: 10),
@@ -207,8 +216,7 @@ class _RateHostState extends State<RateHost> {
                                   color: currentTheme.scaffoldBackgroundColor,
                                 ),
                               ),
-                            )
-                        ),
+                            )),
                       ),
                       const SizedBox(height: 12),
                     ],

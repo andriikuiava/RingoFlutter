@@ -1,7 +1,9 @@
 import 'dart:convert';
-import 'dart:ui' as ui;
 import 'dart:io' show Platform;
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -9,8 +11,6 @@ import 'package:ringoflutter/Classes/CoordinatesClass.dart';
 import 'package:ringoflutter/Event/EventPage.dart';
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:ringoflutter/api_endpoints.dart';
-import 'package:flutter/services.dart' show rootBundle;
-
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -24,13 +24,11 @@ class _MapPageState extends State<MapPage> {
   GoogleMapController? _mapController;
   final List<Marker> _markers = [];
 
-
   GoogleMapController? mapController;
   String? _mapStyle;
   String? _mapStyleDark;
   String? _mapStyleIos;
   String? _mapStyleIosDark;
-
 
   @override
   void initState() {
@@ -64,8 +62,10 @@ class _MapPageState extends State<MapPage> {
     if (_mapController == null) return;
 
     LatLngBounds visibleRegion = await _mapController!.getVisibleRegion();
-    print("Top Left: ${visibleRegion.northeast.latitude}, ${visibleRegion.southwest.longitude}");
-    print("Bottom Right: ${visibleRegion.southwest.latitude}, ${visibleRegion.northeast.longitude}");
+    print(
+        "Top Left: ${visibleRegion.northeast.latitude}, ${visibleRegion.southwest.longitude}");
+    print(
+        "Bottom Right: ${visibleRegion.southwest.latitude}, ${visibleRegion.northeast.longitude}");
     print("User Latitude: ${userLocation!.latitude}");
     print("User Longitude: ${userLocation!.longitude}");
   }
@@ -82,7 +82,8 @@ class _MapPageState extends State<MapPage> {
     final double lonMin = visibleRegion.southwest.longitude;
     final double lonMax = visibleRegion.northeast.longitude;
 
-    final url = '${ApiEndpoints.SEARCH}/geo/area?latMin=$latMin&latMax=$latMax&lonMin=$lonMin&lonMax=$lonMax';
+    final url =
+        '${ApiEndpoints.SEARCH}/geo/area?latMin=$latMin&latMax=$latMax&lonMin=$lonMin&lonMax=$lonMax';
     var headers = {
       'Authorization': "Bearer $token",
     };
@@ -104,11 +105,13 @@ class _MapPageState extends State<MapPage> {
         _markers.clear();
 
         for (var object in objects) {
-          BitmapDescriptor customIcon = await _createCustomMarkerBitmap(object.count);
+          BitmapDescriptor customIcon =
+              await _createCustomMarkerBitmap(object.count);
 
           Marker marker = Marker(
             markerId: MarkerId(object.id.toString()),
-            position: LatLng(object.coordinates.latitude, object.coordinates.longitude),
+            position: LatLng(
+                object.coordinates.latitude, object.coordinates.longitude),
             infoWindow: InfoWindow(
               title: 'Count: ${object.count}',
               snippet: 'MainPhotoId: ${object.mainPhotoId}, Id: ${object.id}',
@@ -119,7 +122,8 @@ class _MapPageState extends State<MapPage> {
               if (object.count == 1) {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => EventPage(eventId: object.id!)),
+                  MaterialPageRoute(
+                      builder: (context) => EventPage(eventId: object.id!)),
                 );
               }
             },
@@ -135,8 +139,6 @@ class _MapPageState extends State<MapPage> {
     }
   }
 
-
-
   Future<BitmapDescriptor> _createCustomMarkerBitmap(int count) async {
     final currentTheme = Theme.of(context);
     final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
@@ -149,14 +151,19 @@ class _MapPageState extends State<MapPage> {
 
     final TextPainter textPainter = TextPainter(
       text: TextSpan(
-        text: count.toString(),
-        style: TextStyle(color: currentTheme.scaffoldBackgroundColor, fontWeight: FontWeight.bold, fontSize: 70)
-      ),
+          text: count.toString(),
+          style: TextStyle(
+              color: currentTheme.scaffoldBackgroundColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 70)),
       textDirection: TextDirection.ltr,
     );
 
     textPainter.layout();
-    textPainter.paint(canvas, Offset((size - textPainter.width) / 2, (size - textPainter.height) / 2));
+    textPainter.paint(
+        canvas,
+        Offset(
+            (size - textPainter.width) / 2, (size - textPainter.height) / 2));
 
     final img = await pictureRecorder.endRecording().toImage(size, size);
     final data = await img.toByteData(format: ui.ImageByteFormat.png);
@@ -164,40 +171,39 @@ class _MapPageState extends State<MapPage> {
     return BitmapDescriptor.fromBytes(data!.buffer.asUint8List());
   }
 
-
   @override
   Widget build(BuildContext context) {
     final currentTheme = Theme.of(context);
     return userLocation != null
         ? GoogleMap(
-      onMapCreated: (controller) {
-        _mapController = controller;
-        (Platform.isAndroid)
-            ? (currentTheme.brightness == Brightness.light)
-            ? _mapController?.setMapStyle(_mapStyle!)
-            : _mapController?.setMapStyle(_mapStyleDark!)
-            : (currentTheme.brightness == Brightness.light)
-            ? _mapController?.setMapStyle(_mapStyleIos!)
-            : _mapController?.setMapStyle(_mapStyleIosDark!);
-      },
-      initialCameraPosition: CameraPosition(
-        target: LatLng(userLocation!.latitude, userLocation!.longitude),
-        zoom: 12,
-      ),
-      myLocationEnabled: true,
-      mapType: MapType.normal,
-      myLocationButtonEnabled: false,
-      compassEnabled: true,
-      markers: Set<Marker>.of(_markers),
-      onCameraMove: (position) {
-        _showObjectsOnMap();
-      },
-    )
+            onMapCreated: (controller) {
+              _mapController = controller;
+              (Platform.isAndroid)
+                  ? (currentTheme.brightness == Brightness.light)
+                      ? _mapController?.setMapStyle(_mapStyle!)
+                      : _mapController?.setMapStyle(_mapStyleDark!)
+                  : (currentTheme.brightness == Brightness.light)
+                      ? _mapController?.setMapStyle(_mapStyleIos!)
+                      : _mapController?.setMapStyle(_mapStyleIosDark!);
+            },
+            initialCameraPosition: CameraPosition(
+              target: LatLng(userLocation!.latitude, userLocation!.longitude),
+              zoom: 12,
+            ),
+            myLocationEnabled: true,
+            mapType: MapType.normal,
+            myLocationButtonEnabled: false,
+            compassEnabled: true,
+            markers: Set<Marker>.of(_markers),
+            onCameraMove: (position) {
+              _showObjectsOnMap();
+            },
+          )
         : Center(
-      child: CircularProgressIndicator(
-        color: currentTheme.colorScheme.primary,
-      ),
-    );
+            child: CircularProgressIndicator(
+              color: currentTheme.colorScheme.primary,
+            ),
+          );
   }
 }
 
@@ -239,7 +245,8 @@ class CustomMarkerWidget extends StatelessWidget {
       ),
       child: Text(
         count.toString(),
-        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        style:
+            const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
       ),
     );
   }

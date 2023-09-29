@@ -18,7 +18,8 @@ class ApiEndpoints {
   static const String LOGIN_GOOGLE = "$BASE_URL/auth/login/google";
   static const String SIGNUP_APPLE = "$BASE_URL/participants/sign-up/apple";
   static const String LOGIN_APPLE = "$BASE_URL/auth/login/apple";
-  static const String RESEND_CONFIRMATION_LINK = "$BASE_URL/auth/send-verification-email";
+  static const String RESEND_CONFIRMATION_LINK =
+      "$BASE_URL/auth/send-verification-email";
 
   //TOKENS
   static const String REFRESH_TOKENS = "$BASE_URL/auth/refresh-token";
@@ -45,13 +46,13 @@ class ApiEndpoints {
 
   //PHOTOS
   static const String GET_PHOTO = "$BASE_URL/photos";
-  static const String SET_PROFILE_PICTURE = "$BASE_URL/participants/profile-picture";
+  static const String SET_PROFILE_PICTURE =
+      "$BASE_URL/participants/profile-picture";
 
   //CURRENCY & CATEGORY
   static const String GET_CURRENCY = "$BASE_URL/currencies";
   static const String GET_CATEGORY = "$BASE_URL/categories";
 }
-
 
 void showSuccessAlert(String? title, String? message, context) {
   StatusAlert.show(
@@ -59,7 +60,9 @@ void showSuccessAlert(String? title, String? message, context) {
     duration: const Duration(seconds: 2),
     title: 'Success',
     subtitle: message,
-    configuration: IconConfiguration(icon: CupertinoIcons.check_mark, size: MediaQuery.of(context).size.width * 0.25),
+    configuration: IconConfiguration(
+        icon: CupertinoIcons.check_mark,
+        size: MediaQuery.of(context).size.width * 0.25),
   );
 }
 
@@ -69,7 +72,9 @@ void showErrorAlert(String? title, String? message, context) {
     duration: const Duration(seconds: 2),
     title: 'Error',
     subtitle: message,
-    configuration: IconConfiguration(icon: CupertinoIcons.exclamationmark_triangle, size: MediaQuery.of(context).size.width * 0.25),
+    configuration: IconConfiguration(
+        icon: CupertinoIcons.exclamationmark_triangle,
+        size: MediaQuery.of(context).size.width * 0.25),
   );
 }
 
@@ -78,7 +83,9 @@ void showSavedAlert(context) {
     context,
     duration: const Duration(seconds: 2),
     title: 'Saved',
-    configuration: IconConfiguration(icon: CupertinoIcons.bookmark_fill, size: MediaQuery.of(context).size.width * 0.25),
+    configuration: IconConfiguration(
+        icon: CupertinoIcons.bookmark_fill,
+        size: MediaQuery.of(context).size.width * 0.25),
   );
 }
 
@@ -87,6 +94,8 @@ void showUnsavedAlert(context) {
     context,
     duration: const Duration(seconds: 2),
     title: 'Unsaved',
-    configuration: IconConfiguration(icon: CupertinoIcons.bookmark, size: MediaQuery.of(context).size.width * 0.25),
+    configuration: IconConfiguration(
+        icon: CupertinoIcons.bookmark,
+        size: MediaQuery.of(context).size.width * 0.25),
   );
 }

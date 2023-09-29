@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ringoflutter/Security/checkIsLoggedIn.dart';
+
 import 'UI/Themes.dart';
 
 void main() {
@@ -18,5 +19,6 @@ void main() {
 }
 
 class App {
-  static final GlobalKey<NavigatorState> materialKey = GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> materialKey =
+      GlobalKey<NavigatorState>();
 }

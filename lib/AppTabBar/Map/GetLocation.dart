@@ -23,7 +23,8 @@ Future<Coordinates> getUserLocation() async {
   if (permission == LocationPermission.denied) {
     // Request location permission
     permission = await Geolocator.requestPermission();
-    if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
+    if (permission != LocationPermission.whileInUse &&
+        permission != LocationPermission.always) {
       // The user denied location permission, take appropriate action
       Geolocator.openAppSettings();
       return Coordinates(latitude: 59.436962, longitude: 24.753574);

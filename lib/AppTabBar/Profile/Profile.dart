@@ -11,7 +11,6 @@ import 'package:ringoflutter/UI/Functions/Formats.dart';
 import 'package:ringoflutter/UI/Themes.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 
-
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -55,7 +54,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     final currentTheme = Theme.of(context);
@@ -68,7 +66,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Navigator.push(
               context,
               CupertinoPageRoute(
-                builder: (context) => ChangePasswordView(shouldShowChangePassword: shouldShowChangePassword,),
+                builder: (context) => ChangePasswordView(
+                  shouldShowChangePassword: shouldShowChangePassword,
+                ),
               ),
             );
           },
@@ -104,14 +104,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: FutureBuilder<User>(
                           future: getUserInfo(),
                           builder: (BuildContext context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.done) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.done) {
                               if (snapshot.hasError) {
                                 return Center(
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Text(
                                       'An error occurred while loading your profile, check your internet connection and try again.',
-                                      style: TextStyle(fontSize: 18, color: currentTheme.colorScheme.primary, decoration: TextDecoration.none, fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color:
+                                              currentTheme.colorScheme.primary,
+                                          decoration: TextDecoration.none,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                 );
@@ -125,7 +131,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           Padding(
                                             padding: defaultWidgetPadding,
                                             child: CircleAvatar(
-                                              backgroundColor: currentTheme.colorScheme.primary,
+                                              backgroundColor: currentTheme
+                                                  .colorScheme.primary,
                                               radius: 40,
                                               backgroundImage: NetworkImage(
                                                 '${ApiEndpoints.GET_PHOTO}/${data.profilePictureId}',
@@ -133,35 +140,74 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             ),
                                           ),
                                         Row(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            SizedBox(width: data.profilePictureId == null ? 10 : 0,),
+                                            SizedBox(
+                                              width:
+                                                  data.profilePictureId == null
+                                                      ? 10
+                                                      : 0,
+                                            ),
                                             Column(
-                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
                                               children: [
-                                                const SizedBox(height: 10,),
+                                                const SizedBox(
+                                                  height: 10,
+                                                ),
                                                 SizedBox(
-                                                  width: data.profilePictureId == null ? MediaQuery.of(context).size.width * 0.9 : MediaQuery.of(context).size.width * 0.6,
+                                                  width:
+                                                      data.profilePictureId ==
+                                                              null
+                                                          ? MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.9
+                                                          : MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.6,
                                                   child: Text(
                                                     data.name,
                                                     maxLines: 2,
-                                                    overflow: TextOverflow.ellipsis,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                     style: TextStyle(
-                                                      decoration: TextDecoration.none,
-                                                      color: currentTheme.colorScheme.primary,
-                                                      fontWeight: FontWeight.bold,
+                                                      decoration:
+                                                          TextDecoration.none,
+                                                      color: currentTheme
+                                                          .colorScheme.primary,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       fontSize: 24,
                                                     ),
                                                   ),
                                                 ),
                                                 SizedBox(
-                                                  width: data.profilePictureId == null ? MediaQuery.of(context).size.width * 0.9 : MediaQuery.of(context).size.width * 0.6,
+                                                  width:
+                                                      data.profilePictureId ==
+                                                              null
+                                                          ? MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.9
+                                                          : MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.6,
                                                   child: Text(
                                                     '@${data.username}',
                                                     style: const TextStyle(
-                                                      decoration: TextDecoration.none,
+                                                      decoration:
+                                                          TextDecoration.none,
                                                       color: Colors.grey,
-                                                      fontWeight: FontWeight.normal,
+                                                      fontWeight:
+                                                          FontWeight.normal,
                                                       fontSize: 20,
                                                     ),
                                                   ),
@@ -172,62 +218,93 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         )
                                       ],
                                     ),
-                                    const SizedBox(height: 10,),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
                                     Row(
                                       children: [
-                                        const SizedBox(width: 12,),
+                                        const SizedBox(
+                                          width: 12,
+                                        ),
                                         const Icon(
                                           CupertinoIcons.calendar,
                                           size: 22,
                                         ),
-                                        const SizedBox(width: 8,),
+                                        const SizedBox(
+                                          width: 8,
+                                        ),
                                         Text(
-                                          (data.dateOfBirth == null) ? 'No date of birth provided' : convertTimestampToBigDate(data.dateOfBirth!),
+                                          (data.dateOfBirth == null)
+                                              ? 'No date of birth provided'
+                                              : convertTimestampToBigDate(
+                                                  data.dateOfBirth!),
                                           style: TextStyle(
                                             decoration: TextDecoration.none,
-                                            color: currentTheme.colorScheme.primary,
+                                            color: currentTheme
+                                                .colorScheme.primary,
                                             fontSize: 16,
                                             fontWeight: FontWeight.normal,
                                           ),
                                         ),
                                       ],
                                     ),
-                                    const SizedBox(height: 6,),
+                                    const SizedBox(
+                                      height: 6,
+                                    ),
                                     Row(
                                       children: [
-                                        const SizedBox(width: 12,),
+                                        const SizedBox(
+                                          width: 12,
+                                        ),
                                         const Icon(
                                           CupertinoIcons.person,
                                           size: 22,
                                         ),
-                                        const SizedBox(width: 8,),
+                                        const SizedBox(
+                                          width: 8,
+                                        ),
                                         Text(
-                                          (data.gender == null) ? 'No gender provided' : capitalizeFirstLetter(data.gender!),
+                                          (data.gender == null)
+                                              ? 'No gender provided'
+                                              : capitalizeFirstLetter(
+                                                  data.gender!),
                                           style: TextStyle(
                                             decoration: TextDecoration.none,
-                                            color: currentTheme.colorScheme.primary,
+                                            color: currentTheme
+                                                .colorScheme.primary,
                                             fontSize: 16,
                                             fontWeight: FontWeight.normal,
                                           ),
                                         ),
                                       ],
                                     ),
-                                    const SizedBox(height: 10,),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
                                     Row(
                                       children: [
-                                        const SizedBox(width: 12,),
+                                        const SizedBox(
+                                          width: 12,
+                                        ),
                                         ElevatedButton(
                                           style: ElevatedButton.styleFrom(
-                                            foregroundColor: currentTheme.colorScheme.background,
-                                            backgroundColor: (currentTheme.brightness == Brightness.light)
-                                                ? Colors.grey.shade200
-                                                : currentTheme.colorScheme.background,
+                                            foregroundColor: currentTheme
+                                                .colorScheme.background,
+                                            backgroundColor:
+                                                (currentTheme.brightness ==
+                                                        Brightness.light)
+                                                    ? Colors.grey.shade200
+                                                    : currentTheme
+                                                        .colorScheme.background,
                                           ),
                                           onPressed: () async {
-                                            final wasEdited = await Navigator.push(
+                                            final wasEdited =
+                                                await Navigator.push(
                                               context,
                                               CupertinoPageRoute(
-                                                builder: (context) => EditProfile(beforeEdit: data),
+                                                builder: (context) =>
+                                                    EditProfile(
+                                                        beforeEdit: data),
                                               ),
                                             );
                                             if (wasEdited) {
@@ -237,18 +314,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             }
                                           },
                                           child: Row(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
                                             children: [
                                               Icon(
                                                 CupertinoIcons.pencil,
                                                 size: 22,
-                                                color: currentTheme.colorScheme.primary,
+                                                color: currentTheme
+                                                    .colorScheme.primary,
                                               ),
-                                              SizedBox(width: 5,),
-                                              Text('Edit Profile',
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                'Edit Profile',
                                                 style: TextStyle(
-                                                  decoration: TextDecoration.none,
-                                                  color: currentTheme.colorScheme.primary,
+                                                  decoration:
+                                                      TextDecoration.none,
+                                                  color: currentTheme
+                                                      .colorScheme.primary,
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.normal,
                                                 ),
@@ -258,7 +342,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ),
                                       ],
                                     ),
-                                    const SizedBox(height: 10,),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
                                   ],
                                 );
                               }

@@ -56,8 +56,8 @@ class _FeedBuilderState extends State<FeedBuilder> {
       });
       if (response.statusCode == 200) {
         final List<dynamic> data = customJsonDecode(response.body);
-        final List<EventInFeed> newEvents = data.map((item) =>
-            EventInFeed.fromJson(item)).toList();
+        final List<EventInFeed> newEvents =
+            data.map((item) => EventInFeed.fromJson(item)).toList();
 
         setState(() {
           events.addAll(newEvents);
@@ -152,41 +152,42 @@ class _FeedBuilderState extends State<FeedBuilder> {
                   ),
                 );
               } else if (isLoading) {
-                return Center(child: CircularProgressIndicator(
+                return Center(
+                    child: CircularProgressIndicator(
                   color: currentTheme.colorScheme.primary,
                 ));
               } else {
                 return Center(
                   child: (isRequestSent && events.isEmpty)
                       ? Padding(
-                    padding: defaultWidgetPadding,
-                    child: ClipRRect(
-                        borderRadius: defaultWidgetCornerRadius,
-                        child: Container(
-                          color: currentTheme.colorScheme.background,
-                          child: const Column(
-                            children: [
-                              SizedBox(height: 20),
-                              Row(
-                                children: [
-                                  Spacer(),
-                                  Text('No events available',
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      decoration: TextDecoration.none,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 24,
+                          padding: defaultWidgetPadding,
+                          child: ClipRRect(
+                              borderRadius: defaultWidgetCornerRadius,
+                              child: Container(
+                                color: currentTheme.colorScheme.background,
+                                child: const Column(
+                                  children: [
+                                    SizedBox(height: 20),
+                                    Row(
+                                      children: [
+                                        Spacer(),
+                                        Text(
+                                          'No events available',
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                            decoration: TextDecoration.none,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 24,
+                                          ),
+                                        ),
+                                        Spacer(),
+                                      ],
                                     ),
-                                  ),
-                                  Spacer(),
-                                ],
-                              ),
-                              SizedBox(height: 20)
-                            ],
-                          ),
+                                    SizedBox(height: 20)
+                                  ],
+                                ),
+                              )),
                         )
-                    ),
-                  )
                       : const SizedBox(height: 0),
                 );
               }

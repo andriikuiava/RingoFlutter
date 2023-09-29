@@ -18,7 +18,6 @@ import 'package:ringoflutter/api_endpoints.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
-
 class HostPage extends StatefulWidget {
   final int hostId;
 
@@ -27,8 +26,8 @@ class HostPage extends StatefulWidget {
   @override
   _HostPageState createState() => _HostPageState();
 }
-ScrollController _scrollController = ScrollController();
 
+ScrollController _scrollController = ScrollController();
 
 class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
   late Future<Organisation> _organisationFuture;
@@ -108,16 +107,15 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                     child: ClipRRect(
                       borderRadius: defaultWidgetCornerRadius,
                       child: Container(
-                          width: MediaQuery
-                              .of(context)
-                              .size
-                              .width * 0.95,
+                          width: MediaQuery.of(context).size.width * 0.95,
                           color: currentTheme.colorScheme.background,
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const SizedBox(height: 8,),
+                              const SizedBox(
+                                height: 8,
+                              ),
                               Row(
                                 children: [
                                   if (snapshot.data!.profilePictureId != null)
@@ -129,12 +127,11 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                           shape: BoxShape.circle,
                                         ),
                                         child: CircleAvatar(
-                                          backgroundColor: currentTheme.colorScheme.primary,
+                                          backgroundColor:
+                                              currentTheme.colorScheme.primary,
                                           radius: 30.0,
                                           backgroundImage: NetworkImage(
-                                            '${ApiEndpoints
-                                                .GET_PHOTO}/${snapshot.data!
-                                                .profilePictureId}',
+                                            '${ApiEndpoints.GET_PHOTO}/${snapshot.data!.profilePictureId}',
                                           ),
                                         ),
                                       ),
@@ -148,12 +145,14 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                           shape: BoxShape.circle,
                                         ),
                                         child: CircleAvatar(
-                                          backgroundColor: currentTheme.colorScheme.background,
+                                          backgroundColor: currentTheme
+                                              .colorScheme.background,
                                           radius: 30.0,
                                           backgroundImage: AssetImage(
-                                            (currentTheme.brightness == Brightness.light)
-                                            ? 'assets/images/Ringo-Black.png'
-                                            : 'assets/images/Ringo-White.png',
+                                            (currentTheme.brightness ==
+                                                    Brightness.light)
+                                                ? 'assets/images/Ringo-Black.png'
+                                                : 'assets/images/Ringo-White.png',
                                           ),
                                         ),
                                       ),
@@ -162,24 +161,31 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                   Align(
                                     alignment: Alignment.centerLeft,
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment
-                                          .start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(
-                                          width: MediaQuery.of(context).size.width * 0.7,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.7,
                                           child: Text(
                                             snapshot.data!.name,
                                             maxLines: 1,
                                             style: TextStyle(
                                               decoration: TextDecoration.none,
-                                              color: currentTheme.colorScheme.primary,
+                                              color: currentTheme
+                                                  .colorScheme.primary,
                                               fontSize: 28,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                         ),
                                         SizedBox(
-                                          width: MediaQuery.of(context).size.width * 0.7,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.7,
                                           child: Text(
                                             "@${snapshot.data!.username}",
                                             maxLines: 1,
@@ -193,15 +199,15 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                         ),
                                         const SizedBox(height: 10),
                                         SizedBox(
-                                          width: MediaQuery
-                                              .of(context)
-                                              .size
-                                              .width * 0.7,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.7,
                                           child: GestureDetector(
                                             onTap: () {
                                               setState(() {
                                                 isDescriptionExpanded =
-                                                !isDescriptionExpanded;
+                                                    !isDescriptionExpanded;
                                               });
                                             },
                                             child: AnimatedSize(
@@ -209,38 +215,53 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                                   milliseconds: 500),
                                               curve: Curves.easeInOut,
                                               child: (isDescriptionExpanded)
-                                                ? SizedBox(
-                                                width: MediaQuery
-                                                    .of(context)
-                                                    .size
-                                                    .width * 0.7,
-                                                child: Text(
-                                                  snapshot.data!.description,
-                                                  style: TextStyle(
-                                                    decoration: TextDecoration.none,
-                                                    color: currentTheme.colorScheme.primary,
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.normal,
-                                                  ),
-                                                ),
-                                              )
+                                                  ? SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.7,
+                                                      child: Text(
+                                                        snapshot
+                                                            .data!.description,
+                                                        style: TextStyle(
+                                                          decoration:
+                                                              TextDecoration
+                                                                  .none,
+                                                          color: currentTheme
+                                                              .colorScheme
+                                                              .primary,
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                        ),
+                                                      ),
+                                                    )
                                                   : SizedBox(
-                                                width: MediaQuery
-                                                    .of(context)
-                                                    .size
-                                                    .width * 0.7,
-                                                child: Text(
-                                                  snapshot.data!.description,
-                                                  maxLines: 3,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                    decoration: TextDecoration.none,
-                                                    color: currentTheme.colorScheme.primary,
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.normal,
-                                                  ),
-                                                ),
-                                              ),
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.7,
+                                                      child: Text(
+                                                        snapshot
+                                                            .data!.description,
+                                                        maxLines: 3,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                          decoration:
+                                                              TextDecoration
+                                                                  .none,
+                                                          color: currentTheme
+                                                              .colorScheme
+                                                              .primary,
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                        ),
+                                                      ),
+                                                    ),
                                             ),
                                           ),
                                         ),
@@ -251,17 +272,13 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                               ),
                               const SizedBox(height: 10),
                             ],
-                          )
-                      ),
+                          )),
                     ),
                   ),
                   const SizedBox(height: 8),
                   if (snapshot.data!.contacts.isNotEmpty)
                     SizedBox(
-                      width: MediaQuery
-                          .of(context)
-                          .size
-                          .width * 0.95,
+                      width: MediaQuery.of(context).size.width * 0.95,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           elevation: 0,
@@ -271,141 +288,138 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                           showModalBottomSheet<void>(
                             context: context,
                             elevation: 0,
-                            builder: (context) =>
-                                SizedBox(
-                                  height: 370,
-                                  width: MediaQuery
-                                      .of(context)
-                                      .size
-                                      .width,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start,
-                                    children: [
-                                      const SizedBox(height: 16,),
-                                      ListView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: snapshot.data!.contacts
-                                            .length,
-                                        itemBuilder: (context, index) {
-                                          ContactCard contactCard = snapshot
-                                              .data!.contacts[index];
-                                          bool isNumeric(String str) {
-                                            if (str == null) {
-                                              return false;
-                                            }
-                                            return double.tryParse(str) != null;
-                                          }
+                            builder: (context) => SizedBox(
+                              height: 370,
+                              width: MediaQuery.of(context).size.width,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(
+                                    height: 16,
+                                  ),
+                                  ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: snapshot.data!.contacts.length,
+                                    itemBuilder: (context, index) {
+                                      ContactCard contactCard =
+                                          snapshot.data!.contacts[index];
+                                      bool isNumeric(String str) {
+                                        if (str == null) {
+                                          return false;
+                                        }
+                                        return double.tryParse(str) != null;
+                                      }
 
-                                          IconData iconData;
-                                          if (RegExp(
+                                      IconData iconData;
+                                      if (RegExp(
                                               r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)')
-                                              .hasMatch(contactCard.content)) {
-                                            iconData = CupertinoIcons.link;
-                                          } else if (RegExp(
+                                          .hasMatch(contactCard.content)) {
+                                        iconData = CupertinoIcons.link;
+                                      } else if (RegExp(
                                               r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
-                                              .hasMatch(contactCard.content)) {
-                                            iconData = CupertinoIcons.mail;
-                                          } else if (RegExp(
+                                          .hasMatch(contactCard.content)) {
+                                        iconData = CupertinoIcons.mail;
+                                      } else if (RegExp(
                                               r'^\+?[1-9][0-9\s-\(\)]{7,14}$')
-                                              .hasMatch(contactCard.content)) {
-                                            iconData = CupertinoIcons.phone;
-                                          } else {
-                                            iconData =
-                                                CupertinoIcons.doc_on_doc;
+                                          .hasMatch(contactCard.content)) {
+                                        iconData = CupertinoIcons.phone;
+                                      } else {
+                                        iconData = CupertinoIcons.doc_on_doc;
+                                      }
+
+                                      return GestureDetector(
+                                        onTap: () async {
+                                          if (iconData == CupertinoIcons.link) {
+                                            launch(contactCard.content);
+                                          } else if (iconData ==
+                                              CupertinoIcons.mail) {
+                                            launch(
+                                                "mailto:${contactCard.content}");
+                                          } else if (iconData ==
+                                              CupertinoIcons.phone) {
+                                            String phoneNumber =
+                                                contactCard.content.replaceAll(
+                                                    RegExp(r'[^0-9]'), '');
+                                            launch("tel:$phoneNumber");
+                                          } else if (iconData ==
+                                              CupertinoIcons.doc_on_doc) {
+                                            await Clipboard.setData(
+                                                ClipboardData(
+                                                    text: contactCard.content));
+                                            Fluttertoast.showToast(
+                                              msg: "Copied to clipboard",
+                                              gravity: ToastGravity.CENTER,
+                                              backgroundColor: currentTheme
+                                                  .colorScheme.background,
+                                              textColor:
+                                                  currentTheme.primaryColor,
+                                              fontSize: 24,
+                                            );
                                           }
-
-
-                                          return GestureDetector(
-                                            onTap: () async {
-                                              if (iconData ==
-                                                  CupertinoIcons.link) {
-                                                launch(contactCard.content);
-                                              } else if (iconData ==
-                                                  CupertinoIcons.mail) {
-                                                launch("mailto:${contactCard
-                                                    .content}");
-                                              } else if (iconData ==
-                                                  CupertinoIcons.phone) {
-                                                String phoneNumber = contactCard.content.replaceAll(RegExp(r'[^0-9]'), '');
-                                                launch("tel:$phoneNumber");
-                                              } else if (iconData ==
-                                                  CupertinoIcons.doc_on_doc) {
-                                                await Clipboard.setData(
-                                                    ClipboardData(
-                                                        text: contactCard
-                                                            .content));
-                                                Fluttertoast.showToast(
-                                                  msg: "Copied to clipboard",
-                                                  gravity: ToastGravity.CENTER,
-                                                  backgroundColor: currentTheme
-                                                      .colorScheme.background,
-                                                  textColor: currentTheme
-                                                      .primaryColor,
-                                                  fontSize: 24,
-                                                );
-                                              }
-                                            },
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(
-                                                  10.0),
-                                              child: SizedBox(
-                                                width: MediaQuery
-                                                    .of(context)
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context)
                                                     .size
-                                                    .width * 0.9,
-                                                child: Row(
+                                                    .width *
+                                                0.9,
+                                            child: Row(
+                                              children: [
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Icon(
+                                                  iconData,
+                                                  size: 16,
+                                                  color:
+                                                      currentTheme.primaryColor,
+                                                ),
+                                                const SizedBox(
+                                                  width: 16,
+                                                ),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: [
-                                                    const SizedBox(width: 10,),
-                                                    Icon(
-                                                      iconData,
-                                                      size: 16,
-                                                      color: currentTheme
-                                                          .primaryColor,
+                                                    Text(
+                                                      contactCard.title,
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                        color: currentTheme
+                                                            .primaryColor,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 16,
+                                                      ),
                                                     ),
-                                                    const SizedBox(width: 16,),
-                                                    Column(
-                                                      crossAxisAlignment: CrossAxisAlignment
-                                                          .start,
-                                                      children: [
-                                                        Text(
-                                                          contactCard.title,
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style: TextStyle(
-                                                            color: currentTheme
-                                                                .primaryColor,
-                                                            fontWeight: FontWeight
-                                                                .bold,
-                                                            fontSize: 16,
-                                                          ),
-                                                        ),
-                                                        Text(
-                                                          contactCard.content,
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style: TextStyle(
-                                                            color: currentTheme
-                                                                .primaryColor,
-                                                            fontWeight: FontWeight
-                                                                .normal,
-                                                            fontSize: 16,
-                                                          ),
-                                                        ),
-                                                      ],
+                                                    Text(
+                                                      contactCard.content,
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                        color: currentTheme
+                                                            .primaryColor,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                        fontSize: 16,
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
-                                              ),
+                                              ],
                                             ),
-                                          );
-                                        },
-                                      ),
-                                    ],
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   ),
-                                ),
+                                ],
+                              ),
+                            ),
                           );
                         },
                         child: Text(
@@ -420,18 +434,15 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                       ),
                     ),
                   SizedBox(
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width * 0.95,
+                    width: MediaQuery.of(context).size.width * 0.95,
                     height: 60,
                     child: Card(
                       elevation: 0,
                       color: currentTheme.colorScheme.background,
                       child: TabBar(
                         indicatorColor: currentTheme.colorScheme.primary,
-                        overlayColor: MaterialStateProperty.all(currentTheme
-                            .primaryColor.withOpacity(0.1)),
+                        overlayColor: MaterialStateProperty.all(
+                            currentTheme.primaryColor.withOpacity(0.1)),
                         splashBorderRadius: BorderRadius.circular(12),
                         controller: _tabController,
                         tabs: [
@@ -441,8 +452,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                               children: [
                                 if (snapshot.data!.rating != null)
                                   Text(
-                                    snapshot.data!.rating!.toStringAsFixed(
-                                        1),
+                                    snapshot.data!.rating!.toStringAsFixed(1),
                                     style: const TextStyle(
                                       fontSize: 20,
                                     ),
@@ -494,14 +504,8 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                   ),
                   const SizedBox(height: 6),
                   SizedBox(
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width * 0.95,
-                    height: MediaQuery
-                        .of(context)
-                        .size
-                        .height * 0.5,
+                    width: MediaQuery.of(context).size.width * 0.95,
+                    height: MediaQuery.of(context).size.height * 0.5,
                     child: TabBarView(
                       controller: _tabController,
                       children: [
@@ -523,15 +527,13 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
     );
   }
 
-
   Future<List<Review>> getReviewsByOrganisationId(int id, int page) async {
     await checkTimestamp();
     firstReview = null;
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
     Uri url = Uri.parse(
-        '${ApiEndpoints.GET_ORGANISATION}/${widget.hostId}/${ApiEndpoints
-            .REVIEWS}?page=$page&size=10');
+        '${ApiEndpoints.GET_ORGANISATION}/${widget.hostId}/${ApiEndpoints.REVIEWS}?page=$page&size=10');
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -545,8 +547,6 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
     }
   }
 
-
-
   Widget ratingSection(Organisation? data) {
     int currentPage = 0;
     bool isLoading = false;
@@ -557,7 +557,8 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
         setState(() {
           isLoading = true;
         });
-        final newReviews = await getReviewsByOrganisationId(widget.hostId, currentPage + 1);
+        final newReviews =
+            await getReviewsByOrganisationId(widget.hostId, currentPage + 1);
         setState(() {
           isLoading = false;
           currentPage++;
@@ -568,6 +569,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
         });
       }
     }
+
     final currentTheme = Theme.of(context);
     return Column(
       children: [
@@ -575,10 +577,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
           borderRadius: defaultWidgetCornerRadius,
           child: Container(
             color: currentTheme.colorScheme.background,
-            width: MediaQuery
-                .of(context)
-                .size
-                .width * 0.95,
+            width: MediaQuery.of(context).size.width * 0.95,
             child: CupertinoButton(
               child: Text(
                 "Manage review",
@@ -602,10 +601,11 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        RateHost(review: firstReview,
-                          createdReview: isReviewCreated,
-                          organisationId: widget.hostId,),
+                    builder: (context) => RateHost(
+                      review: firstReview,
+                      createdReview: isReviewCreated,
+                      organisationId: widget.hostId,
+                    ),
                   ),
                 );
               },
@@ -648,7 +648,8 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                     itemBuilder: (context, index) {
                       if (index == reviews.length) {
                         if (isLoading) {
-                          return const Center(child: CircularProgressIndicator());
+                          return const Center(
+                              child: CircularProgressIndicator());
                         } else {
                           return const SizedBox(); // Return an empty SizedBox when no more reviews to load
                         }
@@ -658,36 +659,43 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                         child: ListTile(
                           leading: review.participant.profilePictureId != null
                               ? CircleAvatar(
-                            backgroundColor: currentTheme.colorScheme.primary,
-                            radius: 20.0,
-                            backgroundImage: NetworkImage(
-                              '${ApiEndpoints.GET_PHOTO}/${review.participant.profilePictureId}',
-                            ),
-                          )
+                                  backgroundColor:
+                                      currentTheme.colorScheme.primary,
+                                  radius: 20.0,
+                                  backgroundImage: NetworkImage(
+                                    '${ApiEndpoints.GET_PHOTO}/${review.participant.profilePictureId}',
+                                  ),
+                                )
                               : CircleAvatar(
-                            backgroundColor: currentTheme.colorScheme.primary,
-                            radius: 20.0,
-                            child: Icon(
-                              CupertinoIcons.person,
-                              color: currentTheme.colorScheme.background,
-                            ),
-                          ),
-                          title: Text("${review.participant.name} ∘ @${review.participant.username}"),
+                                  backgroundColor:
+                                      currentTheme.colorScheme.primary,
+                                  radius: 20.0,
+                                  child: Icon(
+                                    CupertinoIcons.person,
+                                    color: currentTheme.colorScheme.background,
+                                  ),
+                                ),
+                          title: Text(
+                              "${review.participant.name} ∘ @${review.participant.username}"),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Column(
                                 children: [
-                                  const SizedBox(height: 2,),
+                                  const SizedBox(
+                                    height: 2,
+                                  ),
                                   Row(
                                     children: [
-                                      const SizedBox(height: 6,),
+                                      const SizedBox(
+                                        height: 6,
+                                      ),
                                       RatingBarIndicator(
-                                        itemBuilder: (context, _) =>
-                                            Icon(
-                                              CupertinoIcons.star_fill,
-                                              color: currentTheme.colorScheme.primary,
-                                            ),
+                                        itemBuilder: (context, _) => Icon(
+                                          CupertinoIcons.star_fill,
+                                          color:
+                                              currentTheme.colorScheme.primary,
+                                        ),
                                         rating: review.rate.toDouble(),
                                         itemCount: 5,
                                         itemSize: 16.0,
@@ -699,15 +707,19 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                               ),
                               if (review.comment != "")
                                 SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.8,
-                                  child: Text(review.comment!,
-                                  style: TextStyle(
-                                    color: currentTheme.colorScheme.primary,
-                                  ),
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.8,
+                                  child: Text(
+                                    review.comment!,
+                                    style: TextStyle(
+                                      color: currentTheme.colorScheme.primary,
+                                    ),
                                   ),
                                 )
                               else if (review.comment == "")
-                                const SizedBox(height: 0,),
+                                const SizedBox(
+                                  height: 0,
+                                ),
                             ],
                           ),
                         ),
@@ -725,13 +737,12 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
     );
   }
 
-
-
   Future<List<EventInFeed>> getUpcomingEvents(int id) async {
     await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
-    Uri url = Uri.parse('${ApiEndpoints.SEARCH}?hostId=${widget.hostId}&startTimeMin=${convertToUtc(DateTime.now())}');
+    Uri url = Uri.parse(
+        '${ApiEndpoints.SEARCH}?hostId=${widget.hostId}&startTimeMin=${convertToUtc(DateTime.now())}');
     print(url);
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
@@ -802,7 +813,8 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 10), // Add some spacing between the image and text
+                            const SizedBox(width: 10),
+                            // Add some spacing between the image and text
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -832,7 +844,8 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
                                           style: TextStyle(
-                                            color: currentTheme.colorScheme.primary,
+                                            color: currentTheme
+                                                .colorScheme.primary,
                                             fontSize: 16,
                                             decoration: TextDecoration.none,
                                             fontWeight: FontWeight.normal,
@@ -841,11 +854,12 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                       ),
                                       const SizedBox(width: 5),
                                       Text(
-                                          (event.price! == 0)
-                                              ? "Free"
-                                              : "${event.currency!.symbol}${event.price!.toStringAsFixed(2)}",
+                                        (event.price! == 0)
+                                            ? "Free"
+                                            : "${event.currency!.symbol}${event.price!.toStringAsFixed(2)}",
                                         style: TextStyle(
-                                          color: currentTheme.colorScheme.primary,
+                                          color:
+                                              currentTheme.colorScheme.primary,
                                           fontSize: 16,
                                           decoration: TextDecoration.none,
                                           fontWeight: FontWeight.bold,
@@ -863,11 +877,13 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                       ),
                                       const SizedBox(width: 5),
                                       Text(
-                                        startTimeFromTimestamp(event.startTime!, null),
+                                        startTimeFromTimestamp(
+                                            event.startTime!, null),
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
                                         style: TextStyle(
-                                          color: currentTheme.colorScheme.primary,
+                                          color:
+                                              currentTheme.colorScheme.primary,
                                           fontSize: 16,
                                           decoration: TextDecoration.none,
                                           fontWeight: FontWeight.normal,
@@ -881,8 +897,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                           ],
                         ),
                       ],
-                    )
-                );
+                    ));
               },
             );
           }
@@ -891,13 +906,12 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
     );
   }
 
-
-
   Future<List<EventInFeed>> getPastEvents(int id) async {
     await checkTimestamp();
     const storage = FlutterSecureStorage();
     var token = await storage.read(key: 'access_token');
-    Uri url = Uri.parse('${ApiEndpoints.SEARCH}?hostId=${widget.hostId}&startTimeMax=${convertToUtc(DateTime.now())}');
+    Uri url = Uri.parse(
+        '${ApiEndpoints.SEARCH}?hostId=${widget.hostId}&startTimeMax=${convertToUtc(DateTime.now())}');
     print(url);
     var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
@@ -964,11 +978,11 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                     '${ApiEndpoints.GET_PHOTO}/${event.mainPhotoId}',
                                     width: 80,
                                     height: 80,
-                                    fit: BoxFit.cover
-                                ),
+                                    fit: BoxFit.cover),
                               ),
                             ),
-                            const SizedBox(width: 10), // Add some spacing between the image and text
+                            const SizedBox(width: 10),
+                            // Add some spacing between the image and text
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -977,8 +991,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                     event.name,
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 20
-                                    ),
+                                        fontSize: 20),
                                   ),
                                   Row(
                                     children: [
@@ -990,9 +1003,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                       Text(
                                         event.address!,
                                         style: const TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 16
-                                        ),
+                                            color: Colors.grey, fontSize: 16),
                                       ),
                                     ],
                                   ),
@@ -1004,11 +1015,10 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                                         color: Colors.grey,
                                       ),
                                       Text(
-                                        startTimeFromTimestamp(event.startTime!, null),
+                                        startTimeFromTimestamp(
+                                            event.startTime!, null),
                                         style: const TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 16
-                                        ),
+                                            color: Colors.grey, fontSize: 16),
                                       ),
                                     ],
                                   ),
@@ -1018,8 +1028,7 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                           ],
                         ),
                       ],
-                    )
-                );
+                    ));
               },
             );
           }
@@ -1027,5 +1036,4 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
       ),
     );
   }
-
 }

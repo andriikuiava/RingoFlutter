@@ -1,23 +1,24 @@
 import 'dart:async';
 import 'dart:io' show Platform;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:pull_down_button/pull_down_button.dart';
 import 'package:ringoflutter/AppTabBar/Feed/FeedPage.dart';
 import 'package:ringoflutter/AppTabBar/Map/GetLocation.dart';
-import 'package:ringoflutter/Classes/CurrencyClass.dart';
 import 'package:ringoflutter/Classes/CategoryClass.dart';
+import 'package:ringoflutter/Classes/CurrencyClass.dart';
 import 'package:ringoflutter/Classes/EventClass.dart';
 import 'package:ringoflutter/Event/EventPage.dart';
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:ringoflutter/UI/Functions/Formats.dart';
 import 'package:ringoflutter/UI/Themes.dart';
 import 'package:ringoflutter/api_endpoints.dart';
-import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'package:flutter/services.dart' show rootBundle;
 
 class CirclePainter extends CustomPainter {
   final Offset center;
@@ -34,8 +35,7 @@ class CirclePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final backgroundPaint = Paint()
-      ..color = Colors.blue.withOpacity(0.1);
+    final backgroundPaint = Paint()..color = Colors.blue.withOpacity(0.1);
     canvas.drawCircle(center, radius, backgroundPaint);
 
     final paint = Paint()
@@ -45,14 +45,11 @@ class CirclePainter extends CustomPainter {
     canvas.drawCircle(center, radius, paint);
   }
 
-
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return false;
   }
 }
-
-
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -74,7 +71,6 @@ class _SearchPageState extends State<SearchPage> {
   bool _isDateStartButtonTapped = false;
   bool _isDateEndButtonTapped = false;
 
-
   double? mapCenterLat;
   double? mapCenterLong;
   int? radius;
@@ -84,7 +80,7 @@ class _SearchPageState extends State<SearchPage> {
   String? _mapStyleDark;
   String? _mapStyleIos;
   String? _mapStyleIosDark;
-    
+
   GoogleMapController? _mapController;
   var sortBy = "price";
   var sortDirection = "ASC";
@@ -136,30 +132,28 @@ class _SearchPageState extends State<SearchPage> {
     var result = "";
 
     if (sortDirection == "ASC") {
-      result = "$result&sortDirection=ASC&";
-    }
-    else if (sortDirection == "DESC") {
-      result = "$result&sortDirection=DESC&";
+      result = "$result&dir=ASC&";
+    } else if (sortDirection == "DESC") {
+      result = "$result&dir=DESC&";
     }
 
     if (sortBy == "distance") {
       result = "$result&sort=distance&";
-    }
-    else if (sortBy == "price") {
+    } else if (sortBy == "price") {
       result = "$result&sort=price&";
-    }
-    else if (sortBy == "date") {
+    } else if (sortBy == "date") {
       result = "$result&sort=startTime&";
-    }
-    else if (sortBy == "popularity") {
+    } else if (sortBy == "popularity") {
       result = "$result&sort=peopleCount&";
     }
 
     //location
     if (mapCenterLat != null) {
-      result = "$result&latitude=$mapCenterLat&longitude=$mapCenterLong&maxDistance=$radius&";
+      result =
+          "$result&latitude=$mapCenterLat&longitude=$mapCenterLong&maxDistance=$radius&";
     } else {
-      result = "$result&latitude=${location.latitude}&longitude=${location.longitude}";
+      result =
+          "$result&latitude=${location.latitude}&longitude=${location.longitude}";
     }
 
     //date
@@ -175,12 +169,9 @@ class _SearchPageState extends State<SearchPage> {
       setState(() {
         isEndTimeSelected = true;
       });
-    }
-
-    else if (startTime == null && endTime == null) {
+    } else if (startTime == null && endTime == null) {
       result = "$result&startTimeMin=${convertToUtc(DateTime.now())}&";
     }
-
 
     //category
     if (selectedCategoryListIds.isNotEmpty) {
@@ -194,10 +185,12 @@ class _SearchPageState extends State<SearchPage> {
 
     //price
     if (_TextFieldPriceFrom.text != "") {
-      result = "$result&priceMin=${_TextFieldPriceFrom.text}&currencyId=$selectedCurrencyId&";
+      result =
+          "$result&priceMin=${_TextFieldPriceFrom.text}&currencyId=$selectedCurrencyId&";
     }
     if (_TextFieldPriceTo.text != "") {
-      result = "$result&priceMax=${_TextFieldPriceTo.text}&currencyId=$selectedCurrencyId&";
+      result =
+          "$result&priceMax=${_TextFieldPriceTo.text}&currencyId=$selectedCurrencyId&";
     }
 
     return result;
@@ -223,7 +216,7 @@ class _SearchPageState extends State<SearchPage> {
       if (response.statusCode == 200) {
         final List<dynamic> data = customJsonDecode(response.body);
         final List<EventInFeed> newEvents =
-        data.map((item) => EventInFeed.fromJson(item)).toList();
+            data.map((item) => EventInFeed.fromJson(item)).toList();
 
         setState(() {
           events.addAll(newEvents);
@@ -245,19 +238,18 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   List<Currency> listOfCurrencies = [];
+
   void getCurrencies() async {
     await checkTimestamp();
     const storage = FlutterSecureStorage();
     String? token = await storage.read(key: 'access_token');
     var url = Uri.parse(ApiEndpoints.GET_CURRENCY);
-    var headers = {
-      'Authorization': 'Bearer $token'
-    };
+    var headers = {'Authorization': 'Bearer $token'};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
       final List<dynamic> data = customJsonDecode(response.body);
       final List<Currency> newCurrencies =
-      data.map((item) => Currency.fromJson(item)).toList();
+          data.map((item) => Currency.fromJson(item)).toList();
       setState(() {
         listOfCurrencies.addAll(newCurrencies);
       });
@@ -290,10 +282,11 @@ class _SearchPageState extends State<SearchPage> {
         backgroundColor: currentTheme.scaffoldBackgroundColor,
         navigationBar: CupertinoNavigationBar(
           backgroundColor: currentTheme.scaffoldBackgroundColor,
-          middle: Text('Search',
-          style: TextStyle(
-            color: currentTheme.colorScheme.primary,
-          ),
+          middle: Text(
+            'Search',
+            style: TextStyle(
+              color: currentTheme.colorScheme.primary,
+            ),
           ),
         ),
         child: GestureDetector(
@@ -405,34 +398,34 @@ class _SearchPageState extends State<SearchPage> {
                                 sortBy == "distance"
                                     ? CupertinoIcons.location_fill
                                     : sortBy == "price"
-                                    ? CupertinoIcons.money_dollar
-                                    : sortBy == "date"
-                                    ? CupertinoIcons.calendar_today
-                                    : sortBy == "popularity"
-                                    ? CupertinoIcons.person_2_fill
-                                    : CupertinoIcons.sort_down,
+                                        ? CupertinoIcons.money_dollar
+                                        : sortBy == "date"
+                                            ? CupertinoIcons.calendar_today
+                                            : sortBy == "popularity"
+                                                ? CupertinoIcons.person_2_fill
+                                                : CupertinoIcons.sort_down,
                                 color: currentTheme.colorScheme.background,
                               ),
                             ),
                             title: sortDirection == "ASC"
                                 ? sortBy == "distance"
-                                ? "Closest"
-                                : sortBy == "price"
-                                ? "Cheapest"
-                                : sortBy == "date"
-                                ? "Newest"
-                                : sortBy == "popularity"
-                                ? "Most popular"
-                                : "Sort by"
+                                    ? "Closest"
+                                    : sortBy == "price"
+                                        ? "Cheapest"
+                                        : sortBy == "date"
+                                            ? "Newest"
+                                            : sortBy == "popularity"
+                                                ? "Most popular"
+                                                : "Sort by"
                                 : sortBy == "distance"
-                                ? "Furthest"
-                                : sortBy == "price"
-                                ? "Most expensive"
-                                : sortBy == "date"
-                                ? "Oldest"
-                                : sortBy == "popularity"
-                                ? "Least popular"
-                                : "Sort by",
+                                    ? "Furthest"
+                                    : sortBy == "price"
+                                        ? "Most expensive"
+                                        : sortBy == "date"
+                                            ? "Oldest"
+                                            : sortBy == "popularity"
+                                                ? "Least popular"
+                                                : "Sort by",
                             subtitle: 'Sorted by $sortBy',
                           ),
                           PullDownMenuActionsRow.small(
@@ -501,12 +494,12 @@ class _SearchPageState extends State<SearchPage> {
                                 title: sortBy == "distance"
                                     ? "Closest"
                                     : sortBy == "price"
-                                    ? "Cheapest"
-                                    : sortBy == "date"
-                                    ? "Newest"
-                                    : sortBy == "popularity"
-                                    ? "Most popular"
-                                    : "",
+                                        ? "Cheapest"
+                                        : sortBy == "date"
+                                            ? "Newest"
+                                            : sortBy == "popularity"
+                                                ? "Most popular"
+                                                : "",
                                 icon: CupertinoIcons.arrow_up,
                               ),
                               PullDownMenuItem(
@@ -521,12 +514,12 @@ class _SearchPageState extends State<SearchPage> {
                                 title: sortBy == "distance"
                                     ? "Furthest"
                                     : sortBy == "price"
-                                    ? "Most expensive"
-                                    : sortBy == "date"
-                                    ? "Oldest"
-                                    : sortBy == "popularity"
-                                    ? "Least popular"
-                                    : "",
+                                        ? "Most expensive"
+                                        : sortBy == "date"
+                                            ? "Oldest"
+                                            : sortBy == "popularity"
+                                                ? "Least popular"
+                                                : "",
                                 icon: CupertinoIcons.arrow_down,
                               ),
                             ],
@@ -537,7 +530,8 @@ class _SearchPageState extends State<SearchPage> {
                           child: CupertinoButton(
                             onPressed: showMenu,
                             color: currentTheme.colorScheme.background,
-                            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 7, vertical: 2),
                             child: Row(
                               children: [
                                 Icon(
@@ -566,15 +560,22 @@ class _SearchPageState extends State<SearchPage> {
                         child: CupertinoButton(
                           onPressed: () {
                             setState(() {
-                              _isLocationPickerTapped = !_isLocationPickerTapped;
+                              _isLocationPickerTapped =
+                                  !_isLocationPickerTapped;
                               _isPriceButtonTapped = false;
                               _isDateStartButtonTapped = false;
                               _isDateEndButtonTapped = false;
                             });
                           },
-                          color: (mapCenterLat == null) ? currentTheme.colorScheme.background
-                              : (currentTheme.brightness == Brightness.light) ? currentTheme.colorScheme.primary.withOpacity(0.1) : currentTheme.colorScheme.primary.withOpacity(0.3),
-                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                          color: (mapCenterLat == null)
+                              ? currentTheme.colorScheme.background
+                              : (currentTheme.brightness == Brightness.light)
+                                  ? currentTheme.colorScheme.primary
+                                      .withOpacity(0.1)
+                                  : currentTheme.colorScheme.primary
+                                      .withOpacity(0.3),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 7, vertical: 2),
                           child: Row(
                             children: [
                               Icon(
@@ -608,9 +609,16 @@ class _SearchPageState extends State<SearchPage> {
                               _isDateEndButtonTapped = false;
                             });
                           },
-                          color: !(_TextFieldPriceTo.text != "" || _TextFieldPriceFrom.text != "") ? currentTheme.colorScheme.background
-                              : (currentTheme.brightness == Brightness.light) ? currentTheme.colorScheme.primary.withOpacity(0.1) : currentTheme.colorScheme.primary.withOpacity(0.3),
-                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                          color: !(_TextFieldPriceTo.text != "" ||
+                                  _TextFieldPriceFrom.text != "")
+                              ? currentTheme.colorScheme.background
+                              : (currentTheme.brightness == Brightness.light)
+                                  ? currentTheme.colorScheme.primary
+                                      .withOpacity(0.1)
+                                  : currentTheme.colorScheme.primary
+                                      .withOpacity(0.3),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 7, vertical: 2),
                           child: Row(
                             children: [
                               Icon(
@@ -638,16 +646,22 @@ class _SearchPageState extends State<SearchPage> {
                         child: CupertinoButton(
                           onPressed: () {
                             setState(() {
-                              _isDateStartButtonTapped = !_isDateStartButtonTapped;
+                              _isDateStartButtonTapped =
+                                  !_isDateStartButtonTapped;
                               _isPriceButtonTapped = false;
                               _isLocationPickerTapped = false;
                               _isDateEndButtonTapped = false;
                             });
                           },
-
-                          color: !(startTime != null) ? currentTheme.colorScheme.background
-                              : (currentTheme.brightness == Brightness.light) ? currentTheme.colorScheme.primary.withOpacity(0.1) : currentTheme.colorScheme.primary.withOpacity(0.3),
-                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                          color: !(startTime != null)
+                              ? currentTheme.colorScheme.background
+                              : (currentTheme.brightness == Brightness.light)
+                                  ? currentTheme.colorScheme.primary
+                                      .withOpacity(0.1)
+                                  : currentTheme.colorScheme.primary
+                                      .withOpacity(0.3),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 7, vertical: 2),
                           child: Row(
                             children: [
                               Icon(
@@ -681,10 +695,15 @@ class _SearchPageState extends State<SearchPage> {
                               _isDateStartButtonTapped = false;
                             });
                           },
-
-                          color: !(endTime != null) ? currentTheme.colorScheme.background
-                              : (currentTheme.brightness == Brightness.light) ? currentTheme.colorScheme.primary.withOpacity(0.1) : currentTheme.colorScheme.primary.withOpacity(0.3),
-                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                          color: !(endTime != null)
+                              ? currentTheme.colorScheme.background
+                              : (currentTheme.brightness == Brightness.light)
+                                  ? currentTheme.colorScheme.primary
+                                      .withOpacity(0.1)
+                                  : currentTheme.colorScheme.primary
+                                      .withOpacity(0.3),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 7, vertical: 2),
                           child: Row(
                             children: [
                               Icon(
@@ -715,24 +734,29 @@ class _SearchPageState extends State<SearchPage> {
                             var url = Uri.parse(ApiEndpoints.GET_CATEGORY);
                             var response = await http.get(url);
                             if (response.statusCode == 200) {
-                              final List<dynamic> data = customJsonDecode(response.body);
-                              final List<CategoryClass> newCategoryList =
-                              data.map((item) => CategoryClass.fromJson(item)).toList();
+                              final List<dynamic> data =
+                                  customJsonDecode(response.body);
+                              final List<CategoryClass> newCategoryList = data
+                                  .map((item) => CategoryClass.fromJson(item))
+                                  .toList();
                               for (var category in newCategoryList) {
                                 listOfCategories.add(category);
                               }
                               await showDialog(
                                 context: context,
                                 builder: (ctx) {
-                                  return  MultiSelectDialog(
-                                    width: MediaQuery.of(context).size.width * 1,
+                                  return MultiSelectDialog(
+                                    width:
+                                        MediaQuery.of(context).size.width * 1,
                                     title: const Text("Select categories"),
                                     itemsTextStyle: TextStyle(
                                       color: currentTheme.colorScheme.primary,
                                     ),
                                     searchable: true,
-                                    backgroundColor: currentTheme.colorScheme.background,
-                                    checkColor: currentTheme.colorScheme.background,
+                                    backgroundColor:
+                                        currentTheme.colorScheme.background,
+                                    checkColor:
+                                        currentTheme.colorScheme.background,
                                     colorator: (item) {
                                       return currentTheme.colorScheme.primary;
                                     },
@@ -759,8 +783,10 @@ class _SearchPageState extends State<SearchPage> {
                                         selectedCategoryList = [];
                                         selectedCategoryListIds = [];
                                         for (var category in values) {
-                                          selectedCategoryList.add(category.name);
-                                          selectedCategoryListIds.add(category.id);
+                                          selectedCategoryList
+                                              .add(category.name);
+                                          selectedCategoryListIds
+                                              .add(category.id);
                                         }
                                         print(selectedCategoryList);
                                         print(selectedCategoryListIds);
@@ -778,12 +804,19 @@ class _SearchPageState extends State<SearchPage> {
                                 },
                               );
                             } else {
-                              print('Failed to load currencies: ${response.statusCode}');
+                              print(
+                                  'Failed to load currencies: ${response.statusCode}');
                             }
                           },
-                          color: !(selectedCategoryList.isNotEmpty) ? currentTheme.colorScheme.background
-                              : (currentTheme.brightness == Brightness.light) ? currentTheme.colorScheme.primary.withOpacity(0.1) : currentTheme.colorScheme.primary.withOpacity(0.3),
-                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                          color: !(selectedCategoryList.isNotEmpty)
+                              ? currentTheme.colorScheme.background
+                              : (currentTheme.brightness == Brightness.light)
+                                  ? currentTheme.colorScheme.primary
+                                      .withOpacity(0.1)
+                                  : currentTheme.colorScheme.primary
+                                      .withOpacity(0.3),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 7, vertical: 2),
                           child: Row(
                             children: [
                               Icon(
@@ -811,268 +844,323 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               ),
               SizedBox(
-                height: (_isLocationPickerTapped || _isPriceButtonTapped) ? 0 : 10,
+                height:
+                    (_isLocationPickerTapped || _isPriceButtonTapped) ? 0 : 10,
               ),
               AnimatedSize(
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeInOut,
                 child: _isPriceButtonTapped
                     ? Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.25,
-                          height: 70,
-                          padding: const EdgeInsets.all(10),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: CupertinoTextField(
-                              style: TextStyle(
-                                color: currentTheme.colorScheme.primary,
-                              ),
-                              decoration: BoxDecoration(
-                                color: currentTheme.colorScheme.background,
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              cursorColor: currentTheme.colorScheme.primary,
-                              maxLength: 3,
-                              keyboardType: TextInputType.number,
-                              onChanged: (value) {
-                                setState(() {
-                                  _TextFieldPriceFrom.text = value;
-                                });
-                              },
-                              controller: _TextFieldPriceFrom,
-                              placeholder: 'From',
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.25,
-                          height: 70,
-                          padding: const EdgeInsets.all(10),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: CupertinoTextField(
-                              decoration: BoxDecoration(
-                                color: currentTheme.colorScheme.background,
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              cursorColor: currentTheme.colorScheme.primary,
-                              style: TextStyle(
-                                color: currentTheme.colorScheme.primary,
-                              ),
-                              maxLength: 3,
-                              keyboardType: TextInputType.number,
-                              controller: _TextFieldPriceTo,
-                              onChanged: (value) {
-                                setState(() {
-                                  _TextFieldPriceTo.text = value;
-                                });
-                              },
-                              placeholder: 'To',
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        PullDownButton(
-                          itemBuilder: (context) => listOfCurrencies.map((currency) {
-                            return PullDownMenuItem.selectable(
-                              title: "${currency.symbol} ${currency.name}",
-                              selected: selectedCurrency == currency.name,
-                              onTap: () {
-                                setState(() {
-                                  selectedCurrency = currency.name;
-                                  selectedCurrencySymbol = currency.symbol;
-                                  selectedCurrencyId = currency.id;
-                                });
-                              },
-                            );
-                          }).toList(),
-                          buttonBuilder: (context, showMenu) => CupertinoButton(
-                            onPressed: showMenu,
-                            padding: EdgeInsets.zero,
-                            child: Container(
-                              width: MediaQuery.of(context).size.width * 0.21,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                color: currentTheme.colorScheme.background,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '$selectedCurrencySymbol $selectedCurrency',
-                                  style: TextStyle(fontSize: 16, color: currentTheme.colorScheme.primary),
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.25,
+                                height: 70,
+                                padding: const EdgeInsets.all(10),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: CupertinoTextField(
+                                    style: TextStyle(
+                                      color: currentTheme.colorScheme.primary,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color:
+                                          currentTheme.colorScheme.background,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    cursorColor:
+                                        currentTheme.colorScheme.primary,
+                                    maxLength: 3,
+                                    keyboardType: TextInputType.number,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _TextFieldPriceFrom.text = value;
+                                      });
+                                    },
+                                    controller: _TextFieldPriceFrom,
+                                    placeholder: 'From',
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Spacer(),
-                        CupertinoButton(
-                          onPressed: () {
-                            setState(() {
-                              _TextFieldPriceFrom.text = "";
-                              _TextFieldPriceTo.text = "";
-                              _isPriceButtonTapped = !_isPriceButtonTapped;
-                              events = [];
-                              currentPage = 0;
-                              fetchEvents();
-                            });
-                          },
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.30,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: currentTheme.colorScheme.background,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Cancel',
-                                style: TextStyle(fontSize: 16, color: currentTheme.colorScheme.primary),
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.25,
+                                height: 70,
+                                padding: const EdgeInsets.all(10),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: CupertinoTextField(
+                                    decoration: BoxDecoration(
+                                      color:
+                                          currentTheme.colorScheme.background,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    cursorColor:
+                                        currentTheme.colorScheme.primary,
+                                    style: TextStyle(
+                                      color: currentTheme.colorScheme.primary,
+                                    ),
+                                    maxLength: 3,
+                                    keyboardType: TextInputType.number,
+                                    controller: _TextFieldPriceTo,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _TextFieldPriceTo.text = value;
+                                      });
+                                    },
+                                    placeholder: 'To',
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
-                        CupertinoButton(
-                          onPressed: () {
-                            setState(() {
-                              _isPriceButtonTapped = false;
-                              events = [];
-                              currentPage = 0;
-                              fetchEvents();
-                            });
-                          },
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.30,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: currentTheme.colorScheme.background,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Apply',
-                                style: TextStyle(fontSize: 16, color: currentTheme.colorScheme.primary, fontWeight: FontWeight.bold),
+                              const SizedBox(width: 10),
+                              PullDownButton(
+                                itemBuilder: (context) =>
+                                    listOfCurrencies.map((currency) {
+                                  return PullDownMenuItem.selectable(
+                                    title:
+                                        "${currency.symbol} ${currency.name}",
+                                    selected: selectedCurrency == currency.name,
+                                    onTap: () {
+                                      setState(() {
+                                        selectedCurrency = currency.name;
+                                        selectedCurrencySymbol =
+                                            currency.symbol;
+                                        selectedCurrencyId = currency.id;
+                                      });
+                                    },
+                                  );
+                                }).toList(),
+                                buttonBuilder: (context, showMenu) =>
+                                    CupertinoButton(
+                                  onPressed: showMenu,
+                                  padding: EdgeInsets.zero,
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.21,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      color:
+                                          currentTheme.colorScheme.background,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        '$selectedCurrencySymbol $selectedCurrency',
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            color: currentTheme
+                                                .colorScheme.primary),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
-                        ),
-                        const Spacer(),
-                      ],
-                    ),
-                  ],
-                )
+                          Row(
+                            children: [
+                              const Spacer(),
+                              CupertinoButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _TextFieldPriceFrom.text = "";
+                                    _TextFieldPriceTo.text = "";
+                                    _isPriceButtonTapped =
+                                        !_isPriceButtonTapped;
+                                    events = [];
+                                    currentPage = 0;
+                                    fetchEvents();
+                                  });
+                                },
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.30,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: currentTheme.colorScheme.background,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      'Cancel',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color:
+                                              currentTheme.colorScheme.primary),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              CupertinoButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _isPriceButtonTapped = false;
+                                    events = [];
+                                    currentPage = 0;
+                                    fetchEvents();
+                                  });
+                                },
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.30,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: currentTheme.colorScheme.background,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      'Apply',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color:
+                                              currentTheme.colorScheme.primary,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const Spacer(),
+                            ],
+                          ),
+                        ],
+                      )
                     : const SizedBox(),
               ),
               AnimatedSize(
                 duration: const Duration(milliseconds: 200),
                 curve: Curves.easeInOut,
                 child: _isLocationPickerTapped
-                  ? Column(
-                  children: [
-                    const SizedBox(height: 10),
-                    ClipRRect(
-                      borderRadius: defaultWidgetCornerRadius,
-                      child: SizedBox(
-                        height: MediaQuery.of(context).size.width * 0.93,
-                        width: MediaQuery.of(context).size.width * 0.93,
-                        child: Stack(
-                          children: [
-                            GoogleMap(
-                              onMapCreated: (controller) {
-                                _mapController = controller;
-                                (Platform.isAndroid)
-                                    ? (currentTheme.brightness == Brightness.light)
-                                    ? _mapController?.setMapStyle(_mapStyle!)
-                                    : _mapController?.setMapStyle(_mapStyleDark!)
-                                    : (currentTheme.brightness == Brightness.light)
-                                    ? _mapController?.setMapStyle(_mapStyleIos!)
-                                    : _mapController?.setMapStyle(_mapStyleIosDark!);
-                              },
-                              initialCameraPosition: const CameraPosition(
-                                target: LatLng(59.47644736286131, 24.781226109442517),
-                                zoom: 11,
-                              ),
-                              myLocationEnabled: true,
-                              myLocationButtonEnabled: false,
-                              zoomControlsEnabled: false,
-                            ),
-                            CustomPaint(
-                              painter: CirclePainter(
-                                  center: Offset(MediaQuery.of(context).size.width * 0.465, MediaQuery.of(context).size.width * 0.465),
-                                  radius: MediaQuery.of(context).size.width * 0.435,
-                                  color: Colors.blue.shade700,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.93,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    ? Column(
                         children: [
-                          CupertinoButton(
-                            onPressed: () {
-                              mapCenterLat = null;
-                              mapCenterLong = null;
-                              radius = null;
-                              setState(() {
-                                _isLocationPickerTapped = false;
-                                events = [];
-                                currentPage = 0;
-                                fetchEvents();
-                              });
-                            },
-                            color: currentTheme.colorScheme.background,
-                            child: Text(
-                              'Cancel',
-                              style: TextStyle(fontSize: 16, color: currentTheme.colorScheme.primary),
+                          const SizedBox(height: 10),
+                          ClipRRect(
+                            borderRadius: defaultWidgetCornerRadius,
+                            child: SizedBox(
+                              height: MediaQuery.of(context).size.width * 0.93,
+                              width: MediaQuery.of(context).size.width * 0.93,
+                              child: Stack(
+                                children: [
+                                  GoogleMap(
+                                    onMapCreated: (controller) {
+                                      _mapController = controller;
+                                      (Platform.isAndroid)
+                                          ? (currentTheme.brightness ==
+                                                  Brightness.light)
+                                              ? _mapController
+                                                  ?.setMapStyle(_mapStyle!)
+                                              : _mapController
+                                                  ?.setMapStyle(_mapStyleDark!)
+                                          : (currentTheme.brightness ==
+                                                  Brightness.light)
+                                              ? _mapController
+                                                  ?.setMapStyle(_mapStyleIos!)
+                                              : _mapController?.setMapStyle(
+                                                  _mapStyleIosDark!);
+                                    },
+                                    initialCameraPosition: const CameraPosition(
+                                      target: LatLng(59.47644736286131,
+                                          24.781226109442517),
+                                      zoom: 11,
+                                    ),
+                                    myLocationEnabled: true,
+                                    myLocationButtonEnabled: false,
+                                    zoomControlsEnabled: false,
+                                  ),
+                                  CustomPaint(
+                                    painter: CirclePainter(
+                                      center: Offset(
+                                          MediaQuery.of(context).size.width *
+                                              0.465,
+                                          MediaQuery.of(context).size.width *
+                                              0.465),
+                                      radius:
+                                          MediaQuery.of(context).size.width *
+                                              0.435,
+                                      color: Colors.blue.shade700,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                          CupertinoButton(
-                            onPressed: () async {
-                              LatLngBounds visibleRegion = await _mapController!.getVisibleRegion();
-                              var topLeftLat = visibleRegion.northeast.latitude;
-                              var topLeftLong = visibleRegion.southwest.longitude;
-                              var bottomRightLat = visibleRegion.southwest.latitude;
-                              var bottomRightLong = visibleRegion.northeast.longitude;
-                              var zoomLevel = await _mapController!.getZoomLevel();
+                          const SizedBox(height: 10),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.93,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CupertinoButton(
+                                  onPressed: () {
+                                    mapCenterLat = null;
+                                    mapCenterLong = null;
+                                    radius = null;
+                                    setState(() {
+                                      _isLocationPickerTapped = false;
+                                      events = [];
+                                      currentPage = 0;
+                                      fetchEvents();
+                                    });
+                                  },
+                                  color: currentTheme.colorScheme.background,
+                                  child: Text(
+                                    'Cancel',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color:
+                                            currentTheme.colorScheme.primary),
+                                  ),
+                                ),
+                                CupertinoButton(
+                                  onPressed: () async {
+                                    LatLngBounds visibleRegion =
+                                        await _mapController!
+                                            .getVisibleRegion();
+                                    var topLeftLat =
+                                        visibleRegion.northeast.latitude;
+                                    var topLeftLong =
+                                        visibleRegion.southwest.longitude;
+                                    var bottomRightLat =
+                                        visibleRegion.southwest.latitude;
+                                    var bottomRightLong =
+                                        visibleRegion.northeast.longitude;
+                                    var zoomLevel =
+                                        await _mapController!.getZoomLevel();
 
-                              mapCenterLat = (topLeftLat + bottomRightLat) / 2;
-                              mapCenterLong = (topLeftLong + bottomRightLong) / 2;
+                                    mapCenterLat =
+                                        (topLeftLat + bottomRightLat) / 2;
+                                    mapCenterLong =
+                                        (topLeftLong + bottomRightLong) / 2;
 
-                              double calculatedValue = (((topLeftLat - bottomRightLat) /2 )* 111) * 1000;
-                              radius = calculatedValue.toInt();
-                              setState(() {
-                                _isLocationPickerTapped = false;
-                                events = [];
-                                currentPage = 0;
-                                fetchEvents();
-                              });
-                            },
-                            color: currentTheme.colorScheme.background,
-                            child: Text(
-                              'Apply',
-                              style: TextStyle(fontSize: 16, color: currentTheme.colorScheme.primary, fontWeight: FontWeight.bold),
+                                    double calculatedValue =
+                                        (((topLeftLat - bottomRightLat) / 2) *
+                                                111) *
+                                            1000;
+                                    radius = calculatedValue.toInt();
+                                    setState(() {
+                                      _isLocationPickerTapped = false;
+                                      events = [];
+                                      currentPage = 0;
+                                      fetchEvents();
+                                    });
+                                  },
+                                  color: currentTheme.colorScheme.background,
+                                  child: Text(
+                                    'Apply',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color: currentTheme.colorScheme.primary,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
+                          const SizedBox(height: 10),
                         ],
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                  ],
-                )
+                      )
                     : const SizedBox(),
               ),
               AnimatedSize(
@@ -1080,186 +1168,205 @@ class _SearchPageState extends State<SearchPage> {
                 curve: Curves.easeInOut,
                 child: _isDateStartButtonTapped
                     ? Column(
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.width * 0.93,
-                      child: CupertinoDatePicker(
-                        mode: CupertinoDatePickerMode.dateAndTime,
-                        initialDateTime: startTime ?? DateTime.now(),
-                        onDateTimeChanged: (DateTime newDateTime) {
-                          setState(() {
-                            startTime = newDateTime;
-                          });
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.93,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween, // Aligns buttons to the left and right
                         children: [
-                          CupertinoButton(
-                            onPressed: () {
-                              setState(() {
-                                startTime = null;
-                                _isDateStartButtonTapped = false;
-                                events = [];
-                                currentPage = 0;
-                                fetchEvents();
-                              });
-                            },
-                            color: currentTheme.colorScheme.background,
-                            child: Text(
-                              'Cancel',
-                              style: TextStyle(fontSize: 16, color: currentTheme.colorScheme.primary),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.width * 0.93,
+                            child: CupertinoDatePicker(
+                              mode: CupertinoDatePickerMode.dateAndTime,
+                              initialDateTime: startTime ?? DateTime.now(),
+                              onDateTimeChanged: (DateTime newDateTime) {
+                                setState(() {
+                                  startTime = newDateTime;
+                                });
+                              },
                             ),
                           ),
-                          CupertinoButton(
-                            onPressed: () {
-                              setState(() {
-                                _isDateStartButtonTapped = false;
-                                events = [];
-                                currentPage = 0;
-                                fetchEvents();
-                              });
-                            },
-                            color: currentTheme.colorScheme.background,
-                            child: Text(
-                              'Apply',
-                              style: TextStyle(fontSize: 16, color: currentTheme.colorScheme.primary, fontWeight: FontWeight.bold),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.93,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              // Aligns buttons to the left and right
+                              children: [
+                                CupertinoButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      startTime = null;
+                                      _isDateStartButtonTapped = false;
+                                      events = [];
+                                      currentPage = 0;
+                                      fetchEvents();
+                                    });
+                                  },
+                                  color: currentTheme.colorScheme.background,
+                                  child: Text(
+                                    'Cancel',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color:
+                                            currentTheme.colorScheme.primary),
+                                  ),
+                                ),
+                                CupertinoButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _isDateStartButtonTapped = false;
+                                      events = [];
+                                      currentPage = 0;
+                                      fetchEvents();
+                                    });
+                                  },
+                                  color: currentTheme.colorScheme.background,
+                                  child: Text(
+                                    'Apply',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color: currentTheme.colorScheme.primary,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
+                          const SizedBox(height: 10),
                         ],
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                  ],
-                )
+                      )
                     : const SizedBox(),
               ),
               AnimatedSize(
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeInOut,
-                child:  _isDateEndButtonTapped
+                child: _isDateEndButtonTapped
                     ? SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.93,
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).size.width * 0.93,
-                        child: CupertinoDatePicker(
-                          mode: CupertinoDatePickerMode.dateAndTime,
-                          initialDateTime: endTime ?? DateTime.now(),
-                          onDateTimeChanged: (DateTime newDateTime) {
-                            setState(() {
-                              endTime = newDateTime;
-                            });
-                          },
-                        ),
-                      ),
-                      SizedBox(
                         width: MediaQuery.of(context).size.width * 0.93,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween, // Aligns buttons to the left and right
+                        child: Column(
                           children: [
-                            CupertinoButton(
-                              onPressed: () {
-                                setState(() {
-                                  endTime = null;
-                                  _isDateEndButtonTapped = false;
-                                  events = [];
-                                  currentPage = 0;
-                                  fetchEvents();
-                                });
-                              },
-                              color: currentTheme.colorScheme.background,
-                              child: Text(
-                                'Cancel',
-                                style: TextStyle(fontSize: 16, color: currentTheme.colorScheme.primary),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.width * 0.93,
+                              child: CupertinoDatePicker(
+                                mode: CupertinoDatePickerMode.dateAndTime,
+                                initialDateTime: endTime ?? DateTime.now(),
+                                onDateTimeChanged: (DateTime newDateTime) {
+                                  setState(() {
+                                    endTime = newDateTime;
+                                  });
+                                },
                               ),
                             ),
-                            CupertinoButton(
-                              onPressed: () {
-                                setState(() {
-                                  _isDateEndButtonTapped = false;
-                                  events = [];
-                                  currentPage = 0;
-                                  fetchEvents();
-                                });
-                              },
-                              color: currentTheme.colorScheme.background,
-                              child: Text(
-                                'Apply',
-                                style: TextStyle(fontSize: 16, color: currentTheme.colorScheme.primary, fontWeight: FontWeight.bold),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.93,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                // Aligns buttons to the left and right
+                                children: [
+                                  CupertinoButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        endTime = null;
+                                        _isDateEndButtonTapped = false;
+                                        events = [];
+                                        currentPage = 0;
+                                        fetchEvents();
+                                      });
+                                    },
+                                    color: currentTheme.colorScheme.background,
+                                    child: Text(
+                                      'Cancel',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color:
+                                              currentTheme.colorScheme.primary),
+                                    ),
+                                  ),
+                                  CupertinoButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _isDateEndButtonTapped = false;
+                                        events = [];
+                                        currentPage = 0;
+                                        fetchEvents();
+                                      });
+                                    },
+                                    color: currentTheme.colorScheme.background,
+                                    child: Text(
+                                      'Apply',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color:
+                                              currentTheme.colorScheme.primary,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
+                            const SizedBox(height: 10),
                           ],
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                    ],
-                  ),
-                )
+                      )
                     : const SizedBox(),
               ),
               Expanded(
                 child: NotificationListener<ScrollNotification>(
                   onNotification: _onNotification,
                   child: (events.isNotEmpty)
-                  ? RefreshIndicator(
-                    color: currentTheme.colorScheme.primary,
-                    child: ListView.builder(
-                      itemCount: events.length + 1,
-                      itemBuilder: (context, index) {
-                        if (index == 0) {
-                          return const SizedBox();
-                        } else if (index <= events.length) {
-                          final event = events[index - 1];
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>EventPage(eventId: event.id!),
-                                ),
-                              );
+                      ? RefreshIndicator(
+                          color: currentTheme.colorScheme.primary,
+                          child: ListView.builder(
+                            itemCount: events.length + 1,
+                            itemBuilder: (context, index) {
+                              if (index == 0) {
+                                return const SizedBox();
+                              } else if (index <= events.length) {
+                                final event = events[index - 1];
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            EventPage(eventId: event.id!),
+                                      ),
+                                    );
+                                  },
+                                  child: Column(
+                                    children: [
+                                      (mapCenterLat == null)
+                                          ? eventCard(context, event, false)
+                                          : eventCard(context, event, true),
+                                      const SizedBox(height: 10),
+                                    ],
+                                  ),
+                                );
+                              } else if (isLoading) {
+                                return Center(
+                                    child: CircularProgressIndicator(
+                                        color:
+                                            currentTheme.colorScheme.primary));
+                              } else {
+                                return const SizedBox();
+                              }
                             },
-                            child: Column(
-                              children: [
-                                (mapCenterLat == null)
-                                ? eventCard(context, event, false)
-                                : eventCard(context, event, true),
-                                const SizedBox(height: 10),
-                              ],
+                          ),
+                          onRefresh: () async {
+                            setState(() {
+                              events = [];
+                              currentPage = 0;
+                              fetchEvents();
+                            });
+                          },
+                        )
+                      : Center(
+                          child: Text(
+                            "No events found",
+                            style: TextStyle(
+                              color: currentTheme.colorScheme.primary,
+                              decoration: TextDecoration.none,
+                              fontSize: 18,
+                              fontWeight: FontWeight.normal,
                             ),
-                          );
-                        } else if (isLoading) {
-                          return Center(child: CircularProgressIndicator(
-                            color: currentTheme.colorScheme.primary
-                          ));
-                        } else {
-                          return const SizedBox();
-                        }
-                      },
-                    ),
-                    onRefresh: () async {
-                      setState(() {
-                        events = [];
-                        currentPage = 0;
-                        fetchEvents();
-                      });
-                    },
-                  )
-                    : Center(
-                    child: Text("No events found",
-                      style: TextStyle(
-                      color: currentTheme.colorScheme.primary,
-                        decoration: TextDecoration.none,
-                        fontSize: 18,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
-                  ),
+                          ),
+                        ),
                 ),
               ),
             ],

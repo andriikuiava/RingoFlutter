@@ -1,6 +1,5 @@
 import 'package:ringoflutter/Classes/CurrencyClass.dart';
 
-
 class TicketType {
   int id;
   String title;

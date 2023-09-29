@@ -1,22 +1,21 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
+import 'package:ringoflutter/Classes/Answer.dart';
 import 'package:ringoflutter/Classes/EventClass.dart';
 import 'package:ringoflutter/Classes/RegistrationFormClass.dart';
-import 'package:ringoflutter/Classes/Answer.dart';
-import 'package:ringoflutter/Classes/TicketTypeClass.dart';
 import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:ringoflutter/api_endpoints.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
-
 
 class FormCompletion extends StatefulWidget {
   final EventFull event;
   final int selectedTicketType;
-  const FormCompletion({super.key, required this.event, required this.selectedTicketType});
 
+  const FormCompletion(
+      {super.key, required this.event, required this.selectedTicketType});
 
   @override
   _FormCompletionState createState() => _FormCompletionState();
@@ -29,45 +28,50 @@ class _FormCompletionState extends State<FormCompletion> {
   bool isLoading = false;
 
   void prepareFieldsForAnswers() {
-for (var question in widget.event.registrationForm!.questions) {
-      switch (question.type) {
-        case 'INPUT_FIELD':
-          answers.add(Answer(questionId: question.id, content: ''));
-          break;
-        case 'MULTIPLE_CHOICE':
-          answers.add(Answer(questionId: question.id, optionIds: []));
-          break;
-        case 'CHECKBOX':
-          answers.add(Answer(questionId: question.id, optionIds: []));
-          break;
+    if (widget.event.registrationForm != null) {
+      for (var question in widget.event.registrationForm!.questions) {
+        switch (question.type) {
+          case 'INPUT_FIELD':
+            answers.add(Answer(questionId: question.id, content: ''));
+            break;
+          case 'MULTIPLE_CHOICE':
+            answers.add(Answer(questionId: question.id, optionIds: []));
+            break;
+          case 'CHECKBOX':
+            answers.add(Answer(questionId: question.id, optionIds: []));
+            break;
+        }
       }
     }
   }
 
   void checkIfFormIsCompleted() {
     isFormCompleted = true;
-    for (var question in widget.event.registrationForm!.questions) {
-      final answer = answers.firstWhere((answer) => answer.questionId == question.id);
-      if (question.required) {
-        switch (question.type) {
-          case 'INPUT_FIELD':
-            if (answer.content == '') {
-              isFormCompleted = false;
-              return;
-            }
-            break;
-          case 'MULTIPLE_CHOICE':
-            if (answer.optionIds!.isEmpty) {
-              isFormCompleted = false;
-              return;
-            }
-            break;
-          case 'CHECKBOX':
-            if (answer.optionIds!.isEmpty) {
-              isFormCompleted = false;
-              return;
-            }
-            break;
+    if (widget.event.registrationForm != null) {
+      for (var question in widget.event.registrationForm!.questions) {
+        final answer =
+            answers.firstWhere((answer) => answer.questionId == question.id);
+        if (question.required) {
+          switch (question.type) {
+            case 'INPUT_FIELD':
+              if (answer.content == '') {
+                isFormCompleted = false;
+                return;
+              }
+              break;
+            case 'MULTIPLE_CHOICE':
+              if (answer.optionIds!.isEmpty) {
+                isFormCompleted = false;
+                return;
+              }
+              break;
+            case 'CHECKBOX':
+              if (answer.optionIds!.isEmpty) {
+                isFormCompleted = false;
+                return;
+              }
+              break;
+          }
         }
       }
     }
@@ -79,7 +83,8 @@ for (var question in widget.event.registrationForm!.questions) {
     });
     await checkTimestamp();
     var token = await storage.read(key: 'access_token');
-    var url = Uri.parse('${ApiEndpoints.SEARCH}/${widget.event.id}/${ApiEndpoints.JOIN}/ticket-types/${widget.selectedTicketType}');
+    var url = Uri.parse(
+        '${ApiEndpoints.SEARCH}/${widget.event.id}/${ApiEndpoints.JOIN}/ticket-types/${widget.selectedTicketType}');
     print(url);
     var headers = {
       'Authorization': 'Bearer $token',
@@ -89,13 +94,13 @@ for (var question in widget.event.registrationForm!.questions) {
       "answers": answers.map((answer) => answer.toJson()).toList(),
     };
     print(body);
-    var response = await http.post(
-      url,
-      headers: headers,
-      body: jsonEncode(body),
-    );
+    var response = await http.post(url,
+        headers: headers,
+        body:
+            (widget.event.registrationForm == null) ? null : jsonEncode(body));
     if (response.statusCode == 200) {
-      showSuccessAlert("Success", "You have successfully joined the event", context);
+      showSuccessAlert(
+          "Success", "You have successfully joined the event", context);
       Navigator.pop(context, true);
     } else {
       setState(() {
@@ -106,8 +111,6 @@ for (var question in widget.event.registrationForm!.questions) {
       showErrorAlert("Error", "Something went wrong", context);
     }
   }
-
-
 
   @override
   void initState() {
@@ -125,8 +128,8 @@ for (var question in widget.event.registrationForm!.questions) {
       navigationBar: CupertinoNavigationBar(
         backgroundColor: currentTheme.scaffoldBackgroundColor,
         middle: Text(
-        'Form completion',
-        style: TextStyle(color: currentTheme.colorScheme.primary),
+          'Form completion',
+          style: TextStyle(color: currentTheme.colorScheme.primary),
         ),
         leading: GestureDetector(
           onTap: () {
@@ -146,14 +149,26 @@ for (var question in widget.event.registrationForm!.questions) {
         child: Column(
           children: [
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.9,
+              height: MediaQuery.of(context).size.height * 0.8,
               child: ListView.builder(
-                itemCount: widget.event.registrationForm!.questions.length + 2,
+                itemCount: (widget.event.registrationForm == null)
+                    ? 2
+                    : 2 + widget.event.registrationForm!.questions.length,
                 itemBuilder: (context, index) {
                   if (index == 0) {
-                    return buildNameAndDescriptionOfTheForm(widget.event.registrationForm!);
-                  } else if (index != 0 && index != widget.event.registrationForm!.questions.length + 1) {
-                    final question = widget.event.registrationForm!.questions[index - 1];
+                    if (widget.event.registrationForm == null) {
+                      return Container();
+                    } else {
+                      return buildNameAndDescriptionOfTheForm(
+                          widget.event.registrationForm!);
+                    }
+                  } else if (widget.event.registrationForm != null &&
+                      (index != 0 &&
+                          index !=
+                              widget.event.registrationForm!.questions.length +
+                                  1)) {
+                    final question =
+                        widget.event.registrationForm!.questions[index - 1];
                     switch (question.type) {
                       case 'INPUT_FIELD':
                         return buildInputFieldQuestion(question);
@@ -164,7 +179,8 @@ for (var question in widget.event.registrationForm!.questions) {
                     }
                   } else {
                     return Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                       height: 50,
                       child: Material(
                         elevation: (isFormCompleted) ? 6 : 0,
@@ -174,27 +190,32 @@ for (var question in widget.event.registrationForm!.questions) {
                           child: Container(
                             color: isFormCompleted
                                 ? currentTheme.colorScheme.background
-                                : currentTheme.colorScheme.primary.withOpacity(0.2),
+                                : currentTheme.colorScheme.primary
+                                    .withOpacity(0.2),
                             width: MediaQuery.of(context).size.width * 0.8,
                             child: CupertinoButton(
                               child: (isLoading)
-                              ? CupertinoActivityIndicator(
-                                color: currentTheme.colorScheme.primary,
-                              )
+                                  ? CupertinoActivityIndicator(
+                                      color: currentTheme.colorScheme.primary,
+                                    )
                                   : Text(
-                                isFormCompleted ? 'Submit' : 'Please complete the form',
-                                style: TextStyle(
-                                  color: isFormCompleted
-                                      ? currentTheme.colorScheme.primary
-                                      : currentTheme.colorScheme.primary.withOpacity(0.6),
-                                ),
-                              ),
+                                      isFormCompleted
+                                          ? 'Get ticket'
+                                          : 'Please complete the form',
+                                      style: TextStyle(
+                                        color: isFormCompleted
+                                            ? currentTheme.colorScheme.primary
+                                            : currentTheme.colorScheme.primary
+                                                .withOpacity(0.6),
+                                      ),
+                                    ),
                               onPressed: () {
                                 checkIfFormIsCompleted();
                                 if (isFormCompleted) {
                                   getTicket();
                                 } else {
-                                  showErrorAlert("Error", "Please fill the form", context);
+                                  showErrorAlert(
+                                      "Error", "Please fill the form", context);
                                 }
                               },
                             ),
@@ -300,7 +321,8 @@ for (var question in widget.event.registrationForm!.questions) {
             ),
             cursorColor: currentTheme.colorScheme.primary,
             onChanged: (value) {
-              final answer = answers.firstWhere((answer) => answer.questionId == question.id);
+              final answer = answers
+                  .firstWhere((answer) => answer.questionId == question.id);
               answer.content = value;
               checkIfFormIsCompleted();
               setState(() {});
@@ -337,13 +359,18 @@ for (var question in widget.event.registrationForm!.questions) {
               Container(
                 child: CupertinoButton(
                   child: Icon(
-                    (answers.firstWhere((answer) => answer.questionId == question.id).optionIds!.isNotEmpty)
+                    (answers
+                            .firstWhere(
+                                (answer) => answer.questionId == question.id)
+                            .optionIds!
+                            .isNotEmpty)
                         ? CupertinoIcons.clear_circled_solid
                         : CupertinoIcons.clear_circled,
                     color: currentTheme.colorScheme.primary,
                   ),
                   onPressed: () {
-                    final answer = answers.firstWhere((answer) => answer.questionId == question.id);
+                    final answer = answers.firstWhere(
+                        (answer) => answer.questionId == question.id);
                     if (answer.optionIds!.isNotEmpty) {
                       answer.optionIds!.clear();
                     }
@@ -363,7 +390,8 @@ for (var question in widget.event.registrationForm!.questions) {
               final option = question.options![index];
               return GestureDetector(
                 onTap: () {
-                  final answer = answers.firstWhere((answer) => answer.questionId == question.id);
+                  final answer = answers
+                      .firstWhere((answer) => answer.questionId == question.id);
                   if (answer.optionIds!.isNotEmpty) {
                     answer.optionIds!.clear();
                   }
@@ -381,7 +409,11 @@ for (var question in widget.event.registrationForm!.questions) {
                   child: Row(
                     children: [
                       Icon(
-                        answers.firstWhere((answer) => answer.questionId == question.id).optionIds!.contains(option.id)
+                        answers
+                                .firstWhere((answer) =>
+                                    answer.questionId == question.id)
+                                .optionIds!
+                                .contains(option.id)
                             ? CupertinoIcons.smallcircle_fill_circle
                             : CupertinoIcons.circle,
                         color: currentTheme.colorScheme.primary,
@@ -434,7 +466,8 @@ for (var question in widget.event.registrationForm!.questions) {
               final option = question.options![index];
               return GestureDetector(
                 onTap: () {
-                  final answer = answers.firstWhere((answer) => answer.questionId == question.id);
+                  final answer = answers
+                      .firstWhere((answer) => answer.questionId == question.id);
                   if (answer.optionIds!.contains(option.id)) {
                     answer.optionIds!.remove(option.id);
                   } else {
@@ -453,7 +486,11 @@ for (var question in widget.event.registrationForm!.questions) {
                   child: Row(
                     children: [
                       Icon(
-                        answers.firstWhere((answer) => answer.questionId == question.id).optionIds!.contains(option.id)
+                        answers
+                                .firstWhere((answer) =>
+                                    answer.questionId == question.id)
+                                .optionIds!
+                                .contains(option.id)
                             ? CupertinoIcons.checkmark_square_fill
                             : CupertinoIcons.square,
                         color: currentTheme.colorScheme.primary,

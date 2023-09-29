@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:ringoflutter/AppTabBar/Home.dart';
 import 'package:ringoflutter/Security/EmailVerificationPage.dart';
 import 'package:ringoflutter/Security/Functions/ActivateAccount.dart';
@@ -8,7 +9,6 @@ import 'package:ringoflutter/Security/Functions/CheckTimestampFunc.dart';
 import 'package:ringoflutter/Security/LoginPage.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 import 'package:ringoflutter/main.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = App.materialKey;
 
@@ -45,17 +45,25 @@ class _CheckerPageState extends State<CheckerPage> {
       });
       if (responseId.statusCode == 200) {
         final jsonResponse = customJsonDecode(responseId.body);
-        storage.write(
-            key: "id",
-            value: jsonResponse['id'].toString());
+        storage.write(key: "id", value: jsonResponse['id'].toString());
         if (!jsonResponse['emailVerified']) {
           navigatorKey.currentState?.pushReplacement(
-            MaterialPageRoute(builder: (_) => EmailVerificationPage(usersEmail: jsonResponse['email'], usersUsername: jsonResponse['username'],)),
+            MaterialPageRoute(
+                builder: (_) => EmailVerificationPage(
+                      usersEmail: jsonResponse['email'],
+                      usersUsername: jsonResponse['username'],
+                    )),
           );
         } else {
           if (jsonResponse['dateOfBirth'] == null) {
             navigatorKey.currentState?.pushReplacement(
-              MaterialPageRoute(builder: (_) => ActivateAccountPage(usersEmail: jsonResponse['email'], usersUsername: jsonResponse['username'], usersName: jsonResponse['name'],),),
+              MaterialPageRoute(
+                builder: (_) => ActivateAccountPage(
+                  usersEmail: jsonResponse['email'],
+                  usersUsername: jsonResponse['username'],
+                  usersName: jsonResponse['name'],
+                ),
+              ),
             );
           } else {
             navigatorKey.currentState?.pushReplacement(

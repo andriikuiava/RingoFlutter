@@ -8,7 +8,6 @@ import 'package:ringoflutter/Classes/RegistrationCredentialsClass.dart';
 import 'package:ringoflutter/Security/Functions/RegisterFunc.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 
-
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({Key? key}) : super(key: key);
 
@@ -25,7 +24,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
   late DateTime dateController;
   int selectedGender = 2;
   File? image;
-
 
   @override
   void initState() {
@@ -48,7 +46,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
   bool isNumber = false;
   bool isSpecialSymbol = false;
   bool is8Characters = false;
-
 
   bool isFormValid = false;
 
@@ -91,7 +88,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   void isEmailValidFunc() {
     setState(() {
-      if (RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+      if (RegExp(
+              r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
           .hasMatch(_emailController.text)) {
         isEmailValid = true;
       } else {
@@ -118,7 +116,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
       isNumber = false;
     }
 
-    if (RegExp(r'(?=.*[!@#$%^&*(),.?\":{}|<>])').hasMatch(_passwordController.text)) {
+    if (RegExp(r'(?=.*[!@#$%^&*(),.?\":{}|<>])')
+        .hasMatch(_passwordController.text)) {
       isSpecialSymbol = true;
     } else {
       isSpecialSymbol = false;
@@ -188,10 +187,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
           ),
           actions: <CupertinoActionSheetAction>[
             CupertinoActionSheetAction(
-              child: Text('Close',
+              child: Text(
+                'Close',
                 style: TextStyle(
                   color: Theme.of(context).primaryColor,
-                ),),
+                ),
+              ),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -240,14 +241,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       children: [
                         (image == null)
                             ? Icon(
-                          CupertinoIcons.person_circle,
-                          color: currentTheme.colorScheme.primary,
-                          size: 120,
-                        )
+                                CupertinoIcons.person_circle,
+                                color: currentTheme.colorScheme.primary,
+                                size: 120,
+                              )
                             : CircleAvatar(
-                          radius: 60,
-                          backgroundImage: FileImage(image!),
-                        ),
+                                radius: 60,
+                                backgroundImage: FileImage(image!),
+                              ),
                         const SizedBox(width: 20),
                         Expanded(
                           child: Column(
@@ -403,16 +404,21 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               context: context,
                               builder: (BuildContext context) {
                                 return CupertinoActionSheet(
-                                  title: const Text('Username should be unique, and can contain only letters, numbers, underscores and dots',
+                                  title: const Text(
+                                    'Username should be unique, and can contain only letters, numbers, underscores and dots',
                                     style: TextStyle(
                                       fontSize: 16,
-                                    ),),
+                                    ),
+                                  ),
                                   actions: <CupertinoActionSheetAction>[
                                     CupertinoActionSheetAction(
-                                      child: Text('Close',
+                                      child: Text(
+                                        'Close',
                                         style: TextStyle(
-                                          color: currentTheme.colorScheme.primary,
-                                        ),),
+                                          color:
+                                              currentTheme.colorScheme.primary,
+                                        ),
+                                      ),
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
@@ -509,7 +515,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           setState(() {
                             for (var symbol in value.split('')) {
                               if (symbol == ' ') {
-                                _emailController.text = value.replaceAll(' ', '');
+                                _emailController.text =
+                                    value.replaceAll(' ', '');
                               }
                             }
                           });
@@ -672,7 +679,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           setState(() => dateController = newDate);
                         },
                         minimumDate: DateTime(1900),
-                        maximumDate: DateTime.now().add(const Duration(seconds: 5)),
+                        maximumDate:
+                            DateTime.now().add(const Duration(seconds: 5)),
                       ),
                     ),
                   ],
@@ -720,7 +728,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                 color: currentTheme.colorScheme.primary,
                                 fontSize: 16,
                                 decoration: TextDecoration.none,
-
                               ),
                             ),
                             2: Text(
@@ -766,9 +773,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               }
 
                               DateFormat dateFormat = DateFormat('yyyy-MM-dd');
-                              String formattedTimestamp = dateFormat.format(dateController);
+                              String formattedTimestamp =
+                                  dateFormat.format(dateController);
 
-                              if (_passwordController.text == _repeatPasswordController.text) {
+                              if (_passwordController.text ==
+                                  _repeatPasswordController.text) {
                                 setState(() {
                                   isLoading = true;
                                 });
@@ -779,10 +788,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                         email: _emailController.text,
                                         password: _passwordController.text,
                                         dateOfBirth: formattedTimestamp,
-                                        gender: genderText
-                                    ),
-                                    context
-                                );
+                                        gender: genderText),
+                                    context);
                                 setState(() {
                                   isLoading = false;
                                 });
@@ -790,7 +797,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                 setState(() {
                                   isLoading = false;
                                 });
-                                showErrorAlert("Error", "Passwords do not match", context);
+                                showErrorAlert(
+                                    "Error", "Passwords do not match", context);
                               }
                             } else {
                               null;
@@ -799,19 +807,19 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: (!isLoading)
-                              ? Text(
-                              'Register',
-                              style: TextStyle(
-                                color: isFormValid
-                                    ? currentTheme.colorScheme.background
-                                    : currentTheme.colorScheme.primary,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )
-                              : CupertinoActivityIndicator(
-                              color: currentTheme.colorScheme.background,
-                              radius: 13,
-                            ),
+                                ? Text(
+                                    'Register',
+                                    style: TextStyle(
+                                      color: isFormValid
+                                          ? currentTheme.colorScheme.background
+                                          : currentTheme.colorScheme.primary,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )
+                                : CupertinoActivityIndicator(
+                                    color: currentTheme.colorScheme.background,
+                                    radius: 13,
+                                  ),
                           ),
                         ),
                       ),

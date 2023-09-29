@@ -19,7 +19,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   void validateEmail() {
     setState(() {
-      if (RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+      if (RegExp(
+              r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
           .hasMatch(_emailController.text)) {
         isEmailValid = true;
       } else {
@@ -81,7 +82,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.9,
-                  child:  SizedBox(
+                  child: SizedBox(
                     height: 50,
                     child: CupertinoTextField(
                       autocorrect: false,
@@ -131,12 +132,16 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.9,
                   child: CupertinoButton(
-                    color: isEmailValid ? currentTheme.colorScheme.primary : currentTheme.colorScheme.background,
+                    color: isEmailValid
+                        ? currentTheme.colorScheme.primary
+                        : currentTheme.colorScheme.background,
                     child: Text(
                       'Send',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: isEmailValid ? currentTheme.colorScheme.background : currentTheme.colorScheme.primary,
+                        color: isEmailValid
+                            ? currentTheme.colorScheme.background
+                            : currentTheme.colorScheme.primary,
                         fontSize: 16,
                       ),
                     ),
@@ -149,12 +154,19 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       print(url);
                       print(headers);
                       print(jsonBody);
-                      final response = await http.post(url, headers: headers, body: jsonBody);
+                      final response = await http.post(url,
+                          headers: headers, body: jsonBody);
                       if (response.statusCode == 200) {
-                        showSuccessAlert("Success", "A password reset link has been sent to your email", context);
+                        showSuccessAlert(
+                            "Success",
+                            "A password reset link has been sent to your email",
+                            context);
                         Navigator.pop(context);
                       } else {
-                        showErrorAlert("Error", "An error occurred while sending a request", context);
+                        showErrorAlert(
+                            "Error",
+                            "An error occurred while sending a request",
+                            context);
                       }
                     },
                   ),

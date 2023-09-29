@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:add_2_calendar/add_2_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:ringoflutter/Classes/EventClass.dart';
 import 'package:ringoflutter/Classes/TicketTypeClass.dart';
@@ -31,59 +30,61 @@ String capitalizeFirstLetter(String input) {
 String startTimeFromTimestamp(String timestampStart, String? timestampEnd) {
   DateTime parsedDateTimeStart = DateTime.parse('${timestampStart}Z').toLocal();
   String formattedDateStart = parsedDateTimeStart.day.toString();
-  String formattedTimeStart = '${parsedDateTimeStart.hour.toString().padLeft(2, '0')}:${parsedDateTimeStart.minute.toString().padLeft(2, '0')}';
+  String formattedTimeStart =
+      '${parsedDateTimeStart.hour.toString().padLeft(2, '0')}:${parsedDateTimeStart.minute.toString().padLeft(2, '0')}';
   String formattedMonthStart;
 
-    switch (parsedDateTimeStart.month) {
-      case 1:
-        formattedMonthStart = 'Jan';
-        break;
-      case 2:
-        formattedMonthStart = 'Feb';
-        break;
-      case 3:
-        formattedMonthStart = 'Mar';
-        break;
-      case 4:
-        formattedMonthStart = 'Apr';
-        break;
-      case 5:
-        formattedMonthStart = 'May';
-        break;
-      case 6:
-        formattedMonthStart = 'Jun';
-        break;
-      case 7:
-        formattedMonthStart = 'Jul';
-        break;
-      case 8:
-        formattedMonthStart = 'Aug';
-        break;
-      case 9:
-        formattedMonthStart = 'Sep';
-        break;
-      case 10:
-        formattedMonthStart = 'Oct';
-        break;
-      case 11:
-        formattedMonthStart = 'Nov';
-        break;
-      case 12:
-        formattedMonthStart = 'Dec';
-        break;
-      default:
-        formattedMonthStart = '';
-        break;
-    }
+  switch (parsedDateTimeStart.month) {
+    case 1:
+      formattedMonthStart = 'Jan';
+      break;
+    case 2:
+      formattedMonthStart = 'Feb';
+      break;
+    case 3:
+      formattedMonthStart = 'Mar';
+      break;
+    case 4:
+      formattedMonthStart = 'Apr';
+      break;
+    case 5:
+      formattedMonthStart = 'May';
+      break;
+    case 6:
+      formattedMonthStart = 'Jun';
+      break;
+    case 7:
+      formattedMonthStart = 'Jul';
+      break;
+    case 8:
+      formattedMonthStart = 'Aug';
+      break;
+    case 9:
+      formattedMonthStart = 'Sep';
+      break;
+    case 10:
+      formattedMonthStart = 'Oct';
+      break;
+    case 11:
+      formattedMonthStart = 'Nov';
+      break;
+    case 12:
+      formattedMonthStart = 'Dec';
+      break;
+    default:
+      formattedMonthStart = '';
+      break;
+  }
 
   if (timestampEnd == null) {
-    String formattedTimestamp = '$formattedMonthStart $formattedDateStart ${parsedDateTimeStart.year}, $formattedTimeStart';
+    String formattedTimestamp =
+        '$formattedMonthStart $formattedDateStart ${parsedDateTimeStart.year}, $formattedTimeStart';
     return formattedTimestamp;
   } else {
-
     DateTime parsedDateTimeEnd = DateTime.parse('${timestampEnd}Z').toLocal();
     String formattedDateEnd = parsedDateTimeEnd.day.toString();
-    String formattedTimeEnd = '${parsedDateTimeEnd.hour.toString().padLeft(2, '0')}:${parsedDateTimeEnd.minute.toString().padLeft(2, '0')}';
+    String formattedTimeEnd =
+        '${parsedDateTimeEnd.hour.toString().padLeft(2, '0')}:${parsedDateTimeEnd.minute.toString().padLeft(2, '0')}';
     String formattedMonthEnd;
 
     switch (parsedDateTimeEnd.month) {
@@ -130,12 +131,15 @@ String startTimeFromTimestamp(String timestampStart, String? timestampEnd) {
 
     String formattedTimestamp = '';
 
-    int durationInHours = parsedDateTimeEnd.difference(parsedDateTimeStart).inHours;
+    int durationInHours =
+        parsedDateTimeEnd.difference(parsedDateTimeStart).inHours;
 
     if (durationInHours < 24) {
-      formattedTimestamp = '$formattedMonthStart $formattedDateStart ${parsedDateTimeStart.year}, $formattedTimeStart - $formattedTimeEnd';
+      formattedTimestamp =
+          '$formattedMonthStart $formattedDateStart ${parsedDateTimeStart.year}, $formattedTimeStart - $formattedTimeEnd';
     } else {
-      formattedTimestamp = '$formattedMonthStart $formattedDateStart ${parsedDateTimeStart.year}, $formattedTimeStart\n$formattedMonthEnd $formattedDateEnd ${parsedDateTimeEnd.year}, $formattedTimeEnd';
+      formattedTimestamp =
+          '$formattedMonthStart $formattedDateStart ${parsedDateTimeStart.year}, $formattedTimeStart\n$formattedMonthEnd $formattedDateEnd ${parsedDateTimeEnd.year}, $formattedTimeEnd';
     }
     return formattedTimestamp;
   }
@@ -189,7 +193,6 @@ bool isTimestampInThePast(String timestamp) {
   }
 }
 
-
 String constructDescription(TicketType ticket) {
   String description = '';
 
@@ -200,11 +203,13 @@ String constructDescription(TicketType ticket) {
     if (ticket.peopleCount >= ticket.maxTickets!) {
       description = '$description\nNo tickets available';
     } else {
-      description = '${description}\n${ticket.maxTickets! - ticket.peopleCount} tickets left';
+      description =
+          '${description}\n${ticket.maxTickets! - ticket.peopleCount} tickets left';
     }
   }
   if (ticket.salesStopTime != null || ticket.salesStopTime != '') {
-    description = '${description}\nSales stop ${startTimeFromTimestamp(ticket.salesStopTime!, null)}';
+    description =
+        '${description}\nSales stop ${startTimeFromTimestamp(ticket.salesStopTime!, null)}';
   }
 
   return description;
@@ -227,15 +232,20 @@ bool isSoldOut(TicketType ticket) {
 
 String constructPrice(EventFull event) {
   String price = '';
+  if (event.ticketTypes!.length == 0 || event.ticketTypes == null) {
+    return 'Free';
+  }
   double minPrice = event.ticketTypes!.map((e) => e.price).reduce(min);
   double maxPrice = event.ticketTypes!.map((e) => e.price).reduce(max);
 
   if (minPrice == 0.0 && maxPrice == 0.0) {
     price = 'Free';
   } else if (minPrice == maxPrice) {
-    price = '${event.ticketTypes![0].currency.symbol}${minPrice.toStringAsFixed(2)}';
+    price =
+        '${event.ticketTypes![0].currency.symbol}${minPrice.toStringAsFixed(2)}';
   } else {
-    price = '${event.ticketTypes![0].currency.symbol}${minPrice.toStringAsFixed(2)} - ${event.ticketTypes![0].currency.symbol}${maxPrice.toStringAsFixed(2)}';
+    price =
+        '${event.ticketTypes![0].currency.symbol}${minPrice.toStringAsFixed(2)} - ${event.ticketTypes![0].currency.symbol}${maxPrice.toStringAsFixed(2)}';
   }
   return price;
 }

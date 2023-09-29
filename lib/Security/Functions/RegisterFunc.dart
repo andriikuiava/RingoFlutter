@@ -1,11 +1,13 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:ringoflutter/Classes/RegistrationCredentialsClass.dart';
 import 'package:ringoflutter/Security/EmailVerificationPage.dart';
 import 'package:ringoflutter/api_endpoints.dart';
 
-Future<void> registerUser(RegistrationCredentials registrationCredentials, context) async {
+Future<void> registerUser(
+    RegistrationCredentials registrationCredentials, context) async {
   try {
     Uri url = Uri.parse(ApiEndpoints.REGISTER);
     var headers = {'Content-Type': 'application/json'};
@@ -18,14 +20,18 @@ Future<void> registerUser(RegistrationCredentials registrationCredentials, conte
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => EmailVerificationPage(usersEmail: registrationCredentials.email, usersUsername: registrationCredentials.username,),
+          builder: (context) => EmailVerificationPage(
+            usersEmail: registrationCredentials.email,
+            usersUsername: registrationCredentials.username,
+          ),
         ),
       );
     } else if (response.statusCode == 400) {
       showErrorAlert("Error", response.body, context);
     } else {
       showErrorAlert("Error", "Error occurred while signing up", context);
-      print('User registration failed with status code: ${response.statusCode}');
+      print(
+          'User registration failed with status code: ${response.statusCode}');
       print('Response body: ${response.body}');
     }
   } catch (e) {

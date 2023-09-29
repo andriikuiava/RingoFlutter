@@ -65,9 +65,8 @@ class EventInFeed {
       distance: json['distance'],
       isTicketNeeded: json['isTicketNeeded'],
       price: json['price'],
-      currency: json['currency'] != null
-          ? Currency.fromJson(json['currency'])
-          : null,
+      currency:
+          json['currency'] != null ? Currency.fromJson(json['currency']) : null,
       startTime: json['startTime'],
       endTime: json['endTime'],
       categories: categories,
@@ -77,8 +76,6 @@ class EventInFeed {
     );
   }
 }
-
-
 
 class EventFull {
   int id;
@@ -144,20 +141,19 @@ class EventFull {
       endTime: json['endTime'],
       categories: json['categories'] != null
           ? List<CategoryClass>.from(
-          json['categories'].map((x) => CategoryClass.fromJson(x)))
+              json['categories'].map((x) => CategoryClass.fromJson(x)))
           : null,
       host: Organisation.fromJson(json['host']),
       peopleCount: json['peopleCount'],
       capacity: json['capacity'],
       price: json['price'],
-      currency: json['currency'] != null
-          ? Currency.fromJson(json['currency'])
-          : null,
+      currency:
+          json['currency'] != null ? Currency.fromJson(json['currency']) : null,
       isSaved: json['isSaved'],
       isRegistered: json['isRegistered'],
       ticketTypes: json['ticketTypes'] != null
           ? List<TicketType>.from(
-          json['ticketTypes'].map((x) => TicketType.fromJson(x)))
+              json['ticketTypes'].map((x) => TicketType.fromJson(x)))
           : null,
       registrationForm: json['registrationForm'] != null
           ? RegistrationForm.fromJson(json['registrationForm'])
