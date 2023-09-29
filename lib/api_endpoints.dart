@@ -8,8 +8,8 @@ dynamic customJsonDecode(String responseBody) {
 }
 
 class ApiEndpoints {
-  // static const String BASE_URL = "http://18.194.208.48:8080/api";
-  static const String BASE_URL = "http://localhost:8080/api";
+  static const String BASE_URL = "https://www.ringo-events.com/api";
+  // static const String BASE_URL = "http://localhost:8080/api";
 
   //LOGIN/REGISTER
   static const String REGISTER = "$BASE_URL/participants/sign-up";
@@ -18,8 +18,7 @@ class ApiEndpoints {
   static const String LOGIN_GOOGLE = "$BASE_URL/auth/login/google";
   static const String SIGNUP_APPLE = "$BASE_URL/participants/sign-up/apple";
   static const String LOGIN_APPLE = "$BASE_URL/auth/login/apple";
-  static const String RESEND_CONFIRMATION_LINK =
-      "$BASE_URL/auth/send-verification-email";
+  static const String RESEND_CONFIRMATION_LINK = "$BASE_URL/auth/send-verification-email";
 
   //TOKENS
   static const String REFRESH_TOKENS = "$BASE_URL/auth/refresh-token";
