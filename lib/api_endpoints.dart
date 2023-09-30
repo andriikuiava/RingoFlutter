@@ -8,8 +8,8 @@ dynamic customJsonDecode(String responseBody) {
 }
 
 class ApiEndpoints {
-  // static const String BASE_URL = "https://www.ringo-events.com/api";
-  static const String BASE_URL = "http://localhost:8080/api";
+  static const String BASE_URL = "https://www.ringo-events.com/api";
+  // static const String BASE_URL = "http://localhost:8080/api";
 
   //LOGIN/REGISTER
   static const String REGISTER = "$BASE_URL/participants/sign-up";
