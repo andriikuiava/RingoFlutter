@@ -410,23 +410,17 @@ class _EventPageState extends State<EventPage>
                                                           return GestureDetector(
                                                               onTap: () async {
                                                                 if (!isSoldOut(
-                                                                    event.ticketTypes![
-                                                                        index])) {
-                                                                  Navigator.pop(
-                                                                      context);
+                                                                    event.ticketTypes![index])) {
+                                                                  Navigator.pop(context);
                                                                   final wasBought =
-                                                                      await Navigator
-                                                                          .push(
+                                                                      await Navigator.push(
                                                                     context,
                                                                     MaterialPageRoute(
                                                                       builder:
                                                                           (context) =>
                                                                               FormCompletion(
-                                                                        event:
-                                                                            event,
-                                                                        selectedTicketType: event
-                                                                            .ticketTypes![index]
-                                                                            .id,
+                                                                        event: event,
+                                                                        selectedTicketType: event.ticketTypes![index].id,
                                                                       ),
                                                                     ),
                                                                   );
