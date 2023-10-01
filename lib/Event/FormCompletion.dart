@@ -1,5 +1,6 @@
 import 'dart:convert';
-
+import 'package:flutter_stripe/flutter_stripe.dart' hide Card;
+import 'package:ringoflutter/Classes/PaymentIntentClass.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -77,6 +78,8 @@ class _FormCompletionState extends State<FormCompletion> {
     }
   }
 
+  String? localPaymentIntentClientSecret;
+
   void getTicket() async {
     setState(() {
       isLoading = true;
@@ -99,9 +102,46 @@ class _FormCompletionState extends State<FormCompletion> {
         body:
             (widget.event.registrationForm == null) ? null : jsonEncode(body));
     if (response.statusCode == 200) {
-      showSuccessAlert(
-          "Success", "You have successfully joined the event", context);
-      Navigator.pop(context, true);
+      var decoded = PaymentIntentResponse.fromJson(customJsonDecode(response.body));
+      if (decoded.ticket != null) {
+        showSuccessAlert("Success", "You have successfully joined the event", context);
+        setState(() {
+          isLoading = false;
+        });
+        Navigator.pop(context, true);
+      } else if (decoded.paymentIntentClientSecret != null && decoded.organisationAccountId != null) {
+        Stripe.stripeAccountId = decoded.organisationAccountId;
+        localPaymentIntentClientSecret = decoded.paymentIntentClientSecret;
+        await initPaymentSheet();
+        try {
+          await Stripe.instance.presentPaymentSheet().then((value) {
+            showSuccessAlert("Success", "You have successfully bought a ticket", context);
+            Future.delayed(const Duration(seconds: 2), () {
+              setState(() {
+                isLoading = false;
+              });
+              Navigator.pop(context, true);
+            });
+          }).onError((error, stackTrace) {
+            setState(() {
+              isLoading = false;
+            });
+            throw Exception(error);
+          });
+        } on StripeException catch (e) {
+          print('Error is:---> $e');
+          showErrorAlert("Error", "Something went wrong", context);
+          setState(() {
+            isLoading = false;
+          });
+        } catch (e) {
+          print('$e');
+          showErrorAlert("Error", "Something went wrong", context);
+          setState(() {
+            isLoading = false;
+          });
+        }
+      }
     } else {
       setState(() {
         isLoading = false;
@@ -109,6 +149,27 @@ class _FormCompletionState extends State<FormCompletion> {
       print(response.statusCode);
       print(response.body);
       showErrorAlert("Error", "Something went wrong", context);
+    }
+  }
+
+  Future<void> initPaymentSheet() async {
+    try {
+      await Stripe.instance.initPaymentSheet(
+          paymentSheetParameters: SetupPaymentSheetParameters(
+            customFlow: false,
+            merchantDisplayName: widget.event.host.name,
+            style: Theme.of(context).brightness == Brightness.dark
+                ? ThemeMode.dark
+                : ThemeMode.light,
+            paymentIntentClientSecret: localPaymentIntentClientSecret
+            // applePay: PaymentSheetApplePay(
+            //   merchantCountryCode: 'EE',
+            // ),
+          )
+      );
+    } catch (e) {
+      print('Error is:---> ${e}');
+      rethrow;
     }
   }
 
