@@ -1087,12 +1087,13 @@ class _SearchPageState extends State<SearchPage> {
                             ),
                           ),
                           const SizedBox(height: 10),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.93,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                CupertinoButton(
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(width: MediaQuery.sizeOf(context).width * 0.01),
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.48,
+                                child: CupertinoButton(
                                   onPressed: () {
                                     mapCenterLat = null;
                                     mapCenterLong = null;
@@ -1110,14 +1111,18 @@ class _SearchPageState extends State<SearchPage> {
                                     style: TextStyle(
                                         fontSize: 16,
                                         color:
-                                            currentTheme.colorScheme.primary),
+                                        currentTheme.colorScheme.primary),
                                   ),
                                 ),
-                                CupertinoButton(
+                              ),
+                              SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.47,
+                                child: CupertinoButton(
                                   onPressed: () async {
                                     LatLngBounds visibleRegion =
-                                        await _mapController!
-                                            .getVisibleRegion();
+                                    await _mapController!
+                                        .getVisibleRegion();
                                     var topLeftLat =
                                         visibleRegion.northeast.latitude;
                                     var topLeftLong =
@@ -1127,7 +1132,7 @@ class _SearchPageState extends State<SearchPage> {
                                     var bottomRightLong =
                                         visibleRegion.northeast.longitude;
                                     var zoomLevel =
-                                        await _mapController!.getZoomLevel();
+                                    await _mapController!.getZoomLevel();
 
                                     mapCenterLat =
                                         (topLeftLat + bottomRightLat) / 2;
@@ -1136,7 +1141,7 @@ class _SearchPageState extends State<SearchPage> {
 
                                     double calculatedValue =
                                         (((topLeftLat - bottomRightLat) / 2) *
-                                                111) *
+                                            111) *
                                             1000;
                                     radius = calculatedValue.toInt();
                                     setState(() {
@@ -1155,8 +1160,9 @@ class _SearchPageState extends State<SearchPage> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                              SizedBox(width: MediaQuery.sizeOf(context).width * 0.01),
+                            ],
                           ),
                           const SizedBox(height: 10),
                         ],
@@ -1181,51 +1187,49 @@ class _SearchPageState extends State<SearchPage> {
                               },
                             ),
                           ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.93,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              // Aligns buttons to the left and right
-                              children: [
-                                CupertinoButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      startTime = null;
-                                      _isDateStartButtonTapped = false;
-                                      events = [];
-                                      currentPage = 0;
-                                      fetchEvents();
-                                    });
-                                  },
-                                  color: currentTheme.colorScheme.background,
-                                  child: Text(
-                                    'Cancel',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        color:
-                                            currentTheme.colorScheme.primary),
-                                  ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(width: MediaQuery.sizeOf(context).width * 0.01),
+                              CupertinoButton(
+                                onPressed: () {
+                                  setState(() {
+                                    startTime = null;
+                                    _isDateStartButtonTapped = false;
+                                    events = [];
+                                    currentPage = 0;
+                                    fetchEvents();
+                                  });
+                                },
+                                color: currentTheme.colorScheme.background,
+                                child: Text(
+                                  'Cancel',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color:
+                                      currentTheme.colorScheme.primary),
                                 ),
-                                CupertinoButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _isDateStartButtonTapped = false;
-                                      events = [];
-                                      currentPage = 0;
-                                      fetchEvents();
-                                    });
-                                  },
-                                  color: currentTheme.colorScheme.background,
-                                  child: Text(
-                                    'Apply',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        color: currentTheme.colorScheme.primary,
-                                        fontWeight: FontWeight.bold),
-                                  ),
+                              ),
+                              CupertinoButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _isDateStartButtonTapped = false;
+                                    events = [];
+                                    currentPage = 0;
+                                    fetchEvents();
+                                  });
+                                },
+                                color: currentTheme.colorScheme.background,
+                                child: Text(
+                                  'Apply',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: currentTheme.colorScheme.primary,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                              ],
-                            ),
+                              ),
+                              SizedBox(width: MediaQuery.sizeOf(context).width * 0.01),
+                            ],
                           ),
                           const SizedBox(height: 10),
                         ],
@@ -1252,14 +1256,13 @@ class _SearchPageState extends State<SearchPage> {
                                 },
                               ),
                             ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.93,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                // Aligns buttons to the left and right
-                                children: [
-                                  CupertinoButton(
+                            const SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  width: MediaQuery.of(context).size.width * 0.48,
+                                  child: CupertinoButton(
                                     onPressed: () {
                                       setState(() {
                                         endTime = null;
@@ -1274,11 +1277,14 @@ class _SearchPageState extends State<SearchPage> {
                                       'Cancel',
                                       style: TextStyle(
                                           fontSize: 16,
-                                          color:
-                                              currentTheme.colorScheme.primary),
+                                          color: currentTheme.colorScheme.primary),
                                     ),
                                   ),
-                                  CupertinoButton(
+                                ),
+                                SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
+                                Container(
+                                  width: MediaQuery.of(context).size.width * 0.47,
+                                  child: CupertinoButton(
                                     onPressed: () {
                                       setState(() {
                                         _isDateEndButtonTapped = false;
@@ -1292,15 +1298,13 @@ class _SearchPageState extends State<SearchPage> {
                                       'Apply',
                                       style: TextStyle(
                                           fontSize: 16,
-                                          color:
-                                              currentTheme.colorScheme.primary,
+                                          color: currentTheme.colorScheme.primary,
                                           fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            const SizedBox(height: 10),
                           ],
                         ),
                       )

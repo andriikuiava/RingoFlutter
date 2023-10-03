@@ -99,7 +99,7 @@ class _SavedEventsScreenState extends State<SavedEventsScreen> {
                       ),
                       const SizedBox(width: 20),
                       Container(
-                        width: 0.7 * MediaQuery.of(context).size.width,
+                        width: 0.6 * MediaQuery.of(context).size.width,
                         child: const Text(
                           "You don't have any saved events yet",
                           style: TextStyle(

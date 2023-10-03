@@ -180,9 +180,6 @@ String _twoDigits(int n) {
 }
 
 bool isTimestampInThePast(String timestamp) {
-  if (timestamp == '') {
-    return false;
-  }
   DateTime parsedDateTimeStart = DateTime.parse('${timestamp}Z').toLocal();
   DateTime now = DateTime.now();
 
@@ -221,10 +218,10 @@ bool isSoldOut(TicketType ticket) {
     if (ticket.peopleCount >= ticket.maxTickets!) {
       result = true;
     }
-    if (ticket.salesStopTime != null) {
-      if (isTimestampInThePast(ticket.salesStopTime!)) {
-        result = true;
-      }
+  }
+  if (ticket.salesStopTime != null) {
+    if (isTimestampInThePast(ticket.salesStopTime!)) {
+      result = true;
     }
   }
   return result;
