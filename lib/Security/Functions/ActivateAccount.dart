@@ -189,7 +189,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                                         ),
                                         const SizedBox(width: 10),
                                         Text(
-                                          "Choose from photos",
+                                          "From photos",
                                           style: TextStyle(
                                             color: currentTheme
                                                 .colorScheme.primary,
@@ -446,7 +446,7 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                         ClipRRect(
                           borderRadius: defaultWidgetCornerRadius,
                           child: Container(
-                            width: MediaQuery.of(context).size.width * 0.9,
+                            width: MediaQuery.of(context).size.width * 0.85,
                             height: 50,
                             color: currentTheme.colorScheme.background,
                             child: CupertinoButton(
