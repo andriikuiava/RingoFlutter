@@ -1283,7 +1283,7 @@ class _EventPageState extends State<EventPage>
                         ),
                       ),
                       const SizedBox(
-                        height: 90,
+                        height: 52,
                       ),
                     ],
                   ),
