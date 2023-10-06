@@ -99,423 +99,425 @@ class _HostPageState extends State<HostPage> with TickerProviderStateMixin {
                   ),
                 ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 8),
-                  Center(
-                    child: ClipRRect(
-                      borderRadius: defaultWidgetCornerRadius,
-                      child: Container(
-                          width: MediaQuery.of(context).size.width * 0.95,
-                          color: currentTheme.colorScheme.background,
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(
-                                height: 8,
-                              ),
-                              Row(
-                                children: [
-                                  if (snapshot.data!.profilePictureId != null)
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 9),
-                                      child: Container(
-                                        decoration: const BoxDecoration(
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: CircleAvatar(
-                                          backgroundColor:
-                                              currentTheme.colorScheme.primary,
-                                          radius: 30.0,
-                                          backgroundImage: NetworkImage(
-                                            '${ApiEndpoints.GET_PHOTO}/${snapshot.data!.profilePictureId}',
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 8),
+                    Center(
+                      child: ClipRRect(
+                        borderRadius: defaultWidgetCornerRadius,
+                        child: Container(
+                            width: MediaQuery.of(context).size.width * 0.95,
+                            color: currentTheme.colorScheme.background,
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(
+                                  height: 8,
+                                ),
+                                Row(
+                                  children: [
+                                    if (snapshot.data!.profilePictureId != null)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 9),
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: CircleAvatar(
+                                            backgroundColor:
+                                            currentTheme.colorScheme.primary,
+                                            radius: 30.0,
+                                            backgroundImage: NetworkImage(
+                                              '${ApiEndpoints.GET_PHOTO}/${snapshot.data!.profilePictureId}',
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  if (snapshot.data!.profilePictureId == null)
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 9),
-                                      child: Container(
-                                        decoration: const BoxDecoration(
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: CircleAvatar(
-                                          backgroundColor: currentTheme
-                                              .colorScheme.background,
-                                          radius: 30.0,
-                                          backgroundImage: AssetImage(
-                                            (currentTheme.brightness ==
-                                                    Brightness.light)
-                                                ? 'assets/images/Ringo-Black.png'
-                                                : 'assets/images/Ringo-White.png',
+                                    if (snapshot.data!.profilePictureId == null)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 9),
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: CircleAvatar(
+                                            backgroundColor: currentTheme
+                                                .colorScheme.background,
+                                            radius: 30.0,
+                                            backgroundImage: AssetImage(
+                                              (currentTheme.brightness ==
+                                                  Brightness.light)
+                                                  ? 'assets/images/Ringo-Black.png'
+                                                  : 'assets/images/Ringo-White.png',
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  const SizedBox(width: 10),
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.7,
-                                          child: Text(
-                                            snapshot.data!.name,
-                                            maxLines: 1,
-                                            style: TextStyle(
-                                              decoration: TextDecoration.none,
-                                              color: currentTheme
-                                                  .colorScheme.primary,
-                                              fontSize: 28,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.7,
-                                          child: Text(
-                                            "@${snapshot.data!.username}",
-                                            maxLines: 1,
-                                            style: const TextStyle(
-                                              decoration: TextDecoration.none,
-                                              color: Colors.grey,
-                                              fontWeight: FontWeight.normal,
-                                              fontSize: 20,
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 10),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.7,
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                isDescriptionExpanded =
-                                                    !isDescriptionExpanded;
-                                              });
-                                            },
-                                            child: AnimatedSize(
-                                              duration: const Duration(
-                                                  milliseconds: 500),
-                                              curve: Curves.easeInOut,
-                                              child: (isDescriptionExpanded)
-                                                  ? SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.7,
-                                                      child: Text(
-                                                        snapshot
-                                                            .data!.description,
-                                                        style: TextStyle(
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .none,
-                                                          color: currentTheme
-                                                              .colorScheme
-                                                              .primary,
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                        ),
-                                                      ),
-                                                    )
-                                                  : SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.7,
-                                                      child: Text(
-                                                        snapshot
-                                                            .data!.description,
-                                                        maxLines: 3,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        style: TextStyle(
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .none,
-                                                          color: currentTheme
-                                                              .colorScheme
-                                                              .primary,
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                        ),
-                                                      ),
-                                                    ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 10),
-                            ],
-                          )),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  if (snapshot.data!.contacts.isNotEmpty)
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.95,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          elevation: 0,
-                          backgroundColor: currentTheme.colorScheme.background,
-                        ),
-                        onPressed: () {
-                          showModalBottomSheet<void>(
-                            context: context,
-                            elevation: 0,
-                            builder: (context) => SizedBox(
-                              height: 370,
-                              width: MediaQuery.of(context).size.width,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(
-                                    height: 16,
-                                  ),
-                                  ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: snapshot.data!.contacts.length,
-                                    itemBuilder: (context, index) {
-                                      ContactCard contactCard =
-                                          snapshot.data!.contacts[index];
-                                      bool isNumeric(String str) {
-                                        if (str == null) {
-                                          return false;
-                                        }
-                                        return double.tryParse(str) != null;
-                                      }
-
-                                      IconData iconData;
-                                      if (RegExp(
-                                              r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)')
-                                          .hasMatch(contactCard.content)) {
-                                        iconData = CupertinoIcons.link;
-                                      } else if (RegExp(
-                                              r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
-                                          .hasMatch(contactCard.content)) {
-                                        iconData = CupertinoIcons.mail;
-                                      } else if (RegExp(
-                                              r'^\+?[1-9][0-9\s-\(\)]{7,14}$')
-                                          .hasMatch(contactCard.content)) {
-                                        iconData = CupertinoIcons.phone;
-                                      } else {
-                                        iconData = CupertinoIcons.doc_on_doc;
-                                      }
-
-                                      return GestureDetector(
-                                        onTap: () async {
-                                          if (iconData == CupertinoIcons.link) {
-                                            launch(contactCard.content);
-                                          } else if (iconData ==
-                                              CupertinoIcons.mail) {
-                                            launch(
-                                                "mailto:${contactCard.content}");
-                                          } else if (iconData ==
-                                              CupertinoIcons.phone) {
-                                            String phoneNumber =
-                                                contactCard.content.replaceAll(
-                                                    RegExp(r'[^0-9]'), '');
-                                            launch("tel:$phoneNumber");
-                                          } else if (iconData ==
-                                              CupertinoIcons.doc_on_doc) {
-                                            await Clipboard.setData(
-                                                ClipboardData(
-                                                    text: contactCard.content));
-                                            Fluttertoast.showToast(
-                                              msg: "Copied to clipboard",
-                                              gravity: ToastGravity.CENTER,
-                                              backgroundColor: currentTheme
-                                                  .colorScheme.background,
-                                              textColor:
-                                                  currentTheme.primaryColor,
-                                              fontSize: 24,
-                                            );
-                                          }
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(10.0),
-                                          child: SizedBox(
+                                    const SizedBox(width: 10),
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
                                             width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.9,
-                                            child: Row(
-                                              children: [
-                                                const SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Icon(
-                                                  iconData,
-                                                  size: 16,
-                                                  color:
-                                                      currentTheme.primaryColor,
-                                                ),
-                                                const SizedBox(
-                                                  width: 16,
-                                                ),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      contactCard.title,
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: TextStyle(
-                                                        color: currentTheme
-                                                            .primaryColor,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 16,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      contactCard.content,
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: TextStyle(
-                                                        color: currentTheme
-                                                            .primaryColor,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                        fontSize: 16,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
+                                                .size
+                                                .width *
+                                                0.7,
+                                            child: Text(
+                                              snapshot.data!.name,
+                                              maxLines: 1,
+                                              style: TextStyle(
+                                                decoration: TextDecoration.none,
+                                                color: currentTheme
+                                                    .colorScheme.primary,
+                                                fontSize: 28,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ],
+                                          SizedBox(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width *
+                                                0.7,
+                                            child: Text(
+                                              "@${snapshot.data!.username}",
+                                              maxLines: 1,
+                                              style: const TextStyle(
+                                                decoration: TextDecoration.none,
+                                                color: Colors.grey,
+                                                fontWeight: FontWeight.normal,
+                                                fontSize: 20,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 10),
+                                          SizedBox(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width *
+                                                0.7,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  isDescriptionExpanded =
+                                                  !isDescriptionExpanded;
+                                                });
+                                              },
+                                              child: AnimatedSize(
+                                                duration: const Duration(
+                                                    milliseconds: 500),
+                                                curve: Curves.easeInOut,
+                                                child: (isDescriptionExpanded)
+                                                    ? SizedBox(
+                                                  width:
+                                                  MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                      0.7,
+                                                  child: Text(
+                                                    snapshot
+                                                        .data!.description,
+                                                    style: TextStyle(
+                                                      decoration:
+                                                      TextDecoration
+                                                          .none,
+                                                      color: currentTheme
+                                                          .colorScheme
+                                                          .primary,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                      FontWeight.normal,
+                                                    ),
+                                                  ),
+                                                )
+                                                    : SizedBox(
+                                                  width:
+                                                  MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                      0.7,
+                                                  child: Text(
+                                                    snapshot
+                                                        .data!.description,
+                                                    maxLines: 3,
+                                                    overflow: TextOverflow
+                                                        .ellipsis,
+                                                    style: TextStyle(
+                                                      decoration:
+                                                      TextDecoration
+                                                          .none,
+                                                      color: currentTheme
+                                                          .colorScheme
+                                                          .primary,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                      FontWeight.normal,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                              ],
+                            )),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    if (snapshot.data!.contacts.isNotEmpty)
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.95,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            backgroundColor: currentTheme.colorScheme.background,
+                          ),
+                          onPressed: () {
+                            showModalBottomSheet<void>(
+                              context: context,
+                              elevation: 0,
+                              builder: (context) => SizedBox(
+                                height: 370,
+                                width: MediaQuery.of(context).size.width,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(
+                                      height: 16,
+                                    ),
+                                    ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: snapshot.data!.contacts.length,
+                                      itemBuilder: (context, index) {
+                                        ContactCard contactCard =
+                                        snapshot.data!.contacts[index];
+                                        bool isNumeric(String str) {
+                                          if (str == null) {
+                                            return false;
+                                          }
+                                          return double.tryParse(str) != null;
+                                        }
+
+                                        IconData iconData;
+                                        if (RegExp(
+                                            r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)')
+                                            .hasMatch(contactCard.content)) {
+                                          iconData = CupertinoIcons.link;
+                                        } else if (RegExp(
+                                            r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+                                            .hasMatch(contactCard.content)) {
+                                          iconData = CupertinoIcons.mail;
+                                        } else if (RegExp(
+                                            r'^\+?[1-9][0-9\s-\(\)]{7,14}$')
+                                            .hasMatch(contactCard.content)) {
+                                          iconData = CupertinoIcons.phone;
+                                        } else {
+                                          iconData = CupertinoIcons.doc_on_doc;
+                                        }
+
+                                        return GestureDetector(
+                                          onTap: () async {
+                                            if (iconData == CupertinoIcons.link) {
+                                              launch(contactCard.content);
+                                            } else if (iconData ==
+                                                CupertinoIcons.mail) {
+                                              launch(
+                                                  "mailto:${contactCard.content}");
+                                            } else if (iconData ==
+                                                CupertinoIcons.phone) {
+                                              String phoneNumber =
+                                              contactCard.content.replaceAll(
+                                                  RegExp(r'[^0-9]'), '');
+                                              launch("tel:$phoneNumber");
+                                            } else if (iconData ==
+                                                CupertinoIcons.doc_on_doc) {
+                                              await Clipboard.setData(
+                                                  ClipboardData(
+                                                      text: contactCard.content));
+                                              Fluttertoast.showToast(
+                                                msg: "Copied to clipboard",
+                                                gravity: ToastGravity.CENTER,
+                                                backgroundColor: currentTheme
+                                                    .colorScheme.background,
+                                                textColor:
+                                                currentTheme.primaryColor,
+                                                fontSize: 24,
+                                              );
+                                            }
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10.0),
+                                            child: SizedBox(
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                                  0.9,
+                                              child: Row(
+                                                children: [
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Icon(
+                                                    iconData,
+                                                    size: 16,
+                                                    color:
+                                                    currentTheme.primaryColor,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 16,
+                                                  ),
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text(
+                                                        contactCard.title,
+                                                        maxLines: 1,
+                                                        overflow:
+                                                        TextOverflow.ellipsis,
+                                                        style: TextStyle(
+                                                          color: currentTheme
+                                                              .primaryColor,
+                                                          fontWeight:
+                                                          FontWeight.bold,
+                                                          fontSize: 16,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        contactCard.content,
+                                                        maxLines: 1,
+                                                        overflow:
+                                                        TextOverflow.ellipsis,
+                                                        style: TextStyle(
+                                                          color: currentTheme
+                                                              .primaryColor,
+                                                          fontWeight:
+                                                          FontWeight.normal,
+                                                          fontSize: 16,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
                               ),
+                            );
+                          },
+                          child: Text(
+                            "Contact host",
+                            style: TextStyle(
+                              decoration: TextDecoration.none,
+                              color: currentTheme.colorScheme.primary,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
                             ),
-                          );
-                        },
-                        child: Text(
-                          "Contact host",
-                          style: TextStyle(
-                            decoration: TextDecoration.none,
-                            color: currentTheme.colorScheme.primary,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-                    ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.95,
-                    height: 60,
-                    child: Card(
-                      elevation: 0,
-                      color: currentTheme.colorScheme.background,
-                      child: TabBar(
-                        indicatorColor: currentTheme.colorScheme.primary,
-                        overlayColor: MaterialStateProperty.all(
-                            currentTheme.primaryColor.withOpacity(0.1)),
-                        splashBorderRadius: BorderRadius.circular(12),
-                        controller: _tabController,
-                        tabs: [
-                          Tab(
-                            height: 60,
-                            child: Column(
-                              children: [
-                                if (snapshot.data!.rating != null)
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.95,
+                      height: 60,
+                      child: Card(
+                        elevation: 0,
+                        color: currentTheme.colorScheme.background,
+                        child: TabBar(
+                          indicatorColor: currentTheme.colorScheme.primary,
+                          overlayColor: MaterialStateProperty.all(
+                              currentTheme.primaryColor.withOpacity(0.1)),
+                          splashBorderRadius: BorderRadius.circular(12),
+                          controller: _tabController,
+                          tabs: [
+                            Tab(
+                              height: 60,
+                              child: Column(
+                                children: [
+                                  if (snapshot.data!.rating != null)
+                                    Text(
+                                      snapshot.data!.rating!.toStringAsFixed(1),
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  if (snapshot.data!.rating == null)
+                                    const Text(
+                                      '-',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  const Text('Rating'),
+                                ],
+                              ),
+                            ),
+                            Tab(
+                              height: 60,
+                              child: Column(
+                                children: [
                                   Text(
-                                    snapshot.data!.rating!.toStringAsFixed(1),
+                                    '${snapshot.data!.upcomingEventsCount}',
                                     style: const TextStyle(
                                       fontSize: 20,
                                     ),
                                   ),
-                                if (snapshot.data!.rating == null)
-                                  const Text(
-                                    '-',
-                                    style: TextStyle(
+                                  const Text('Upcoming'),
+                                ],
+                              ),
+                            ),
+                            Tab(
+                              height: 60,
+                              child: Column(
+                                children: [
+                                  Text(
+                                    '${snapshot.data!.pastEventsCount}',
+                                    style: const TextStyle(
                                       fontSize: 20,
                                     ),
                                   ),
-                                const Text('Rating'),
-                              ],
+                                  const Text('Past'),
+                                ],
+                              ),
                             ),
-                          ),
-                          Tab(
-                            height: 60,
-                            child: Column(
-                              children: [
-                                Text(
-                                  '${snapshot.data!.upcomingEventsCount}',
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                const Text('Upcoming'),
-                              ],
-                            ),
-                          ),
-                          Tab(
-                            height: 60,
-                            child: Column(
-                              children: [
-                                Text(
-                                  '${snapshot.data!.pastEventsCount}',
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                const Text('Past'),
-                              ],
-                            ),
-                          ),
-                        ],
-                        labelColor: currentTheme.colorScheme.primary,
-                        unselectedLabelColor: Colors.grey,
+                          ],
+                          labelColor: currentTheme.colorScheme.primary,
+                          unselectedLabelColor: Colors.grey,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 6),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.95,
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    child: TabBarView(
-                      controller: _tabController,
-                      children: [
-                        ratingSection(snapshot.data),
-                        futureEventsSection(snapshot.data),
-                        pastEventsSection(snapshot.data),
-                      ],
+                    const SizedBox(height: 6),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.95,
+                      height: MediaQuery.of(context).size.height * 0.5,
+                      child: TabBarView(
+                        controller: _tabController,
+                        children: [
+                          ratingSection(snapshot.data),
+                          futureEventsSection(snapshot.data),
+                          pastEventsSection(snapshot.data),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );

@@ -576,6 +576,7 @@ class _MyTicketPageState extends State<MyTicketPage> {
                               )
                             : Container(),
                       ),
+                      const SizedBox(height: 50),
                     ],
                   ),
                 ),
