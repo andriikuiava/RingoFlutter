@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:ringoflutter/Security/checkIsLoggedIn.dart';
-
 import 'UI/Themes.dart';
 
 void main() {
