@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io' show Platform;
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -1261,7 +1260,7 @@ class _SearchPageState extends State<SearchPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Container(
-                                  width: MediaQuery.of(context).size.width * 0.48,
+                                  width: MediaQuery.of(context).size.width * 0.46,
                                   child: CupertinoButton(
                                     onPressed: () {
                                       setState(() {
@@ -1276,14 +1275,14 @@ class _SearchPageState extends State<SearchPage> {
                                     child: Text(
                                       'Cancel',
                                       style: TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 14,
                                           color: currentTheme.colorScheme.primary),
                                     ),
                                   ),
                                 ),
                                 SizedBox(width: MediaQuery.sizeOf(context).width * 0.02),
                                 Container(
-                                  width: MediaQuery.of(context).size.width * 0.47,
+                                  width: MediaQuery.of(context).size.width * 0.45,
                                   child: CupertinoButton(
                                     onPressed: () {
                                       setState(() {
@@ -1297,7 +1296,7 @@ class _SearchPageState extends State<SearchPage> {
                                     child: Text(
                                       'Apply',
                                       style: TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 14,
                                           color: currentTheme.colorScheme.primary,
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -1305,6 +1304,7 @@ class _SearchPageState extends State<SearchPage> {
                                 ),
                               ],
                             ),
+                            const SizedBox(height: 10),
                           ],
                         ),
                       )

@@ -38,6 +38,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
         'Authorization': 'Bearer $token'
       });
       if (response.statusCode == 200) {
+        print(response.body);
         var decoded = customJsonDecode(response.body);
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString('tickets', response.body);

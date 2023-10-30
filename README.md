@@ -1,3 +1,0 @@
-# ringoflutter
-
-Ringo application.
